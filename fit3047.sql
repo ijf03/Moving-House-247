@@ -165,13 +165,13 @@ ALTER TABLE `user_types`
 -- AUTO_INCREMENT for table `contact_forms`
 --
 ALTER TABLE `contact_forms`
-  MODIFY `contact_form_id` int(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+  MODIFY `contact_form_id` int(3) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `customers`
 --
 ALTER TABLE `customers`
-  MODIFY `customer_id` int(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `customer_id` int(3) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `jobs`
@@ -183,7 +183,7 @@ ALTER TABLE `jobs`
 -- AUTO_INCREMENT for table `job_types`
 --
 ALTER TABLE `job_types`
-  MODIFY `job_type_id` int(1) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `job_type_id` int(1) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `users`
