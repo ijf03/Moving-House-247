@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 23, 2026 at 10:19 PM
+-- Generation Time: Apr 16, 2026 at 01:21 AM
 -- Server version: 11.8.6-MariaDB
 -- PHP Version: 8.4.16
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `fit3047`
+-- Database: `my_app`
 --
 
 -- --------------------------------------------------------
@@ -28,12 +28,26 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `contact_forms` (
-  `contact_form_id` int(3) NOT NULL,
-  `customer_id` int(3) NOT NULL,
-  `subject` varchar(30) NOT NULL,
+  `contact_form_id` int(11) NOT NULL AUTO_INCREMENT,
+  `customer_id` int(11) NOT NULL,
+  `subject` varchar(100) NOT NULL,
   `message` text NOT NULL,
-  `created` datetime NOT NULL
+  `created` datetime NOT NULL DEFAULT current_timestamp(),
+  `status` varchar(20) NOT NULL DEFAULT 'new',
+  `admin_reply` text DEFAULT NULL,
+  `replied_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`contact_form_id`),
+  KEY `contact_forms_customer_id` (`customer_id`),
+  CONSTRAINT `contact_forms_customer_id`
+    FOREIGN KEY (`customer_id`) REFERENCES `customers` (`customer_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `contact_forms`
+--
+
+INSERT INTO `contact_forms` (`contact_form_id`, `customer_id`, `subject`, `message`, `created`, `status`, `admin_reply`, `replied_at`) VALUES
+(0, 9, 'vfjefkebfjgej', 'asdasda', '2026-04-15 15:18:28', 'new', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -49,6 +63,15 @@ CREATE TABLE `customers` (
   `phone` varchar(15) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
+--
+-- Dumping data for table `customers`
+--
+
+INSERT INTO `customers` (`customer_id`, `first_name`, `last_name`, `email`, `phone`) VALUES
+(1, 'Emily', 'Carter', 'emily.carter@example.com', '0412345678'),
+(2, 'Liam', 'Nguyen', 'liam.nguyen@example.com', '0423456789'),
+(3, 'Sophie', 'Patel', 'sophie.patel@example.com', '0434567890'),
+(4, 'first', 'last', 'email@mail.com', '0987654321'),
 -- --------------------------------------------------------
 
 --
@@ -65,6 +88,15 @@ CREATE TABLE `jobs` (
   `job_time` varchar(5) NOT NULL,
   `customer_id` int(3) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `jobs`
+--
+
+INSERT INTO `jobs` (`job_id`, `job_type_id`, `description`, `pickup_address`, `dropoff_address`, `job_date`, `job_time`, `customer_id`) VALUES
+(1, 1, 'Move 2-bedroom apartment including fridge, sofa, washing machine, and boxes.', '12 King St, Clayton VIC 3168', '88 Collins St, Melbourne VIC 3000', '28/03/2026', '09:00', 1),
+(2, 2, 'Store household furniture and personal boxes for temporary relocation.', '5 Princes Hwy, Dandenong VIC 3175', 'Unit 4, Storage Hub, Springvale VIC 3171', '30/03/2026', '13:30', 2),
+(3, 1, 'Office equipment relocation including desks, monitors, and chairs.', '21 Wellington Rd, Mulgrave VIC 3170', '9 Queen St, Melbourne VIC 3000', '02/04/2026', '08:15', 3);
 
 -- --------------------------------------------------------
 
@@ -101,6 +133,15 @@ CREATE TABLE `users` (
   `user_type` int(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`user_id`, `email`, `password`, `first_name`, `last_name`, `user_type`) VALUES
+(1, 'admin@myapp.local', '$2y$10$examplehashedpasswordforadmin123456789012345678901234', 'Alex', 'Morgan', 1),
+(2, 'staff@myapp.local', '$2y$10$examplehashedpasswordforstaff12345678901234567890123', 'Jordan', 'Lee', 2),
+(4, 'admin@test.com', '$2y$12$xGvQK7AIhGg7iytP8aIEjOV1pm4Ev7hmJweuns1iNDkYW4VI69ipS', 'Alice', 'Admin', 1);
+
 -- --------------------------------------------------------
 
 --
@@ -114,15 +155,18 @@ CREATE TABLE `user_types` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 --
--- Indexes for dumped tables
+-- Dumping data for table `user_types`
 --
 
+INSERT INTO `user_types` (`user_type_id`, `name`, `description`) VALUES
+(1, 'Admin', 'System administrator with full access'),
+(2, 'Staff', 'Operational staff member'),
+(3, 'Client Liaison', 'Handles customer communication and enquiries'),
+(4, 'Admin', 'Full system access');
+
 --
--- Indexes for table `contact_forms`
+-- Indexes for dumped tables
 --
-ALTER TABLE `contact_forms`
-  ADD PRIMARY KEY (`contact_form_id`),
-  ADD KEY `contact_forms_customer_id` (`customer_id`);
 
 --
 -- Indexes for table `customers`
@@ -162,50 +206,38 @@ ALTER TABLE `user_types`
 --
 
 --
--- AUTO_INCREMENT for table `contact_forms`
---
-ALTER TABLE `contact_forms`
-  MODIFY `contact_form_id` int(3) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `customers`
 --
 ALTER TABLE `customers`
-  MODIFY `customer_id` int(3) NOT NULL AUTO_INCREMENT;
+  MODIFY `customer_id` int(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `jobs`
 --
 ALTER TABLE `jobs`
-  MODIFY `job_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `job_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `job_types`
 --
 ALTER TABLE `job_types`
-  MODIFY `job_type_id` int(1) NOT NULL AUTO_INCREMENT;
+  MODIFY `job_type_id` int(1) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `user_types`
 --
 ALTER TABLE `user_types`
-    MODIFY `user_type_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `user_type_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Constraints for dumped tables
 --
-
---
--- Constraints for table `contact_forms`
---
-ALTER TABLE `contact_forms`
-  ADD CONSTRAINT `contact_forms_customer_id` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`customer_id`);
 
 --
 -- Constraints for table `jobs`
@@ -224,10 +256,3 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*dummy test cases*/
-INSERT INTO user_types (name, description) VALUES
-    ('Admin', 'Full system access');
-INSERT INTO user_types (name, description) VALUES
-    ('Customer', 'Limited system access');
-INSERT INTO users (email, password, first_name, last_name, user_type) VALUES
-    ('admin@test.com', '$2y$12$xGvQK7AIhGg7iytP8aIEjOV1pm4Ev7hmJweuns1iNDkYW4VI69ipS', 'Alice', 'Admin', 1);

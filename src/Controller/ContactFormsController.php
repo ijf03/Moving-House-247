@@ -136,7 +136,7 @@ class ContactFormsController extends AppController
                 'replied_at' => null,
             ];
 
-            $contactForm = $this->ContactForms->patchEntity($contactForm, $contactFormData);
+            $contactForm = $this->ContactForms->newEntity($contactFormData);
 
             if ($this->ContactForms->save($contactForm)) {
                 $this->Flash->success(__('Your message has been sent successfully.'));
