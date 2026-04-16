@@ -50,6 +50,7 @@ $isAdmin = ($identity && (int)$role === 1);
         <?php else : ?>
             <?= $this->Html->link('Contact Us', ['controller' => 'ContactForms', 'action' => 'add']) ?>
             <?= $this->Html->link('Book a Service', ['controller' => 'Bookings', 'action' => 'add']) ?>
+            <?= $this->Html->link('My Bookings', ['controller' => 'Bookings', 'action' => 'myBookings']) ?>
         <?php endif; ?>
 
         <?php if ($identity) : ?>

@@ -202,4 +202,42 @@ class BookingsController extends AppController
 
         return $this->redirect(['action' => 'index']);
     }
+
+    public function myBookings()
+    {
+        $identity = $this->request->getAttribute('identity');
+
+        if (!$identity) {
+            $this->Flash->error(__('You must be logged in to view your bookings.'));
+            return $this->redirect(['controller' => 'Users', 'action' => 'login']);
+        }
+
+        if ((int)$identity->get('user_type') !== 2) {
+            $this->Flash->error(__('Only customers can access this page.'));
+            return $this->redirect(['controller' => 'Pages', 'action' => 'display', 'home']);
+        }
+
+        $customersTable = $this->fetchTable('Customers');
+
+        $customer = $customersTable->find()
+            ->where(['email' => $identity-> get('email')])
+            ->first();
+
+        if (!$customer) {
+            $this->Flash->error(__('No customer profile was found.'));
+            return $this->redirect(['controller' => 'Pages', 'action' => 'display', 'home']);
+        }
+
+        $query = $this->Bookings->find()
+            ->contain(['JobTypes'])
+            ->where([
+                'Bookings.customer_id' => $customer->customer_id,
+                'Bookings.status IN' => ['Processing', 'Done'],
+            ])
+            ->orderBy(['Bookings.job_date' => 'ASC']);
+
+        $bookings = $this->paginate($query);
+
+        $this->set(compact('bookings'));
+    }
 }

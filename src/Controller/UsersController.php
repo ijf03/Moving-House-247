@@ -313,6 +313,20 @@ class UsersController extends AppController
             $user = $this->Users->patchEntity($user, $data);
 
             if ($this->Users->save($user)) {
+                $customersTable = $this->fetchTable('Customers');
+
+                $customer = $customersTable->newEntity([
+                    'first_name' => $user->first_name,
+                    'last_name' => $user->last_name,
+                    'email' => $user->email,
+                    'phone' => $user->phone,
+                ]);
+
+                if (!$customersTable->save($customer)) {
+                    $this->Flash->error('User account created, but customer profile could not be created.');
+                    return;
+                }
+
                 $this->Flash->success('Registration successful. Please log in.');
                 return $this->redirect(['action' => 'login']);
             }
