@@ -4,6 +4,7 @@
  * @var \App\Model\Entity\User $user
  */
 ?>
+
 <script src="https://www.google.com/recaptcha/api.js?hl=en" async defer></script>
 
 <div class="row">
@@ -16,7 +17,7 @@
                 <?php
                 echo $this->Form->control('email');
                 ?>
-            <div class="g-recaptcha" data-sitekey="<?= '6Lds85QsAAAAAEEWmyp2mWR9ITmNyAwoLeECRwAs' ?>"></div>
+                <div class="g-recaptcha" data-sitekey="<?= h($siteKey ?? '') ?>"></div>
             </fieldset>
             <?= $this->Form->button(__('Submit')) ?>
             <?= $this->Form->end() ?>
