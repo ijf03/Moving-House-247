@@ -71,7 +71,7 @@ INSERT INTO `customers` (`customer_id`, `first_name`, `last_name`, `email`, `pho
 (1, 'Emily', 'Carter', 'emily.carter@example.com', '0412345678'),
 (2, 'Liam', 'Nguyen', 'liam.nguyen@example.com', '0423456789'),
 (3, 'Sophie', 'Patel', 'sophie.patel@example.com', '0434567890'),
-(4, 'first', 'last', 'email@mail.com', '0987654321'),
+(4, 'first', 'last', 'email@mail.com', '0987654321');
 -- --------------------------------------------------------
 
 --
