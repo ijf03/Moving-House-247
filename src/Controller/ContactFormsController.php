@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use Cake\Core\Configure;
 use Cake\Mailer\Mailer;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
@@ -67,7 +68,7 @@ class ContactFormsController extends AppController
     public function add()
     {
         $contactForm = $this->ContactForms->newEmptyEntity();
-
+        $siteKey = Configure::read('Recaptcha.siteKey');
         if ($this->request->is('post')) {
             $data = $this->request->getData();
             $captchaResponse = $data['g-recaptcha-response'] ?? '';
@@ -78,7 +79,7 @@ class ContactFormsController extends AppController
                 return;
             }
 
-            $secretKey = "6Lds85QsAAAAAEgTCP--6NvRs-HwEGUoj2C3qXJH";
+            $secretKey = Configure::read('Recaptcha.secretKey');
 
             $verifyResponse = file_get_contents(
                 'https://www.google.com/recaptcha/api/siteverify?secret='
@@ -116,7 +117,7 @@ class ContactFormsController extends AppController
 
                 if ($customer->getErrors()) {
                     foreach ($customer->getErrors() as $field => $error) {
-                    $this->Flash->error(__($error[$field]));}
+                        $this->Flash->error(__($error[$field]));}
                     $this->set(compact('contactForm'));
                     return;
                 }
@@ -146,7 +147,7 @@ class ContactFormsController extends AppController
             $this->Flash->error(__('The contact form could not be saved. Please try again.'));
         }
 
-        $this->set(compact('contactForm'));
+        $this->set(compact('contactForm', 'siteKey'));
     }
 
     public function edit($id = null)

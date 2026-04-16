@@ -34,35 +34,38 @@ $isAdmin = ($identity && (int)$role === 1);
     <?= $this->fetch('script') ?>
 </head>
 <body>
-    <nav class="top-nav">
-        <div class="top-nav-title">
-            <a href="<?= $this->Url->build('/') ?>"><span>Moving House </span>24/7</a>
-        </div>
+<nav class="top-nav">
+    <div class="top-nav-title">
+        <a href="<?= $this->Url->build('/') ?>"><span>Moving House </span>24/7</a>
+    </div>
 
-        <div class="top-nav-links">
-            <?= $this->Html->link('Home', ['controller' => 'Pages', 'action' => 'display', 'home']) ?>
+    <div class="top-nav-links">
+        <?= $this->Html->link('Home', ['controller' => 'Pages', 'action' => 'display', 'home']) ?>
 
-            <?php if ($isAdmin) : ?>
-                <?= $this->Html->link('Contact Forms', ['controller' => 'ContactForms', 'action' => 'index']) ?>
-                <?= $this->Html->link('Users', ['controller' => 'Users', 'action' => 'index']) ?>
-            <?php else : ?>
-                <?= $this->Html->link('Contact Us', ['controller' => 'ContactForms', 'action' => 'add']) ?>
-            <?php endif; ?>
 
-            <?php if ($identity) : ?>
-                <?= $this->Html->link('Log Out', ['controller' => 'Users', 'action' => 'logout']) ?>
-            <?php else : ?>
-                <?= $this->Html->link('Log In', ['controller' => 'Users', 'action' => 'login']) ?>
-            <?php endif; ?>
-        </div>
-    </nav>
-    <main class="main">
-        <div class="container">
-            <?= $this->Flash->render() ?>
-            <?= $this->fetch('content') ?>
-        </div>
-    </main>
-    <footer>
-    </footer>
+        <?php if ($isAdmin) : ?>
+            <?= $this->Html->link('Contact Forms', ['controller' => 'ContactForms', 'action' => 'index']) ?>
+            <?= $this->Html->link('Users', ['controller' => 'Users', 'action' => 'index']) ?>
+            <?= $this->Html->link('Manage Bookings', ['controller' => 'Bookings', 'action' => 'index']) ?>
+        <?php else : ?>
+            <?= $this->Html->link('Contact Us', ['controller' => 'ContactForms', 'action' => 'add']) ?>
+            <?= $this->Html->link('Book a Service', ['controller' => 'Bookings', 'action' => 'add']) ?>
+        <?php endif; ?>
+
+        <?php if ($identity) : ?>
+            <?= $this->Html->link('Log Out', ['controller' => 'Users', 'action' => 'logout']) ?>
+        <?php else : ?>
+            <?= $this->Html->link('Log In', ['controller' => 'Users', 'action' => 'login']) ?>
+        <?php endif; ?>
+    </div>
+</nav>
+<main class="main">
+    <div class="container">
+        <?= $this->Flash->render() ?>
+        <?= $this->fetch('content') ?>
+    </div>
+</main>
+<footer>
+</footer>
 </body>
 </html>

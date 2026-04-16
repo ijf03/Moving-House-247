@@ -69,11 +69,11 @@ class CustomersTable extends Table
 
         $validator
             ->scalar('phone')
-            ->maxLength('phone', 12)
+            ->maxLength('phone', 9)
             ->requirePresence('phone', 'create')
             ->notEmptyString('phone')
-            ->add('phone','phone',[
-                'rule' => ['custom','/^4[0-9]{8}$/'],
+            ->add('phone', 'validFormat', [
+                'rule' => ['custom', '/^[0-9]+$/'],
                 'message' => 'Please enter a valid phone number',
             ]);
 

@@ -119,6 +119,27 @@ INSERT INTO `job_types` (`job_type_id`, `job_type_name`, `job_type_description`)
 (2, 'Storage', 'Storage of items from customer');
 
 -- --------------------------------------------------------
+--
+-- Table structure for table `bookings`
+--
+CREATE TABLE `bookings` (
+                            `booking_id` int(11) NOT NULL AUTO_INCREMENT,
+                            `customer_id` int(3) NOT NULL,
+                            `job_type_id` int(1) NOT NULL,
+                            `pickup_address` varchar(95) NOT NULL,
+                            `dropoff_address` varchar(95) NOT NULL,
+                            `job_date` date NOT NULL,
+                            `job_time` time NOT NULL,
+                            `status` varchar(20) NOT NULL DEFAULT 'Pending',
+                            `created` datetime NOT NULL DEFAULT current_timestamp(),
+                            PRIMARY KEY (`booking_id`),
+                            KEY `bookings_customer_id` (`customer_id`),
+                            KEY `bookings_job_type_id` (`job_type_id`),
+                            CONSTRAINT `fk_bookings_customer`
+                                FOREIGN KEY (`customer_id`) REFERENCES `customers` (`customer_id`),
+                            CONSTRAINT `fk_bookings_job_type`
+                                FOREIGN KEY (`job_type_id`) REFERENCES `job_types` (`job_type_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 --
 -- Table structure for table `users`
@@ -252,6 +273,8 @@ ALTER TABLE `jobs`
 ALTER TABLE `users`
   ADD CONSTRAINT `users_user_type_id` FOREIGN KEY (`user_type`) REFERENCES `user_types` (`user_type_id`);
 COMMIT;
+
+ALTER TABLE users ADD phone varchar(15) NOT NULL AFTER email;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
