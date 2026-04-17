@@ -50,7 +50,7 @@ $this->assign('title', 'Moving House 24/7');
 
                     <div class="hero-buttons">
                         <?= $this->Html->link('Book Your Move!', ['controller' => 'ContactForms', 'action' => 'add'], ['class' => 'btn']) ?>
-                        <a class="btn" href="#">View Services</a>
+                        <a class="btn" href="#services">View Services</a>
                     </div>
                 </div>
             </section>
