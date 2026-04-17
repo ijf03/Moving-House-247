@@ -170,6 +170,27 @@ hr {
     background: #c9c9c9;
 }
 
+/* Services section */
+.services {
+    padding: 4rem 6rem 7rem 6rem;
+}
+
+.services h2 {
+    font-size: 4rem;
+    margin-bottom: 1.2rem;
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: 700;
+    color: #111;
+}
+
+.services .section-intro {
+    max-width: 56rem;
+    font-size: 1.6rem;
+    line-height: 1.5;
+    margin-bottom: 3.2rem;
+    color: #444;
+}
+
 /* How it works section */
 .how-it-works {
     padding: 4rem 6rem 7rem 6rem;

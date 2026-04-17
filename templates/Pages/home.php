@@ -55,6 +55,53 @@ $this->assign('title', 'Moving House 24/7');
                 </div>
             </section>
 
+            <section id="services" class="services">
+                <h2>Our Services</h2>
+                <p class="section-intro">
+                    Everything you need for a smooth and stress-free move.
+                </p>
+
+                <div class="services-grid">
+
+                    <div class="service-card">
+                        <span class="service-tag">Relocation</span>
+                        <h3>Relocating</h3>
+                        <p>
+                            End-to-end relocation support to help you move from one
+                            home to another with minimal stress.
+                        </p>
+                    </div>
+
+                    <div class="service-card">
+                        <span class="service-tag">Transport</span>
+                        <h3>Moving Your Belongings</h3>
+                        <p>
+                            Safe and reliable transport for furniture, boxes,
+                            and valuable items across Melbourne.
+                        </p>
+                    </div>
+
+                    <div class="service-card">
+                        <span class="service-tag">Storage</span>
+                        <h3>Storage Solutions</h3>
+                        <p>
+                            Secure short-term and long-term storage when your
+                            moving timeline does not align.
+                        </p>
+                    </div>
+
+                    <div class="service-card">
+                        <span class="service-tag">Removal</span>
+                        <h3>Furniture & Item Removal</h3>
+                        <p>
+                            We help remove unwanted furniture and items,
+                            making it easier to declutter before or after a move.
+                        </p>
+                    </div>
+
+                </div>
+            </section>
+
             <section class="how-it-works">
                 <h2>How It Works</h2>
 
