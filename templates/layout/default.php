@@ -27,45 +27,86 @@ $isAdmin = ($identity && (int)$role === 1);
     </title>
     <?= $this->Html->meta('icon') ?>
 
-    <?= $this->Html->css(['normalize.min', 'milligram.min', 'fonts', 'cake']) ?>
+    <!-- Bootstrap CSS -->
+    <?= $this->Html->css('https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css') ?>
+
+    <!-- Optional: keep your own custom styles -->
+    <?= $this->Html->css(['fonts', 'cake']) ?>
 
     <?= $this->fetch('meta') ?>
     <?= $this->fetch('css') ?>
-    <?= $this->fetch('script') ?>
 </head>
 <body>
-<nav class="top-nav">
-    <div class="top-nav-title">
-        <a href="<?= $this->Url->build('/') ?>"><span>Moving House </span>24/7</a>
-    </div>
 
-    <div class="top-nav-links">
-        <?= $this->Html->link('Home', ['controller' => 'Pages', 'action' => 'display', 'home']) ?>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="<?= $this->Url->build('/') ?>">Moving House 24/7</a>
 
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-        <?php if ($isAdmin) : ?>
-            <?= $this->Html->link('Contact Forms', ['controller' => 'ContactForms', 'action' => 'index']) ?>
-            <?= $this->Html->link('Users', ['controller' => 'Users', 'action' => 'index']) ?>
-            <?= $this->Html->link('Manage Bookings', ['controller' => 'Bookings', 'action' => 'index']) ?>
-        <?php else : ?>
-            <?= $this->Html->link('Contact Us', ['controller' => 'ContactForms', 'action' => 'add']) ?>
-            <?= $this->Html->link('Book a Service', ['controller' => 'Bookings', 'action' => 'add']) ?>
-        <?php endif; ?>
+        <div class="collapse navbar-collapse" id="mainNavbar">
+            <div class="navbar-nav ms-auto">
+                <?= $this->Html->link(
+                    'Home',
+                    ['controller' => 'Pages', 'action' => 'display', 'home'],
+                    ['class' => 'nav-link']
+                ) ?>
 
-        <?php if ($identity) : ?>
-            <?= $this->Html->link('Log Out', ['controller' => 'Users', 'action' => 'logout']) ?>
-        <?php else : ?>
-            <?= $this->Html->link('Log In', ['controller' => 'Users', 'action' => 'login']) ?>
-        <?php endif; ?>
+                <?php if ($isAdmin) : ?>
+                    <?= $this->Html->link(
+                        'Contact Forms',
+                        ['controller' => 'ContactForms', 'action' => 'index'],
+                        ['class' => 'nav-link']
+                    ) ?>
+                    <?= $this->Html->link(
+                        'Users',
+                        ['controller' => 'Users', 'action' => 'index'],
+                        ['class' => 'nav-link']
+                    ) ?>
+                <?php else : ?>
+                    <?= $this->Html->link(
+                        'Contact Us',
+                        ['controller' => 'ContactForms', 'action' => 'add'],
+                        ['class' => 'nav-link']
+                    ) ?>
+                <?php endif; ?>
+
+                <?php if ($identity) : ?>
+                    <?= $this->Html->link(
+                        'Log Out',
+                        ['controller' => 'Users', 'action' => 'logout'],
+                        ['class' => 'nav-link']
+                    ) ?>
+                <?php else : ?>
+                    <?= $this->Html->link(
+                        'Log In',
+                        ['controller' => 'Users', 'action' => 'login'],
+                        ['class' => 'nav-link']
+                    ) ?>
+                <?php endif; ?>
+            </div>
+        </div>
     </div>
 </nav>
-<main class="main">
+
+<main class="py-4">
     <div class="container">
         <?= $this->Flash->render() ?>
         <?= $this->fetch('content') ?>
     </div>
 </main>
-<footer>
+
+<footer class="text-center py-3 border-top">
+    <div class="container">
+        <small>&copy; <?= date('Y') ?> Moving House 24/7</small>
+    </div>
 </footer>
+
+<!-- Bootstrap JS Bundle -->
+<?= $this->Html->script('https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js') ?>
+
+<?= $this->fetch('script') ?>
 </body>
 </html>
