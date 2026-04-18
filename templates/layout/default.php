@@ -28,7 +28,7 @@ $isAdmin = ($identity && (int)$role === 1);
     <?= $this->Html->meta('icon') ?>
 
     <?= $this->Html->css('https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css') ?>
-    <?= $this->Html->css(['fonts', 'cake', 'site']) ?>
+    <?= $this->Html->css(['normalize.min', 'milligram.min', 'cake', 'fonts', 'site', 'home']) ?>
 
     <?= $this->fetch('meta') ?>
     <?= $this->fetch('css') ?>
@@ -71,7 +71,7 @@ $isAdmin = ($identity && (int)$role === 1);
                     <?php else : ?>
                         <?= $this->Html->link(
                             'Services',
-                            ['controller' => 'Pages', 'action' => 'display', 'services'],
+                            ['controller' => 'Pages', 'action' => 'display', 'home', '#' => 'services'],
                             ['class' => 'nav-link mh-nav-link']
                         ) ?>
                         <?= $this->Html->link(
@@ -147,7 +147,7 @@ $isAdmin = ($identity && (int)$role === 1);
                     <h4 class="mh-footer-heading">Company</h4>
                     <ul class="list-unstyled mh-footer-links mb-0">
                         <li><?= $this->Html->link('Home', ['controller' => 'Pages', 'action' => 'display', 'home']) ?></li>
-                        <li><?= $this->Html->link('Services', ['controller' => 'Pages', 'action' => 'display', 'services']) ?></li>
+                        <li><?= $this->Html->link('Services', ['controller' => 'Pages', 'action' => 'display', 'home', '#' => 'services']) ?></li>
                         <li><?= $this->Html->link('Contact', ['controller' => 'ContactForms', 'action' => 'add']) ?></li>
                         <li><?= $this->Html->link('Get a Quote', ['controller' => 'ContactForms', 'action' => 'add']) ?></li>
                     </ul>
