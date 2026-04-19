@@ -98,11 +98,11 @@ CREATE TABLE `jobs`
 INSERT INTO `jobs` (`job_id`, `job_type_id`, `description`, `pickup_address`, `dropoff_address`, `job_date`, `job_time`,
                     `customer_id`)
 VALUES (1, 1, 'Move 2-bedroom apartment including fridge, sofa, washing machine, and boxes.',
-        '12 King St, Clayton VIC 3168', '88 Collins St, Melbourne VIC 3000', '28/03/2026', '09:00', 1),
+        '12 King St, Clayton VIC 3168', '88 Collins St, Melbourne VIC 3000', '2026-03-28', '09:00:00', 1),
        (2, 2, 'Store household furniture and personal boxes for temporary relocation.',
-        '5 Princes Hwy, Dandenong VIC 3175', 'Unit 4, Storage Hub, Springvale VIC 3171', '30/03/2026', '13:30', 2),
+        '5 Princes Hwy, Dandenong VIC 3175', 'Unit 4, Storage Hub, Springvale VIC 3171', '2026-03-30', '13:30:00', 2),
        (3, 1, 'Office equipment relocation including desks, monitors, and chairs.',
-        '21 Wellington Rd, Mulgrave VIC 3170', '9 Queen St, Melbourne VIC 3000', '02/04/2026', '08:15', 3);
+        '21 Wellington Rd, Mulgrave VIC 3170', '9 Queen St, Melbourne VIC 3000', '2026-04-02', '08:15:00', 3);
 
 -- --------------------------------------------------------
 
@@ -150,6 +150,7 @@ CREATE TABLE `users`
 (
     `user_id`    int(11) NOT NULL,
     `email`      varchar(62)  NOT NULL,
+    `phone` varchar(15) NOT NULL,
     `password`   varchar(255) NOT NULL,
     `first_name` varchar(46)  NOT NULL,
     `last_name`  varchar(46)  NOT NULL,
@@ -314,8 +315,6 @@ ALTER TABLE `bookings`
     ADD CONSTRAINT `bookings_customer_id` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`customer_id`),
     ADD CONSTRAINT `bookings_job_type_id` FOREIGN KEY (`job_type_id`) REFERENCES `job_types` (`job_type_id`);
 
-ALTER TABLE users
-    ADD phone varchar(15) NOT NULL AFTER email;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
