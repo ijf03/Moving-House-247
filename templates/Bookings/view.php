@@ -12,6 +12,7 @@
             <?= $this->Form->postLink(__('Delete Booking'), ['action' => 'delete', $booking->booking_id], ['confirm' => __('Are you sure you want to delete # {0}?', $booking->booking_id), 'class' => 'side-nav-item']) ?>
             <?= $this->Html->link(__('List Bookings'), ['action' => 'index'], ['class' => 'side-nav-item']) ?>
             <?= $this->Html->link(__('New Booking'), ['action' => 'add'], ['class' => 'side-nav-item']) ?>
+            <?= $this->Html->link(__('Generate Invoice'), ['controller' => 'Invoices', 'action' => 'add', $booking->booking_id], ['class' => 'side-nav-item']) ?>
         </div>
     </aside>
     <div class="column column-80">

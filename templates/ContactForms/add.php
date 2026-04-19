@@ -49,7 +49,7 @@ $identity = $this->request->getAttribute('identity');
 
                     <div class="form-row">
                         <?= $this->Form->control('email', ['label' => 'Email*', 'required' => true]) ?>
-                        <?= $this->Form->control('phone', ['label' => 'Phone*','placeholder' => '400000000', 'required' => true]) ?>
+                        <?= $this->Form->control('phone', ['label' => 'Phone*','placeholder' => '0412 345 678', 'required' => true]) ?>
                     </div>
 
                     <?= $this->Form->control('subject', ['label' => 'Subject*', 'required' => true]) ?>
