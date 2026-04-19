@@ -10,6 +10,12 @@ use Stripe\Webhook;
 
 class WebhooksController extends AppController
 {
+    public function beforeFilter(\Cake\Event\EventInterface $event): void
+    {
+        parent::beforeFilter($event);
+        $this->Authentication->allowUnauthenticated(['stripe']);
+    }
+
     public function stripe(): Response
     {
         $this->request->allowMethod(['post']);
@@ -17,62 +23,60 @@ class WebhooksController extends AppController
 
         $payload = (string)$this->request->getBody();
         $sigHeader = $this->request->getHeaderLine('Stripe-Signature');
-        $endpointSecret = Configure::read('Stripe.webhookSecret');
+        $endpointSecret = Configure::read('Stripe.webhookKey');
 
         try {
             $event = Webhook::constructEvent($payload, $sigHeader, $endpointSecret);
         } catch (\UnexpectedValueException $e) {
-            return $this->response->withStatus(400)->withStringBody('Invalid payload');
+            return $this->response
+                ->withStatus(400)
+                ->withType('application/json')
+                ->withStringBody(json_encode([
+                    'ok' => false,
+                    'stage' => 'payload',
+                    'message' => $e->getMessage(),
+                ]));
         } catch (SignatureVerificationException $e) {
-            return $this->response->withStatus(400)->withStringBody('Invalid signature');
+            return $this->response
+                ->withStatus(400)
+                ->withType('application/json')
+                ->withStringBody(json_encode([
+                    'ok' => false,
+                    'stage' => 'signature',
+                    'message' => $e->getMessage(),
+                ]));
         }
 
         $invoicesTable = $this->fetchTable('Invoices');
 
-        switch ($event->type) {
-            case 'invoice.paid':
-                $stripeInvoice = $event->data->object;
+        if ($event->type === 'invoice.paid') {
+            $stripeInvoice = $event->data->object;
 
-                $invoice = $invoicesTable->find()
-                    ->where(['stripe_invoice_id' => $stripeInvoice->id])
-                    ->first();
+            $updated = $invoicesTable->updateQuery()
+                ->set([
+                    'status' => 'paid',
+                    'paid_at' => date('Y-m-d H:i:s'),
+                ])
+                ->where(['stripe_invoice_id' => $stripeInvoice->id])
+                ->execute()
+                ->rowCount();
 
-                if ($invoice) {
-                    $invoice->status = 'paid';
-                    $invoice->paid_at = date('Y-m-d H:i:s');
-                    $invoicesTable->save($invoice);
-                }
-                break;
-
-            case 'payment_intent.processing':
-                $paymentIntent = $event->data->object;
-
-                $invoice = $invoicesTable->find()
-                    ->where(['stripe_invoice_id' => $paymentIntent->invoice ?? null])
-                    ->first();
-
-                if ($invoice) {
-                    $invoice->status = 'processing';
-                    $invoicesTable->save($invoice);
-                }
-                break;
-
-            case 'invoice.payment_failed':
-                $stripeInvoice = $event->data->object;
-
-                $invoice = $invoicesTable->find()
-                    ->where(['stripe_invoice_id' => $stripeInvoice->id])
-                    ->first();
-
-                if ($invoice) {
-                    $invoice->status = 'payment_failed';
-                    $invoicesTable->save($invoice);
-                }
-                break;
+            return $this->response
+                ->withType('application/json')
+                ->withStringBody(json_encode([
+                    'ok' => true,
+                    'event_type' => $event->type,
+                    'stripe_invoice_id' => $stripeInvoice->id ?? null,
+                    'updated_rows' => $updated,
+                ]));
         }
 
         return $this->response
             ->withType('application/json')
-            ->withStringBody(json_encode(['received' => true]));
+            ->withStringBody(json_encode([
+                'ok' => true,
+                'event_type' => $event->type,
+                'ignored' => true,
+            ]));
     }
 }
