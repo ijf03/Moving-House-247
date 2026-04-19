@@ -47,7 +47,7 @@ CREATE TABLE `contact_forms`
 
 INSERT INTO `contact_forms` (`contact_form_id`, `customer_id`, `subject`, `message`, `created`, `status`, `admin_reply`,
                              `replied_at`)
-VALUES (0, 9, 'vfjefkebfjgej', 'asdasda', '2026-04-15 15:18:28', 'new', NULL, NULL);
+VALUES (0, 1, 'vfjefkebfjgej', 'asdasda', '2026-04-15 15:18:28', 'new', NULL, NULL);
 
 -- --------------------------------------------------------
 
