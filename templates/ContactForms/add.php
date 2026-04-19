@@ -2,7 +2,7 @@
 /**
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\ContactForm $contactForm
- * @var \Cake\Collection\CollectionInterface|string[] $customers
+ * @var \Cake\Collection\CollectionInterface|array<string> $customers
  */
 
 $this->assign('title', 'Contact Us');
@@ -20,47 +20,137 @@ $identity = $this->request->getAttribute('identity');
     </title>
     <?= $this->Html->meta('icon') ?>
 
-    <?= $this->Html->css(['normalize.min', 'milligram.min', 'fonts', 'cake', 'home']) ?>
+    <?= $this->Html->css(['normalize.min', 'milligram.min', 'fonts', 'cake', 'home', 'site']) ?>
 
     <?= $this->fetch('meta') ?>
     <?= $this->fetch('css') ?>
     <?= $this->fetch('script') ?>
 </head>
 
-<body>
-<main class="landing-page">
+<body class="mh-site">
+<main class="landing-page contact-page">
 
-    <section class="hero">
-        <div class="hero-content">
-            <h1>Contact Us!</h1>
-            <h2>Get a Quote or ask a Question and we will reply as soon as we can!</h2>
-        </div>
-    </section>
-
-    <div>
-        <div>
-            <div class="contactForms form content">
-                <?= $this->Form->create($contactForm) ?>
-                <fieldset>
-                    <div class="form-row">
-                        <?= $this->Form->control('first_name', ['label' => 'First Name*', 'required' => true]) ?>
-                        <?= $this->Form->control('last_name', ['label' => 'Last Name*', 'required' => true]) ?>
-                    </div>
-
-                    <div class="form-row">
-                        <?= $this->Form->control('email', ['label' => 'Email*', 'required' => true]) ?>
-                        <?= $this->Form->control('phone', ['label' => 'Phone*','placeholder' => '400000000', 'required' => true]) ?>
-                    </div>
-
-                    <?= $this->Form->control('subject', ['label' => 'Subject*', 'required' => true]) ?>
-                    <?= $this->Form->control('message', ['label' => 'Message*', 'type' => 'textarea', 'required' => true]) ?>
-
-                    <div class="g-recaptcha" data-sitekey="<?= h($siteKey ?? '') ?>"></div>
-                </fieldset>
-                <?= $this->Form->button(__('Submit')) ?>
-                <?= $this->Form->end() ?>
+    <section class="contact-hero">
+        <div class="container contact-hero-shell">
+            <div class="contact-hero-content text-center text-lg-start">
+                <p class="section-kicker mb-3">Contact Us</p>
+                <h1>Get a Quote or Ask a Question</h1>
+                <p class="contact-hero-text">
+                    Tell us what you need and our team will get back to you as soon as possible.
+                </p>
             </div>
         </div>
-    </div>
+    </section>
+    <section class="contact-section">
+        <div class="container">
+            <div class="row g-4 g-lg-5 align-items-stretch">
+
+                <div class="col-lg-4">
+                    <div class="contact-info-stack h-100">
+                        <div class="contact-info-card">
+                            <span class="contact-info-icon">📞</span>
+                            <div>
+                                <h3>Call us</h3>
+                                <p>1800 24 7 247</p>
+                            </div>
+                        </div>
+
+                        <div class="contact-info-card">
+                            <span class="contact-info-icon">✉️</span>
+                            <div>
+                                <h3>Email</h3>
+                                <p>hello@movinghouse247.com.au</p>
+                            </div>
+                        </div>
+
+                        <div class="contact-info-card">
+                            <span class="contact-info-icon">📍</span>
+                            <div>
+                                <h3>Service Area</h3>
+                                <p>Victoria, Australia</p>
+                            </div>
+                        </div>
+
+                        <div class="contact-side-note">
+                            <h4>Need help with your move?</h4>
+                            <p>
+                                Send us your details and we’ll help you with relocating,
+                                moving belongings, storage, or furniture removal.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-8">
+                    <div class="contact-form-card content">
+                        <?= $this->Form->create($contactForm, ['class' => 'contact-form']) ?>
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <?= $this->Form->control('first_name', [
+                                    'label' => 'First Name*',
+                                    'required' => true,
+                                ]) ?>
+                            </div>
+
+                            <div class="col-md-6">
+                                <?= $this->Form->control('last_name', [
+                                    'label' => 'Last Name*',
+                                    'required' => true,
+                                ]) ?>
+                            </div>
+
+                            <div class="col-md-6">
+                                <?= $this->Form->control('email', [
+                                    'label' => 'Email*',
+                                    'required' => true,
+                                ]) ?>
+                            </div>
+
+                            <div class="col-md-6">
+                                <?= $this->Form->control('phone', [
+                                    'label' => 'Phone*',
+                                    'placeholder' => '0400000000',
+                                    'required' => true,
+                                ]) ?>
+                            </div>
+
+                            <div class="col-12">
+                                <?= $this->Form->control('subject', [
+                                    'label' => 'Subject*',
+                                    'required' => true,
+                                ]) ?>
+                            </div>
+
+                            <div class="col-12">
+                                <?= $this->Form->control('message', [
+                                    'label' => 'Message*',
+                                    'type' => 'textarea',
+                                    'required' => true,
+                                    'rows' => 6,
+                                ]) ?>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="recaptcha-wrap">
+                                    <div class="g-recaptcha" data-sitekey="<?= h($siteKey ?? '') ?>"></div>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <?= $this->Form->button(__('Send Message'), [
+                                    'class' => 'contact-submit-btn',
+                                ]) ?>
+                            </div>
+                        </div>
+
+                        <?= $this->Form->end() ?>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
 </main>
 </body>
+</html>
