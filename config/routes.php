@@ -62,6 +62,21 @@ return function (RouteBuilder $routes): void {
          */
         $builder->connect('/pages/*', 'Pages::display');
 
+        $builder->connect('/invoices/add/{bookingId}', [
+            'controller' => 'Invoices',
+            'action' => 'add',
+        ], ['pass' => ['bookingId']]);
+
+        $builder->connect('/invoices/view/{id}', [
+            'controller' => 'Invoices',
+            'action' => 'view',
+        ], ['pass' => ['id']]);
+
+        $builder->connect('/webhooks/stripe', [
+            'controller' => 'Webhooks',
+            'action' => 'stripe',
+        ]);
+
         /*
          * Connect catchall routes for all controllers.
          *

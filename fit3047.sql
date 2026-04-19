@@ -7,11 +7,9 @@
 -- Server version: 11.8.6-MariaDB
 -- PHP Version: 8.4.16
 
-SET
-SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
-SET
-time_zone = "+00:00";
+SET time_zone = "+00:00";
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -20,7 +18,12 @@ time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `my_app`
+-- Database: `fit3047`
+--
+
+-- --------------------------------------------------------
+
+
 --
 
 -- --------------------------------------------------------
@@ -45,9 +48,8 @@ CREATE TABLE `contact_forms`
 -- Dumping data for table `contact_forms`
 --
 
-INSERT INTO `contact_forms` (`contact_form_id`, `customer_id`, `subject`, `message`, `created`, `status`, `admin_reply`,
-                             `replied_at`)
-VALUES (0, 1, 'vfjefkebfjgej', 'asdasda', '2026-04-15 15:18:28', 'new', NULL, NULL);
+INSERT INTO `contact_forms` (`contact_form_id`, `customer_id`, `subject`, `message`, `created`, `status`, `admin_reply`, `replied_at`) VALUES
+(0, 9, 'vfjefkebfjgej', 'asdasda', '2026-04-15 15:18:28', 'new', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -55,24 +57,19 @@ VALUES (0, 1, 'vfjefkebfjgej', 'asdasda', '2026-04-15 15:18:28', 'new', NULL, NU
 -- Table structure for table `customers`
 --
 
-CREATE TABLE `customers`
-(
-    `customer_id` int(3) NOT NULL,
-    `first_name`  varchar(50) NOT NULL,
-    `last_name`   varchar(50) NOT NULL,
-    `email`       varchar(62) NOT NULL,
-    `phone`       varchar(15) NOT NULL
+CREATE TABLE `customers` (
+  `customer_id` int(3) NOT NULL,
+  `first_name` varchar(50) NOT NULL,
+  `last_name` varchar(50) NOT NULL,
+  `email` varchar(62) NOT NULL,
+  `phone` varchar(15) NOT NULL,
+  `stripe_id` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 --
 -- Dumping data for table `customers`
 --
 
-INSERT INTO `customers` (`customer_id`, `first_name`, `last_name`, `email`, `phone`)
-VALUES (1, 'Emily', 'Carter', 'emily.carter@example.com', '0412345678'),
-       (2, 'Liam', 'Nguyen', 'liam.nguyen@example.com', '0423456789'),
-       (3, 'Sophie', 'Patel', 'sophie.patel@example.com', '0434567890'),
-       (4, 'first', 'last', 'email@mail.com', '0987654321');
 -- --------------------------------------------------------
 
 --
@@ -110,11 +107,10 @@ VALUES (1, 1, 'Move 2-bedroom apartment including fridge, sofa, washing machine,
 -- Table structure for table `job_types`
 --
 
-CREATE TABLE `job_types`
-(
-    `job_type_id`          int(1) NOT NULL,
-    `job_type_name`        varchar(20) NOT NULL,
-    `job_type_description` text        NOT NULL
+CREATE TABLE `job_types` (
+  `job_type_id` int(1) NOT NULL,
+  `job_type_name` varchar(20) NOT NULL,
+  `job_type_description` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 --
@@ -129,37 +125,41 @@ VALUES (1, 'Removal', 'Removal of items from customer'),
 --
 -- Table structure for table `bookings`
 --
-CREATE TABLE `bookings`
-(
-    `booking_id`      int(11) NOT NULL,
-    `customer_id`     int(3) NOT NULL,
-    `job_type_id`     int(1) NOT NULL,
-    `pickup_address`  varchar(95) NOT NULL,
-    `dropoff_address` varchar(95) NOT NULL,
-    `job_date`        date        NOT NULL,
-    `job_time`        time        NOT NULL,
-    `status`          varchar(20) NOT NULL DEFAULT 'Pending',
-    `created`         datetime    NOT NULL DEFAULT current_timestamp()
+CREATE TABLE `bookings` (
+                            `booking_id` int(11) NOT NULL AUTO_INCREMENT,
+                            `customer_id` int(3) NOT NULL,
+                            `job_type_id` int(1) NOT NULL,
+                            `pickup_address` varchar(95) NOT NULL,
+                            `dropoff_address` varchar(95) NOT NULL,
+                            `job_date` date NOT NULL,
+                            `job_time` time NOT NULL,
+                            `status` varchar(20) NOT NULL DEFAULT 'Pending',
+                            `created` datetime NOT NULL DEFAULT current_timestamp(),
+                            PRIMARY KEY (`booking_id`),
+                            KEY `bookings_customer_id` (`customer_id`),
+                            KEY `bookings_job_type_id` (`job_type_id`),
+                            CONSTRAINT `fk_bookings_customer`
+                                FOREIGN KEY (`customer_id`) REFERENCES `customers` (`customer_id`),
+                            CONSTRAINT `fk_bookings_job_type`
+                                FOREIGN KEY (`job_type_id`) REFERENCES `job_types` (`job_type_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 --
 -- Table structure for table `users`
 --
 
-CREATE TABLE `users`
-(
-    `user_id`    int(11) NOT NULL,
-    `email`      varchar(62)  NOT NULL,
-    `phone` varchar(15) NOT NULL,
-    `password`   varchar(255) NOT NULL,
-    `first_name` varchar(46)  NOT NULL,
-    `last_name`  varchar(46)  NOT NULL,
-    `user_type`  int(1) NOT NULL
+CREATE TABLE `users` (
+  `user_id` int(11) NOT NULL,
+  `email` varchar(62) NOT NULL,
+  `phone` varchar(15) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `first_name` varchar(46) NOT NULL,
+  `last_name` varchar(46) NOT NULL,
+  `user_type` int(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 --
 -- Dumping data for table `users`
--- customer123, staff123, admin123
 --
 
 INSERT INTO `users` (`user_id`, `email`, `password`, `first_name`, `last_name`, `user_type`)
@@ -194,10 +194,40 @@ VALUES (1, 'Admin', 'Full system access'),
 --
 
 --
+-- Indexes for table `bookings`
+--
+ALTER TABLE `bookings`
+  ADD PRIMARY KEY (`booking_id`),
+  ADD KEY `bookings_customer_id` (`customer_id`),
+  ADD KEY `bookings_job_type_id` (`job_type_id`);
+
+--
+-- Indexes for table `contact_forms`
+--
+ALTER TABLE `contact_forms`
+  ADD PRIMARY KEY (`contact_form_id`),
+  ADD KEY `contact_forms_customer_id` (`customer_id`);
+
+--
 -- Indexes for table `customers`
 --
 ALTER TABLE `customers`
     ADD PRIMARY KEY (`customer_id`);
+
+--
+-- Indexes for table `invoices`
+--
+ALTER TABLE `invoices`
+  ADD PRIMARY KEY (`invoice_id`),
+  ADD KEY `fk_invoices_booking_id` (`booking_id`),
+  ADD KEY `fk_invoices_customer_id` (`customer_id`);
+
+--
+-- Indexes for table `invoice_items`
+--
+ALTER TABLE `invoice_items`
+  ADD PRIMARY KEY (`invoice_item_id`),
+  ADD KEY `fk_invoice_item_invoice_id` (`invoice_id`);
 
 --
 -- Indexes for table `jobs`
@@ -287,6 +317,32 @@ ALTER TABLE `contact_forms`
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `bookings`
+--
+ALTER TABLE `bookings`
+  ADD CONSTRAINT `fk_bookings_customer` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`customer_id`),
+  ADD CONSTRAINT `fk_bookings_job_type` FOREIGN KEY (`job_type_id`) REFERENCES `job_types` (`job_type_id`);
+
+--
+-- Constraints for table `contact_forms`
+--
+ALTER TABLE `contact_forms`
+  ADD CONSTRAINT `contact_forms_customer_id` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`customer_id`);
+
+--
+-- Constraints for table `invoices`
+--
+ALTER TABLE `invoices`
+  ADD CONSTRAINT `fk_invoices_booking_id` FOREIGN KEY (`booking_id`) REFERENCES `bookings` (`booking_id`),
+  ADD CONSTRAINT `fk_invoices_customer_id` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`customer_id`);
+
+--
+-- Constraints for table `invoice_items`
+--
+ALTER TABLE `invoice_items`
+  ADD CONSTRAINT `fk_invoice_item_invoice_id` FOREIGN KEY (`invoice_id`) REFERENCES `invoices` (`invoice_id`);
 
 --
 -- Constraints for table `contact_forms`

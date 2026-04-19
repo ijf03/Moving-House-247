@@ -13,6 +13,7 @@ use Cake\ORM\Entity;
  * @property string $last_name
  * @property string $email
  * @property string $phone
+ * @property string|null $stripe_id
  */
 class Customer extends Entity
 {
@@ -30,5 +31,6 @@ class Customer extends Entity
         'last_name' => true,
         'email' => true,
         'phone' => true,
+        'stripe_id' => true,
     ];
 }
