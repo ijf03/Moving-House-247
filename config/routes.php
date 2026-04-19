@@ -62,6 +62,18 @@ return function (RouteBuilder $routes): void {
          */
         $builder->connect('/pages/*', 'Pages::display');
 
+        $builder->connect('/invoices/create-from-booking/:bookingId', [
+            'controller' => 'Invoices',
+            'action' => 'createFromBooking',
+        ], ['pass' => ['bookingId']]);
+
+        $builder->connect('/invoices/view/:id', [
+            'controller' => 'Invoices',
+            'action' => 'view',
+        ], ['pass' => ['id']]);
+
+
+
         /*
          * Connect catchall routes for all controllers.
          *

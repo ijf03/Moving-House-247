@@ -43,18 +43,23 @@ class InvoicesTable extends Table
         parent::initialize($config);
 
         $this->setTable('invoices');
-        $this->setDisplayField('stripe_invoice_id');
         $this->setPrimaryKey('invoice_id');
-
         $this->addBehavior('Timestamp');
 
         $this->belongsTo('Bookings', [
             'foreignKey' => 'booking_id',
             'joinType' => 'INNER',
         ]);
+
         $this->belongsTo('Customers', [
             'foreignKey' => 'customer_id',
             'joinType' => 'INNER',
+        ]);
+
+        $this->hasMany('InvoiceItems', [
+            'foreignKey' => 'invoice_id',
+            'dependent' => true,
+            'cascadeCallbacks' => true,
         ]);
     }
 
@@ -68,17 +73,18 @@ class InvoicesTable extends Table
     {
         $validator
             ->integer('booking_id')
+            ->requirePresence('booking_id', 'create')
             ->notEmptyString('booking_id');
 
         $validator
             ->integer('customer_id')
+            ->requirePresence('customer_id', 'create')
             ->notEmptyString('customer_id');
 
         $validator
             ->scalar('stripe_invoice_id')
             ->maxLength('stripe_invoice_id', 255)
-            ->requirePresence('stripe_invoice_id', 'create')
-            ->notEmptyString('stripe_invoice_id');
+            ->allowEmptyString('stripe_invoice_id');
 
         $validator
             ->scalar('invoice_url')
@@ -87,7 +93,6 @@ class InvoicesTable extends Table
         $validator
             ->scalar('status')
             ->maxLength('status', 50)
-            ->requirePresence('status', 'create')
             ->notEmptyString('status');
 
         $validator

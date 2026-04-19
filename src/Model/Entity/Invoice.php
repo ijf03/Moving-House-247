@@ -49,5 +49,6 @@ class Invoice extends Entity
         'modified' => true,
         'booking' => true,
         'customer' => true,
+        'invoice_items' => true,
     ];
 }

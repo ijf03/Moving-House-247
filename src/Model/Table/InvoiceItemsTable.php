@@ -42,9 +42,7 @@ class InvoiceItemsTable extends Table
         parent::initialize($config);
 
         $this->setTable('invoice_items');
-        $this->setDisplayField('description');
         $this->setPrimaryKey('invoice_item_id');
-
         $this->addBehavior('Timestamp');
 
         $this->belongsTo('Invoices', [
@@ -63,6 +61,7 @@ class InvoiceItemsTable extends Table
     {
         $validator
             ->integer('invoice_id')
+            ->requirePresence('invoice_id', 'create')
             ->notEmptyString('invoice_id');
 
         $validator
@@ -74,17 +73,20 @@ class InvoiceItemsTable extends Table
         $validator
             ->decimal('quantity')
             ->requirePresence('quantity', 'create')
-            ->notEmptyString('quantity');
+            ->notEmptyString('quantity')
+            ->greaterThan('quantity', 0);
 
         $validator
             ->integer('unit_price_cents')
             ->requirePresence('unit_price_cents', 'create')
-            ->notEmptyString('unit_price_cents');
+            ->notEmptyString('unit_price_cents')
+            ->greaterThanOrEqual('unit_price_cents', 0);
 
         $validator
             ->integer('line_total_cents')
             ->requirePresence('line_total_cents', 'create')
-            ->notEmptyString('line_total_cents');
+            ->notEmptyString('line_total_cents')
+            ->greaterThanOrEqual('line_total_cents', 0);
 
         $validator
             ->integer('sort_order')

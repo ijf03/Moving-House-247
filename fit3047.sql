@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 19, 2026 at 05:04 PM
+-- Generation Time: Apr 19, 2026 at 05:20 PM
 -- Server version: 11.8.6-MariaDB
 -- PHP Version: 8.4.16
 
@@ -39,13 +39,6 @@ CREATE TABLE `bookings` (
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
---
--- Dumping data for table `bookings`
---
-
-INSERT INTO `bookings` (`booking_id`, `customer_id`, `job_type_id`, `pickup_address`, `dropoff_address`, `job_date`, `job_time`, `status`, `created`) VALUES
-(1, 22, 2, '2 Nobel Banks Drive', 'Monash University Clayton', '2026-04-19', '12:00:00', 'Pending', '2026-04-19 05:42:56');
-
 -- --------------------------------------------------------
 
 --
@@ -59,13 +52,6 @@ CREATE TABLE `contact_forms` (
   `message` text NOT NULL,
   `created` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
-
---
--- Dumping data for table `contact_forms`
---
-
-INSERT INTO `contact_forms` (`contact_form_id`, `customer_id`, `subject`, `message`, `created`) VALUES
-(24, 22, 'Test', 'asdasad', '2026-04-19 05:35:46');
 
 -- --------------------------------------------------------
 
@@ -81,13 +67,6 @@ CREATE TABLE `customers` (
   `phone` varchar(15) NOT NULL,
   `stripe_id` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
-
---
--- Dumping data for table `customers`
---
-
-INSERT INTO `customers` (`customer_id`, `first_name`, `last_name`, `email`, `phone`, `stripe_id`) VALUES
-(22, 'Le', 'Nguyen', 'weejamese0451@gmail.com', '0416647617', 'cus_UMX5ZCco2Nb29a');
 
 -- --------------------------------------------------------
 
@@ -186,8 +165,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `email`, `phone`, `password`, `first_name`, `last_name`, `user_type`) VALUES
-(1, 'admin@test.com', '', '$2y$12$xGvQK7AIhGg7iytP8aIEjOV1pm4Ev7hmJweuns1iNDkYW4VI69ipS', 'Alice', 'Admin', 1),
-(3, 'weejamese0451@gmail.com', '0416647617', '$2y$12$2WFrAan0lleFfx7tZCiLqOpAp6SF92p2eHYk5Vw3CwHZzHQRpCVBe', 'Le', 'Nguyen', 2);
+(1, 'admin@test.com', '', '$2y$12$xGvQK7AIhGg7iytP8aIEjOV1pm4Ev7hmJweuns1iNDkYW4VI69ipS', 'Alice', 'Admin', 1);
 
 -- --------------------------------------------------------
 
@@ -302,13 +280,13 @@ ALTER TABLE `customers`
 -- AUTO_INCREMENT for table `invoices`
 --
 ALTER TABLE `invoices`
-  MODIFY `invoice_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `invoice_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `invoice_items`
 --
 ALTER TABLE `invoice_items`
-  MODIFY `invoice_item_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `invoice_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `jobs`
