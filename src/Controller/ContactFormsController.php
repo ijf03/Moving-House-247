@@ -67,7 +67,6 @@ class ContactFormsController extends AppController
 
     public function add()
     {
-        $stripe = new StripeClient(getenv('STRIPE_SECRET_KEY'));
         $contactForm = $this->ContactForms->newEmptyEntity();
         $siteKey = Configure::read('Recaptcha.siteKey');
         $stripe = new \Stripe\StripeClient(Configure::read('Stripe.secretKey'));
