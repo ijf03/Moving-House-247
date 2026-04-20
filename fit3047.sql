@@ -1,33 +1,16 @@
--- phpMyAdmin SQL Dump
--- version 5.2.3
--- https://www.phpmyadmin.net/
---
--- Host: 127.0.0.1
--- Generation Time: Apr 16, 2026 at 01:21 AM
--- Server version: 11.8.6-MariaDB
--- PHP Version: 8.4.16
-
-SET
-SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
-SET
-time_zone = "+00:00";
+SET time_zone = "+00:00";
 
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-
---
--- Database: `my_app`
---
-
--- --------------------------------------------------------
-
---
--- Table structure for table `contact_forms`
---
+DROP TABLE IF EXISTS `invoice_items`;
+DROP TABLE IF EXISTS `invoices`;
+DROP TABLE IF EXISTS `contact_forms`;
+DROP TABLE IF EXISTS `jobs`;
+DROP TABLE IF EXISTS `bookings`;
+DROP TABLE IF EXISTS `users`;
+DROP TABLE IF EXISTS `customers`;
+DROP TABLE IF EXISTS `job_types`;
+DROP TABLE IF EXISTS `user_types`;
 
 CREATE TABLE `contact_forms`
 (
@@ -189,6 +172,34 @@ VALUES (1, 'Admin', 'Full system access'),
        (2, 'Staff', 'Operational staff member'),
        (3, 'Customer', 'Handles customer communication and enquiries');
 
+
+CREATE TABLE `invoices` (
+                            `invoice_id` int(11) NOT NULL,
+                            `booking_id` int(11) NOT NULL,
+                            `customer_id` int(3) NOT NULL,
+                            `stripe_invoice_id` varchar(255) DEFAULT NULL,
+                            `invoice_url` text DEFAULT NULL,
+                            `status` varchar(50) NOT NULL DEFAULT 'draft',
+                            `subtotal_cents` int(11) DEFAULT NULL,
+                            `total_cents` int(11) DEFAULT NULL,
+                            `sent_at` datetime DEFAULT NULL,
+                            `paid_at` datetime DEFAULT NULL,
+                            `created` datetime NOT NULL DEFAULT current_timestamp(),
+                            `modified` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+CREATE TABLE `invoice_items` (
+                                 `invoice_item_id` int(11) NOT NULL,
+                                 `invoice_id` int(11) NOT NULL,
+                                 `description` varchar(255) NOT NULL,
+                                 `quantity` decimal(10,2) NOT NULL DEFAULT 1.00,
+                                 `unit_price_cents` int(11) NOT NULL,
+                                 `line_total_cents` int(11) NOT NULL,
+                                 `sort_order` int(11) NOT NULL DEFAULT 0,
+                                 `created` datetime NOT NULL DEFAULT current_timestamp(),
+                                 `modified` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
 --
 -- Indexes for dumped tables
 --
@@ -239,6 +250,18 @@ ALTER TABLE `contact_forms`
     ADD PRIMARY KEY (`contact_form_id`);
 
 --
+-- Indexes for table `invoices`
+--
+ALTER TABLE `invoices`
+    ADD PRIMARY KEY (`invoice_id`);
+
+--
+-- Indexes for table `invoice_items`
+--
+ALTER TABLE `invoice_items`
+    ADD PRIMARY KEY (`invoice_item_id`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -285,6 +308,18 @@ ALTER TABLE `contact_forms`
     MODIFY `contact_form_id` int (11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `invoices`
+--
+ALTER TABLE `invoices`
+    MODIFY `invoice_id` int (11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `invoice_items`
+--
+ALTER TABLE `invoice_items`
+    MODIFY `invoice_item_id` int (11) NOT NULL AUTO_INCREMENT;
+
+--
 -- Constraints for dumped tables
 --
 
@@ -306,16 +341,25 @@ ALTER TABLE `jobs`
 --
 ALTER TABLE `users`
     ADD CONSTRAINT `users_user_type_id` FOREIGN KEY (`user_type`) REFERENCES `user_types` (`user_type_id`);
-COMMIT;
 
 --
--- Constraints for table `users`
+-- Constraints for table `bookings`
 --
 ALTER TABLE `bookings`
     ADD CONSTRAINT `bookings_customer_id` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`customer_id`),
     ADD CONSTRAINT `bookings_job_type_id` FOREIGN KEY (`job_type_id`) REFERENCES `job_types` (`job_type_id`);
 
+--
+-- Constraints for table `invoices`
+--
+ALTER TABLE `invoices`
+    ADD CONSTRAINT `invoices_customer_id` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`customer_id`),
+    ADD CONSTRAINT `invoices_booking_id` FOREIGN KEY (`booking_id`) REFERENCES `bookings` (`booking_id`);
 
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+--
+-- Constraints for table `invoice_items`
+--
+ALTER TABLE `invoice_items`
+    ADD CONSTRAINT `invoice_item_invoice_id` FOREIGN KEY (`invoice_id`) REFERENCES `invoices` (`invoice_id`);
+
+COMMIT;
