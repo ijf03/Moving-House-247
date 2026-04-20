@@ -102,7 +102,7 @@ class BookingsController extends AppController
             }
 
             $bookingData = [
-                'customer_id' => $customer->customer_id,
+                'customer_id' => $data['customer_id'],
                 'job_type_id' => $data['job_type_id'],
                 'pickup_address' => $data['pickup_address'],
                 'dropoff_address' => $data['dropoff_address'],
@@ -121,7 +121,17 @@ class BookingsController extends AppController
             $this->Flash->error(__('The booking could not be saved.'));
         }
 
-        $this->set(compact('booking'));
+        $customers = $this->Bookings->Customers->find('list', [
+            'keyField' => 'customer_id',
+            'valueField' => 'first_name',
+        ])->toArray();
+
+        $jobTypes = $this->Bookings->JobTypes->find('list', [
+            'keyField' => 'job_type_id',
+            'valueField' => 'job_type_name',
+        ])->toArray();
+
+        $this->set(compact('booking', 'customers','jobTypes'));
     }
 
     /**
