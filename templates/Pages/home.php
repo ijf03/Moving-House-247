@@ -27,111 +27,142 @@ $this->assign('title', 'Moving House 24/7');
     </title>
     <?= $this->Html->meta('icon') ?>
 
-    <?= $this->Html->css(['normalize.min', 'milligram.min', 'fonts', 'cake', 'home']) ?>
+    <div class="landing-page">
+        <section class="hero">
+            <div class="container-fluid hero-shell">
+                <div class="row align-items-center g-5">
+                    <div class="col-lg-7">
+                        <div class="hero-content">
+                            <div class="hero-badge">
+                                <span class="hero-badge-icon">◷</span>
+                                <span>Available 24/7 across Victoria</span>
+                            </div>
 
-    <?= $this->fetch('meta') ?>
-    <?= $this->fetch('css') ?>
-    <?= $this->fetch('script') ?>
-</head>
-<body>
-    <div>
-        <main class="landing-page">
+                            <h1>
+                                Moves done right,<br>
+                                <span class="accent">any time of day.</span>
+                            </h1>
 
-            <section class="hero">
-                <div class="hero-content">
-                    <h1>Fast, reliable removals across Melbourne</h1>
-                    <h2>Moving made simple, safe, and stress-free</h2>
-                    <p>
-                        From small apartment moves to full house relocations,
-                        Moving House 24/7 helps you move with confidence. Get a
-                        fast quote, choose a time that suits you, and let our
-                        experienced team handle the heavy lifting.
-                    </p>
+                            <p>
+                                Trusted local removals and storage solutions. Get a fast online quote
+                                and book your move in minutes. No hold music, no guesswork.
+                            </p>
 
-                    <div class="hero-buttons">
-                        <?= $this->Html->link('Book Your Move!', ['controller' => 'ContactForms', 'action' => 'add'], ['class' => 'btn']) ?>
-                        <a class="btn" href="#services">View Services</a>
+                            <div class="hero-buttons">
+                                <?= $this->Html->link(
+                                    'Get a Quote',
+                                    ['controller' => 'ContactForms', 'action' => 'add'],
+                                    ['class' => 'btn-primary-custom']
+                                ) ?>
+
+                                <?= $this->Html->link(
+                                    'View Services',
+                                    '#services',
+                                    ['class' => 'btn-outline-custom']
+                                ) ?>
+                            </div>
+
+                            <div class="hero-features">
+                                <span>🛡 Fully insured</span>
+                                <span>⭐ Trained crews</span>
+                                <span>◷ 24/7 availability</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-5">
+                        <div class="hero-stats-panel">
+                            <div class="hero-stat-card">
+                                <span>On-time arrival</span>
+                                <strong>98%</strong>
+                            </div>
+
+                            <div class="hero-stat-card">
+                                <span>5-star reviews</span>
+                                <strong>4.9/5</strong>
+                            </div>
+
+                            <div class="hero-stat-card">
+                                <span>Moves completed</span>
+                                <strong>10,000+</strong>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </section>
+            </div>
+        </section>
 
-            <section id="services" class="services">
+        <section id="services" class="services">
+            <div class="container-fluid services-shell">
                 <h2>Our Services</h2>
                 <p class="section-intro">
-                    Everything you need for a smooth and stress-free move.
+                    Whatever your move looks like, we have a solution to fit.
                 </p>
 
                 <div class="services-grid">
-
                     <div class="service-card">
-                        <span class="service-tag">Relocation</span>
-                        <h3>Relocating</h3>
-                        <p>
-                            End-to-end relocation support to help you move from one
-                            home to another with minimal stress.
-                        </p>
+                        <span class="service-tag">Removals</span>
+                        <h3>Relocation</h3>
+                        <p>Full-service home and apartment moves, planned and executed by trained crews.</p>
                     </div>
 
                     <div class="service-card">
                         <span class="service-tag">Transport</span>
                         <h3>Moving Your Belongings</h3>
-                        <p>
-                            Safe and reliable transport for furniture, boxes,
-                            and valuable items across Melbourne.
-                        </p>
+                        <p>Careful handling of your possessions from packing to delivery, every step covered.</p>
                     </div>
 
                     <div class="service-card">
                         <span class="service-tag">Storage</span>
                         <h3>Storage Solutions</h3>
-                        <p>
-                            Secure short-term and long-term storage when your
-                            moving timeline does not align.
-                        </p>
+                        <p>Short and long-term secure storage when you need extra time between properties.</p>
                     </div>
 
                     <div class="service-card">
-                        <span class="service-tag">Removal</span>
-                        <h3>Furniture & Item Removal</h3>
-                        <p>
-                            We help remove unwanted furniture and items,
-                            making it easier to declutter before or after a move.
-                        </p>
+                        <span class="service-tag">Furniture</span>
+                        <h3>Furniture &amp; Item Removal</h3>
+                        <p>Single items, large furniture, or full clear-outs, we handle the heavy lifting.</p>
                     </div>
-
                 </div>
-            </section>
+            </div>
+        </section>
 
-            <section class="how-it-works">
-                <h2>How It Works</h2>
+        <section class="how-it-works">
+            <div class="container-fluid how-shell">
+                <p class="section-kicker">HOW IT WORKS</p>
+                <h2>Booking is simple</h2>
+                <p class="section-intro">
+                    Three straightforward steps from quote to move-in day.
+                </p>
 
                 <div class="steps">
                     <div class="step-card">
-                        <h3>1. Request a quote</h3>
-                        <p>
-                            Tell us where you’re moving from, where you’re going,
-                            and your preferred date.
-                        </p>
+                        <div class="step-top">
+                            <div class="step-number">01</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <h3>Request a quote</h3>
+                        <p>Tell us about your move with our quick online form. No phone calls needed.</p>
                     </div>
 
                     <div class="step-card">
-                        <h3>2. Confirm your booking</h3>
-                        <p>
-                            We’ll provide a clear quote and help lock in a moving
-                            time that suits you.
-                        </p>
+                        <div class="step-top">
+                            <div class="step-number">02</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <h3>Confirm your booking</h3>
+                        <p>We confirm date, time, crew size and pricing all in writing, no surprises.</p>
                     </div>
 
                     <div class="step-card">
-                        <h3>3. Move with ease</h3>
-                        <p>
-                            Our team arrives ready to pack, lift, transport, and
-                            deliver your items safely.
-                        </p>
+                        <div class="step-top">
+                            <div class="step-number">03</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <h3>Move with ease</h3>
+                        <p>Our team arrives on time, handles the work, and gets you settled in stress-free.</p>
                     </div>
                 </div>
-            </section>
-        </main>
+            </div>
+        </section>
     </div>
-</body>
-</html>
