@@ -71,6 +71,10 @@ class UsersController extends AppController
     {
         $this->request->allowMethod(['get', 'post']);
 
+        if ($this->request->getAttribute('identity')) {
+            return $this->redirect('/');
+        }
+
         if ($this->request->is('post')) {
             $result = $this->Authentication->getResult();
 
