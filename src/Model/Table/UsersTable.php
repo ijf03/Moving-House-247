@@ -62,6 +62,16 @@ class UsersTable extends Table
             ->notEmptyString('email');
 
         $validator
+            ->scalar('phone')
+            ->maxLength('phone', 10)
+            ->requirePresence('phone', 'create')
+            ->notEmptyString('phone')
+            ->add('phone', 'validFormat', [
+                'rule' => ['custom', '/^[0-9]+$/'],
+                'message' => 'Please enter a valid phone number',
+            ]);
+
+        $validator
             ->scalar('password')
             ->maxLength('password', 255)
             ->requirePresence('password', 'create')

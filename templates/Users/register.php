@@ -20,6 +20,15 @@ $this->assign('title', 'Register');
         </div>
 
         <div class="login-form-group">
+            <?= $this->Form->control('phone', [
+                'label' => 'Phone*',
+                'placeholder' => 'Phone',
+                'class' => 'login-input',
+                'required' => true,
+            ]) ?>
+        </div>
+
+        <div class="login-form-group">
             <?= $this->Form->control('password', [
                 'type' => 'password',
                 'label' => 'Password*',
@@ -58,7 +67,7 @@ $this->assign('title', 'Register');
         </div>
 
         <div class="login-form-group">
-            <div class="g-recaptcha" data-sitekey='6Lds85QsAAAAAEEWmyp2mWR9ITmNyAwoLeECRwAs'></div>
+            <div class="g-recaptcha" data-sitekey="<?= h($siteKey ?? '') ?>"></div>
         </div>
 
         <div class="login-form-actions">

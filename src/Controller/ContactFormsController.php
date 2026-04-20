@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use Cake\Core\Configure;
 use Cake\Mailer\Mailer;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
@@ -68,6 +69,8 @@ class ContactFormsController extends AppController
     {
         $stripe = new StripeClient(getenv('STRIPE_SECRET_KEY'));
         $contactForm = $this->ContactForms->newEmptyEntity();
+        $siteKey = Configure::read('Recaptcha.siteKey');
+        $stripe = new \Stripe\StripeClient(Configure::read('Stripe.secretKey'));
 
         if ($this->request->is('post')) {
             $data = $this->request->getData();
@@ -75,11 +78,11 @@ class ContactFormsController extends AppController
 
             if (empty($captchaResponse)) {
                 $this->Flash->error(__('Please complete the reCAPTCHA.'));
-                $this->set(compact('contactForm'));
+                $this->set(compact('contactForm', 'siteKey'));
                 return;
             }
 
-            $secretKey = "6Lds85QsAAAAAEgTCP--6NvRs-HwEGUoj2C3qXJH";
+            $secretKey = Configure::read('Recaptcha.secretKey');
 
             $verifyResponse = file_get_contents(
                 'https://www.google.com/recaptcha/api/siteverify?secret='
@@ -92,7 +95,7 @@ class ContactFormsController extends AppController
 
             if (empty($captchaSuccess['success'])) {
                 $this->Flash->error(__('reCAPTCHA verification failed. Please try again.'));
-                $this->set(compact('contactForm'));
+                $this->set(compact('contactForm', 'siteKey'));
                 return;
             }
 
@@ -116,14 +119,47 @@ class ContactFormsController extends AppController
                 ]);
 
                 if ($customer->getErrors()) {
-                    foreach ($customer->getErrors() as $field => $error) {
-                    $this->Flash->error(__($error[$field]));}
-                    $this->set(compact('contactForm'));
+                    foreach ($customer->getErrors() as $field => $errors) {
+                        foreach ($errors as $message) {
+                            $this->Flash->error($message);
+                        }
+                    }
+                    $this->set(compact('contactForm', 'siteKey'));
                     return;
                 }
+
                 if (!$customersTable->save($customer)) {
                     $this->Flash->error(__('The customer could not be created. Please try again.'));
-                    $this->set(compact('contactForm'));
+                    $this->set(compact('contactForm', 'siteKey'));
+                    return;
+                }
+            }
+
+            if (empty($customer->stripe_id)) {
+                try {
+                    $fullName = trim(($customer->first_name ?? '') . ' ' . ($customer->last_name ?? ''));
+
+                    $stripeCustomer = $stripe->customers->create([
+                        'name' => $fullName !== '' ? $fullName : null,
+                        'email' => $customer->email ?: null,
+                        'phone' => $customer->phone ?: null,
+                        'description' => 'Customer created from contact form',
+                        'metadata' => [
+                            'local_customer_id' => (string)$customer->customer_id,
+                        ],
+                    ]);
+
+                    $customer->set('stripe_id', $stripeCustomer->id);
+                    $customer->setDirty('stripe_id', true);
+
+                    if (!$customersTable->save($customer)) {
+                        $this->Flash->error(__('Customer was created, but Stripe ID could not be saved locally.'));
+                        $this->set(compact('contactForm', 'siteKey'));
+                        return;
+                    }
+                } catch (\Throwable $e) {
+                    $this->Flash->error(__('Stripe customer creation failed: {0}', $e->getMessage()));
+                    $this->set(compact('contactForm', 'siteKey'));
                     return;
                 }
             }
@@ -137,7 +173,7 @@ class ContactFormsController extends AppController
                 'replied_at' => null,
             ];
 
-            $contactForm = $this->ContactForms->patchEntity($contactForm, $contactFormData);
+            $contactForm = $this->ContactForms->newEntity($contactFormData);
 
             if ($this->ContactForms->save($contactForm)) {
                 $this->Flash->success(__('Your message has been sent successfully.'));
@@ -147,7 +183,7 @@ class ContactFormsController extends AppController
             $this->Flash->error(__('The contact form could not be saved. Please try again.'));
         }
 
-        $this->set(compact('contactForm'));
+        $this->set(compact('contactForm', 'siteKey'));
     }
 
     public function edit($id = null)

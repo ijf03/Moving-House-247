@@ -28,39 +28,39 @@ $identity = $this->request->getAttribute('identity');
 </head>
 
 <body>
-    <main class="landing-page">
+<main class="landing-page">
 
-        <section class="hero">
-            <div class="hero-content">
-                <h1>Contact Us!</h1>
-                <h2>Get a Quote or ask a Question and we will reply as soon as we can!</h2>
-            </div>
-        </section>
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Contact Us!</h1>
+            <h2>Get a Quote or ask a Question and we will reply as soon as we can!</h2>
+        </div>
+    </section>
 
+    <div>
         <div>
-            <div>
-                <div class="contactForms form content">
-                    <?= $this->Form->create($contactForm) ?>
-                    <fieldset>
-                        <div class="form-row">
-                            <?= $this->Form->control('first_name', ['label' => 'First Name*', 'required' => true]) ?>
-                            <?= $this->Form->control('last_name', ['label' => 'Last Name*', 'required' => true]) ?>
-                        </div>
+            <div class="contactForms form content">
+                <?= $this->Form->create($contactForm) ?>
+                <fieldset>
+                    <div class="form-row">
+                        <?= $this->Form->control('first_name', ['label' => 'First Name*', 'required' => true]) ?>
+                        <?= $this->Form->control('last_name', ['label' => 'Last Name*', 'required' => true]) ?>
+                    </div>
 
-                        <div class="form-row">
-                            <?= $this->Form->control('email', ['label' => 'Email*', 'required' => true]) ?>
-                            <?= $this->Form->control('phone', ['label' => 'Phone*','placeholder' => '400000000', 'required' => true]) ?>
-                        </div>
+                    <div class="form-row">
+                        <?= $this->Form->control('email', ['label' => 'Email*', 'required' => true]) ?>
+                        <?= $this->Form->control('phone', ['label' => 'Phone*','placeholder' => '0412 345 678', 'required' => true]) ?>
+                    </div>
 
-                        <?= $this->Form->control('subject', ['label' => 'Subject*', 'required' => true]) ?>
-                        <?= $this->Form->control('message', ['label' => 'Message*', 'type' => 'textarea', 'required' => true]) ?>
+                    <?= $this->Form->control('subject', ['label' => 'Subject*', 'required' => true]) ?>
+                    <?= $this->Form->control('message', ['label' => 'Message*', 'type' => 'textarea', 'required' => true]) ?>
 
-                        <div class="g-recaptcha" data-sitekey="<?= '6Lds85QsAAAAAEEWmyp2mWR9ITmNyAwoLeECRwAs' ?>"></div>
-                    </fieldset>
-                    <?= $this->Form->button(__('Submit')) ?>
-                    <?= $this->Form->end() ?>
-                </div>
+                    <div class="g-recaptcha" data-sitekey="<?= h($siteKey ?? '') ?>"></div>
+                </fieldset>
+                <?= $this->Form->button(__('Submit')) ?>
+                <?= $this->Form->end() ?>
             </div>
         </div>
-    </main>
+    </div>
+</main>
 </body>

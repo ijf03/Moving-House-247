@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use Cake\Mailer\Mailer;
+use Cake\Core\Configure;
 
 /**
  * Users Controller
@@ -37,7 +38,7 @@ class UsersController extends AppController
             ->first();
         $isAdmin = $roleQuery->user_type_name == 'Admin';
         $query = $this->Users->find()
-        ->contain(['UserTypes']);
+            ->contain(['UserTypes']);
         $users = $this->paginate($query);
 
         $this->set(compact('users', 'isAdmin'));
@@ -213,6 +214,9 @@ class UsersController extends AppController
     }
 
     public function resetpassword(){
+        $siteKey = Configure::read('Recaptcha.siteKey');
+        $this->set(compact('siteKey'));
+
         $this->request->allowMethod(['get', 'post']);
         if ($this->request->is('post')) {
             $data = $this->request->getData();
@@ -221,7 +225,7 @@ class UsersController extends AppController
                 $this->Flash->error(__('Please complete the reCAPTCHA.'));
                 return;
             }
-            $secretKey = "6Lds85QsAAAAAEgTCP--6NvRs-HwEGUoj2C3qXJH";
+            $secretKey = Configure::read('Recaptcha.secretKey');
 
             $verifyResponse = file_get_contents(
                 'https://www.google.com/recaptcha/api/siteverify?secret='
@@ -262,10 +266,10 @@ class UsersController extends AppController
     public function register()
     {
         $user = $this->Users->newEmptyEntity();
+        $siteKey = Configure::read('Recaptcha.siteKey');
 
         if ($this->request->is('post')) {
             $data = $this->request->getData();
-
             $data['user_type'] = 2;
 
             if (
@@ -275,7 +279,7 @@ class UsersController extends AppController
             ) {
                 $this->Flash->error('Passwords do not match.');
                 $user = $this->Users->patchEntity($user, $data);
-                $this->set(compact('user'));
+                $this->set(compact('user', 'siteKey'));
                 return;
             }
 
@@ -284,11 +288,11 @@ class UsersController extends AppController
             if (empty($captchaResponse)) {
                 $this->Flash->error('Please complete the CAPTCHA.');
                 $user = $this->Users->patchEntity($user, $data);
-                $this->set(compact('user'));
+                $this->set(compact('user', 'siteKey'));
                 return;
             }
 
-            $secretKey = '6Lds85QsAAAAAEgTCP--6NvRs-HwEGUoj2C3qXJH';
+            $secretKey = Configure::read('Recaptcha.secretKey');
 
             $verifyResponse = file_get_contents(
                 'https://www.google.com/recaptcha/api/siteverify?secret=' .
@@ -302,7 +306,7 @@ class UsersController extends AppController
             if (!isset($responseData['success']) || $responseData['success'] !== true) {
                 $this->Flash->error('CAPTCHA verification failed. Please try again.');
                 $user = $this->Users->patchEntity($user, $data);
-                $this->set(compact('user'));
+                $this->set(compact('user', 'siteKey'));
                 return;
             }
 
@@ -316,7 +320,7 @@ class UsersController extends AppController
             $this->Flash->error('Registration failed. Please try again.');
         }
 
-        $this->set(compact('user'));
+        $this->set(compact('user', 'siteKey'));
     }
 
 }
