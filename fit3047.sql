@@ -133,7 +133,7 @@ CREATE TABLE `users`
 (
     `user_id`    int(11) NOT NULL,
     `email`      varchar(62)  NOT NULL,
-    `phone` varchar(15) NOT NULL,
+    `phone`      varchar(15)  NOT NULL,
     `password`   varchar(255) NOT NULL,
     `first_name` varchar(46)  NOT NULL,
     `last_name`  varchar(46)  NOT NULL,
@@ -173,31 +173,33 @@ VALUES (1, 'Admin', 'Full system access'),
        (3, 'Customer', 'Handles customer communication and enquiries');
 
 
-CREATE TABLE `invoices` (
-                            `invoice_id` int(11) NOT NULL,
-                            `booking_id` int(11) NOT NULL,
-                            `customer_id` int(3) NOT NULL,
-                            `stripe_invoice_id` varchar(255) DEFAULT NULL,
-                            `invoice_url` text DEFAULT NULL,
-                            `status` varchar(50) NOT NULL DEFAULT 'draft',
-                            `subtotal_cents` int(11) DEFAULT NULL,
-                            `total_cents` int(11) DEFAULT NULL,
-                            `sent_at` datetime DEFAULT NULL,
-                            `paid_at` datetime DEFAULT NULL,
-                            `created` datetime NOT NULL DEFAULT current_timestamp(),
-                            `modified` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+CREATE TABLE `invoices`
+(
+    `invoice_id`        int(11) NOT NULL,
+    `booking_id`        int(11) NOT NULL,
+    `customer_id`       int(3) NOT NULL,
+    `stripe_invoice_id` varchar(255)         DEFAULT NULL,
+    `invoice_url`       text                 DEFAULT NULL,
+    `status`            varchar(50) NOT NULL DEFAULT 'draft',
+    `subtotal_cents`    int(11) DEFAULT NULL,
+    `total_cents`       int(11) DEFAULT NULL,
+    `sent_at`           datetime             DEFAULT NULL,
+    `paid_at`           datetime             DEFAULT NULL,
+    `created`           datetime    NOT NULL DEFAULT current_timestamp(),
+    `modified`          datetime    NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
-CREATE TABLE `invoice_items` (
-                                 `invoice_item_id` int(11) NOT NULL,
-                                 `invoice_id` int(11) NOT NULL,
-                                 `description` varchar(255) NOT NULL,
-                                 `quantity` decimal(10,2) NOT NULL DEFAULT 1.00,
-                                 `unit_price_cents` int(11) NOT NULL,
-                                 `line_total_cents` int(11) NOT NULL,
-                                 `sort_order` int(11) NOT NULL DEFAULT 0,
-                                 `created` datetime NOT NULL DEFAULT current_timestamp(),
-                                 `modified` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+CREATE TABLE `invoice_items`
+(
+    `invoice_item_id`  int(11) NOT NULL,
+    `invoice_id`       int(11) NOT NULL,
+    `description`      varchar(255)   NOT NULL,
+    `quantity`         decimal(10, 2) NOT NULL DEFAULT 1.00,
+    `unit_price_cents` int(11) NOT NULL,
+    `line_total_cents` int(11) NOT NULL,
+    `sort_order`       int(11) NOT NULL DEFAULT 0,
+    `created`          datetime       NOT NULL DEFAULT current_timestamp(),
+    `modified`         datetime       NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 --
