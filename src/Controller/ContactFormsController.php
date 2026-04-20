@@ -66,6 +66,7 @@ class ContactFormsController extends AppController
 
     public function add()
     {
+        $stripe = new StripeClient(getenv('STRIPE_SECRET_KEY'));
         $contactForm = $this->ContactForms->newEmptyEntity();
 
         if ($this->request->is('post')) {
