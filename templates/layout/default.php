@@ -18,7 +18,7 @@ $role = $identity ? $identity->get('user_type') : null;
 $isAdmin = ($identity && (int)$role === 1);
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <?= $this->Html->charset() ?>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -57,6 +57,15 @@ $isAdmin = ($identity && (int)$role === 1);
                         ['class' => 'nav-link mh-nav-link']
                     ) ?>
 
+        <?php if ($isAdmin) : ?>
+            <?= $this->Html->link('Contact Forms', ['controller' => 'ContactForms', 'action' => 'index']) ?>
+            <?= $this->Html->link('Users', ['controller' => 'Users', 'action' => 'index']) ?>
+            <?= $this->Html->link('Manage Bookings', ['controller' => 'Bookings', 'action' => 'index']) ?>
+        <?php else : ?>
+            <?= $this->Html->link('Contact Us', ['controller' => 'ContactForms', 'action' => 'add']) ?>
+            <?= $this->Html->link('Book a Service', ['controller' => 'Bookings', 'action' => 'add']) ?>
+            <?= $this->Html->link('My Booking', ['controller' => 'Bookings', 'action' => 'myBookings']) ?>
+        <?php endif; ?>
                     <?php if ($isAdmin) : ?>
                         <?= $this->Html->link(
                             'Contact Forms',

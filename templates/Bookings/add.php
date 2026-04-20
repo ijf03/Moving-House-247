@@ -17,17 +17,23 @@
         <div class="bookings form content">
             <?= $this->Form->create($booking) ?>
             <fieldset>
-                <legend><?= __('Add Booking') ?></legend>
+                <legend><?= __('Book a Service') ?></legend>
                 <?php
-                    echo $this->Form->control('customer_id', ['options' => $customers]);
-                    echo $this->Form->control('job_type_id', ['options' => $jobTypes]);
+                    echo $this->Form->control('job_type_id', [
+                        'type' => 'select',
+                        'label' => 'Service Type',
+                        'options' => [
+                            1 => 'Removal',
+                            2 => 'Storage',
+                        ],
+                    ]);
                     echo $this->Form->control('pickup_address');
                     echo $this->Form->control('dropoff_address');
-                    echo $this->Form->control('job_date');
-                    echo $this->Form->control('job_time');
+                    echo $this->Form->control('job_date', ['type' => 'date']);
+                    echo $this->Form->control('job_time', ['type' => 'time']);
                 ?>
             </fieldset>
-            <?= $this->Form->button(__('Submit')) ?>
+            <?= $this->Form->button(__('Submit Booking')) ?>
             <?= $this->Form->end() ?>
         </div>
     </div>
