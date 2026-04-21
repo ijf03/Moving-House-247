@@ -132,6 +132,9 @@ CREATE TABLE bookings (
                               FOREIGN KEY (job_type_id) REFERENCES job_types (job_type_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
+ALTER TABLE bookings ADD message TEXT NULL;
+ALTER TABLE bookings ADD accepted_notified TINYINT(1) NOT NULL DEFAULT 0;
+
 --
 -- Indexes for dumped tables
 --

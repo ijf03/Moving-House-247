@@ -52,6 +52,9 @@
     <?= $this->Form->button(__('Apply')) ?>
     <?= $this->Form->end() ?>
     <div style="overflow-x: auto;">
+        <?php if ($bookings->isEmpty()): ?>
+            <p>No result found.</p>
+        <?php else: ?>
     <table>
         <thead>
         <tr>
@@ -93,5 +96,6 @@
         <?php endforeach; ?>
         </tbody>
     </table>
+    <?php endif; ?>
     </div>
 </div>

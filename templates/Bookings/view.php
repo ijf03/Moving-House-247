@@ -43,5 +43,10 @@
             <th><?= __('Status') ?></th>
             <td><?= h($booking->status) ?></td>
         </tr>
+
+        <tr>
+            <th><?= __('Message') ?></th>
+            <td><?= h($booking->message) ?></td>
+        </tr>
     </table>
 </div>

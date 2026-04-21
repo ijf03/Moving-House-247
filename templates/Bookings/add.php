@@ -20,8 +20,13 @@
 
         echo $this->Form->control('pickup_address');
         echo $this->Form->control('dropoff_address');
-        echo $this->Form->control('job_date', ['type' => 'date']);
+        echo $this->Form->control('job_date', ['type' => 'date', 'min' => date ('Y-m-d'),]);
         echo $this->Form->control('job_time', ['type' => 'time']);
+        echo $this->Form->control('message', [
+            'type' => 'textarea',
+            'label' => 'Message / Additional Notes',
+            'required' => false,
+        ]);
         ?>
     </fieldset>
     <?= $this->Form->button(__('Submit Booking')) ?>
