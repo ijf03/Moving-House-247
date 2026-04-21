@@ -82,6 +82,12 @@ $isUser = ($identity && (int)$role === 2);
                         ) ?>
 
                         <?= $this->Html->link(
+                            'Contact Us',
+                            ['controller' => 'ContactForms', 'action' => 'add'],
+                            ['class' => 'nav-link mh-nav-link'],
+                        ) ?>
+
+                        <?= $this->Html->link(
                             'My Bookings',
                             ['controller' => 'Bookings', 'action' => 'myBookings'],
                             ['class' => 'nav-link mh-nav-link'],
