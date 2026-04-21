@@ -74,8 +74,7 @@ class UsersTable extends Table
         $validator
             ->scalar('password')
             ->maxLength('password', 255)
-            ->requirePresence('password', 'create')
-            ->notEmptyString('password');
+            ->requirePresence('password', 'create');
 
         $validator
             ->scalar('first_name')
@@ -97,7 +96,6 @@ class UsersTable extends Table
         $validator
             ->scalar('confirm_password')
             ->requirePresence('confirm_password', 'create')
-            ->notEmptyString('confirm_password', 'Please confirm your password')
             ->add('confirm_password', 'compareWith', [
                 'rule' => ['compareWith', 'password'],
                 'message' => 'Passwords do not match',

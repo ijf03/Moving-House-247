@@ -23,6 +23,10 @@
                     <td><?= $this->Number->format($user->user_id) ?></td>
                 </tr>
                 <tr>
+                    <th><?= __('Phone') ?></th>
+                    <td><?= h($user->phone) ?></td>
+                </tr>
+                <tr>
                     <th><?= __('Email') ?></th>
                     <td><?= h($user->email) ?></td>
                 </tr>
