@@ -106,7 +106,8 @@ CREATE TABLE `job_types`
 
 INSERT INTO `job_types` (`job_type_id`, `job_type_name`, `job_type_description`)
 VALUES (1, 'Removal', 'Removal of items from customer'),
-       (2, 'Storage', 'Storage of items from customer');
+       (2, 'Storage', 'Storage of items from customer'),
+       (3, 'Transfer', 'Transfer of items for customer');
 
 -- --------------------------------------------------------
 --

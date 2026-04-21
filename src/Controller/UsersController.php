@@ -274,7 +274,7 @@ class UsersController extends AppController
 
         if ($this->request->is('post')) {
             $data = $this->request->getData();
-            $data['user_type'] = 2;
+            $data['user_type'] = 3;
 
             if (
                 empty($data['password']) ||

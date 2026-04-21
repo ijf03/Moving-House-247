@@ -64,11 +64,7 @@
                                 $this->Form->control('job_type_id', [
                                     'type' => 'select',
                                     'label' => 'Service Type',
-                                    'options' => [
-                                        1 => 'Removal',
-                                        2 => 'Storage',
-                                        3 => 'Transfer',
-                                    ],
+                                    'options' => $jobTypes,
                                     'class' => 'booking-input',
                                     'templates' => [
                                         'inputContainer' => '<div class="input booking-form-group {{type}}{{required}}">{{content}}</div>',
