@@ -45,7 +45,9 @@ $isAdmin = ($identity && (int)$role === 1);
                 </span>
             </a>
 
-            <button class="navbar-toggler mh-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler mh-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false"
+                    aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
@@ -54,39 +56,45 @@ $isAdmin = ($identity && (int)$role === 1);
                     <?= $this->Html->link(
                         'Home',
                         ['controller' => 'Pages', 'action' => 'display', 'home'],
-                        ['class' => 'nav-link mh-nav-link']
+                        ['class' => 'nav-link mh-nav-link'],
                     ) ?>
 
-        <?php if ($isAdmin) : ?>
-            <?= $this->Html->link('Contact Forms', ['controller' => 'ContactForms', 'action' => 'index']) ?>
-            <?= $this->Html->link('Users', ['controller' => 'Users', 'action' => 'index']) ?>
-            <?= $this->Html->link('Manage Bookings', ['controller' => 'Bookings', 'action' => 'index']) ?>
-        <?php else : ?>
-            <?= $this->Html->link('Contact Us', ['controller' => 'ContactForms', 'action' => 'add']) ?>
-            <?= $this->Html->link('Book a Service', ['controller' => 'Bookings', 'action' => 'add']) ?>
-            <?= $this->Html->link('My Booking', ['controller' => 'Bookings', 'action' => 'myBookings']) ?>
-        <?php endif; ?>
                     <?php if ($isAdmin) : ?>
                         <?= $this->Html->link(
                             'Contact Forms',
                             ['controller' => 'ContactForms', 'action' => 'index'],
-                            ['class' => 'nav-link mh-nav-link']
+                            ['class' => 'nav-link mh-nav-link'],
                         ) ?>
                         <?= $this->Html->link(
                             'Users',
                             ['controller' => 'Users', 'action' => 'index'],
-                            ['class' => 'nav-link mh-nav-link']
+                            ['class' => 'nav-link mh-nav-link'],
+                        ) ?>
+                        <?= $this->Html->link(
+                            'Manage Bookings',
+                            ['controller' => 'Bookings', 'action' => 'index'],
+                            ['class' => 'nav-link mh-nav-link'],
                         ) ?>
                     <?php else : ?>
                         <?= $this->Html->link(
                             'Services',
                             ['controller' => 'Pages', 'action' => 'display', 'home', '#' => 'services'],
-                            ['class' => 'nav-link mh-nav-link']
+                            ['class' => 'nav-link mh-nav-link'],
+                        ) ?>
+                        <?= $this->Html->link(
+                            'Book a Service',
+                            ['controller' => 'Bookings', 'action' => 'add'],
+                            ['class' => 'nav-link mh-nav-link'],
+                        ) ?>
+                        <?= $this->Html->link(
+                            'My Booking',
+                            ['controller' => 'Bookings', 'action' => 'myBookings'],
+                            ['class' => 'nav-link mh-nav-link'],
                         ) ?>
                         <?= $this->Html->link(
                             'Contact',
                             ['controller' => 'ContactForms', 'action' => 'add'],
-                            ['class' => 'nav-link mh-nav-link']
+                            ['class' => 'nav-link mh-nav-link'],
                         ) ?>
                     <?php endif; ?>
 
@@ -94,20 +102,20 @@ $isAdmin = ($identity && (int)$role === 1);
                         <?= $this->Html->link(
                             'Log Out',
                             ['controller' => 'Users', 'action' => 'logout'],
-                            ['class' => 'nav-link mh-nav-link']
+                            ['class' => 'nav-link mh-nav-link'],
                         ) ?>
                     <?php else : ?>
                         <?= $this->Html->link(
                             'Log In',
                             ['controller' => 'Users', 'action' => 'login'],
-                            ['class' => 'nav-link mh-nav-link']
+                            ['class' => 'nav-link mh-nav-link'],
                         ) ?>
                     <?php endif; ?>
 
                     <?= $this->Html->link(
                         'Get a Quote',
                         ['controller' => 'ContactForms', 'action' => 'add'],
-                        ['class' => 'btn mh-quote-btn ms-lg-3 mt-3 mt-lg-0']
+                        ['class' => 'btn mh-quote-btn ms-lg-3 mt-3 mt-lg-0'],
                     ) ?>
                 </div>
             </div>
@@ -132,7 +140,7 @@ $isAdmin = ($identity && (int)$role === 1);
                     <?= $this->Html->link(
                         'Start Your Quote →',
                         ['controller' => 'ContactForms', 'action' => 'add'],
-                        ['class' => 'btn mh-footer-cta-btn']
+                        ['class' => 'btn mh-footer-cta-btn'],
                     ) ?>
                 </div>
             </div>
@@ -155,10 +163,22 @@ $isAdmin = ($identity && (int)$role === 1);
                 <div class="col-6 col-lg-2">
                     <h4 class="mh-footer-heading">Company</h4>
                     <ul class="list-unstyled mh-footer-links mb-0">
-                        <li><?= $this->Html->link('Home', ['controller' => 'Pages', 'action' => 'display', 'home']) ?></li>
-                        <li><?= $this->Html->link('Services', ['controller' => 'Pages', 'action' => 'display', 'home', '#' => 'services']) ?></li>
-                        <li><?= $this->Html->link('Contact', ['controller' => 'ContactForms', 'action' => 'add']) ?></li>
-                        <li><?= $this->Html->link('Get a Quote', ['controller' => 'ContactForms', 'action' => 'add']) ?></li>
+                        <li><?= $this->Html->link(
+                            'Home',
+                            ['controller' => 'Pages', 'action' => 'display', 'home'],
+                        ) ?></li>
+                        <li><?= $this->Html->link(
+                            'Services',
+                            ['controller' => 'Pages', 'action' => 'display', 'home', '#' => 'services'],
+                        ) ?></li>
+                        <li><?= $this->Html->link(
+                            'Contact',
+                            ['controller' => 'ContactForms', 'action' => 'add'],
+                        ) ?></li>
+                        <li><?= $this->Html->link(
+                            'Get a Quote',
+                            ['controller' => 'ContactForms', 'action' => 'add'],
+                        ) ?></li>
                     </ul>
                 </div>
 
@@ -168,14 +188,14 @@ $isAdmin = ($identity && (int)$role === 1);
                         <li>
                             <?= $this->Html->link(
                                 '0412 345 678',
-                                'tel:0412345678'
+                                'tel:0412345678',
                             ) ?>
                         </li>
                         <li>
                             <?= $this->Html->link(
                                 'hello@movinghouse247.com.au',
                                 'mailto:hello@movinghouse247.com.au',
-                                ['target' => '_blank']
+                                ['target' => '_blank'],
                             ) ?>
                         </li>
                         <li>Victoria, Australia</li>
