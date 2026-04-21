@@ -4,12 +4,12 @@ $this->assign('title', 'Register');
 
 <script src="https://www.google.com/recaptcha/api.js?hl=en" async defer></script>
 
-<main class="auth-page">
+<main class="mh-page-soft">
     <section class="auth-section">
         <div class="container">
             <div class="row justify-content-center py-5">
                 <div class="col-12 col-md-11 col-lg-8 col-xl-7">
-                    <div class="auth-card auth-card-wide">
+                    <div class="mh-form-card auth-card-wide">
                         <?= $this->Flash->render() ?>
 
                         <div class="auth-header text-center">

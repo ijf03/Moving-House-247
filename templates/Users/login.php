@@ -2,12 +2,12 @@
 $this->assign('title', 'Login');
 ?>
 
-<main class="auth-page">
+<main class="mh-page-soft">
     <section class="auth-section">
         <div class="container">
             <div class="row justify-content-center align-items-center min-vh-100 py-5">
                 <div class="col-12 col-md-10 col-lg-6 col-xl-5">
-                    <div class="auth-card">
+                    <div class="mh-form-card">
                         <?= $this->Flash->render() ?>
 
                         <div class="auth-header text-center">
