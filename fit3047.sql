@@ -146,7 +146,7 @@ CREATE TABLE `users`
 --
 
 INSERT INTO `users` (`user_id`, `phone`, `email`, `password`, `first_name`, `last_name`, `user_type`)
-VALUES (1, '0411111111', 'customer@myapp.local', '$2y$12$O2mUGRcOpX4i.RgsD0Dofe9hmwPLsxC.teN0iMwi7a9Dx0ainBcum', 'Alex', 'Morgan', 1),
+VALUES (1, '0411111111', 'customer@myapp.local', '$2y$12$O2mUGRcOpX4i.RgsD0Dofe9hmwPLsxC.teN0iMwi7a9Dx0ainBcum', 'Alex', 'Morgan', 3),
        (2, '0422222222', 'staff@myapp.local', '$2y$12$uVkWd9a7/30M6Zc3CZ8Ou.NOtS2NHNaB8pdaZbmwq8gvFCjjnICse', 'Jordan', 'Lee', 2),
        (3, '0433333333', 'admin@test.com', '$2y$12$xGvQK7AIhGg7iytP8aIEjOV1pm4Ev7hmJweuns1iNDkYW4VI69ipS', 'Alice', 'Admin', 1);
 
