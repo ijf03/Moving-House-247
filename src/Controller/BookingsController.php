@@ -99,10 +99,16 @@ class BookingsController extends AppController
                     $this->set(compact('booking'));
                     return;
                 }
+
+                $customer = $customersTable->find()
+                    ->where([
+                        'email' => $user->email,
+                    ])
+                    ->first();
             }
 
             $bookingData = [
-                'customer_id' => $data['customer_id'],
+                'customer_id' => $customer->customer_id,
                 'job_type_id' => $data['job_type_id'],
                 'pickup_address' => $data['pickup_address'],
                 'dropoff_address' => $data['dropoff_address'],
