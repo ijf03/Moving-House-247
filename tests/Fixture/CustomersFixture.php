@@ -24,6 +24,7 @@ class CustomersFixture extends TestFixture
                 'last_name' => 'Lorem ipsum dolor sit amet',
                 'email' => 'Lorem ipsum dolor sit amet',
                 'phone' => 'Lorem ipsum d',
+                'stripe_id' => 'L',
             ],
         ];
         parent::init();
