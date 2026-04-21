@@ -28,7 +28,7 @@ $identity = $this->request->getAttribute('identity');
 </head>
 
 <body class="mh-site">
-<main class="landing-page contact-page">
+<main class="landing-page mh-page-soft">
 
     <section class="contact-hero">
         <div class="container contact-hero-shell">
@@ -47,7 +47,7 @@ $identity = $this->request->getAttribute('identity');
 
                 <div class="col-lg-4">
                     <div class="contact-info-stack h-100">
-                        <div class="contact-info-card">
+                        <div class="mh-info-card">
                             <span class="contact-info-icon">📞</span>
                             <div>
                                 <h3>Call us</h3>
@@ -55,7 +55,7 @@ $identity = $this->request->getAttribute('identity');
                             </div>
                         </div>
 
-                        <div class="contact-info-card">
+                        <div class="mh-info-card">
                             <span class="contact-info-icon">✉️</span>
                             <div>
                                 <h3>Email</h3>
@@ -63,7 +63,7 @@ $identity = $this->request->getAttribute('identity');
                             </div>
                         </div>
 
-                        <div class="contact-info-card">
+                        <div class="mh-info-card">
                             <span class="contact-info-icon">📍</span>
                             <div>
                                 <h3>Service Area</h3>
@@ -71,8 +71,8 @@ $identity = $this->request->getAttribute('identity');
                             </div>
                         </div>
 
-                        <div class="contact-side-note">
-                            <h4>Need help with your move?</h4>
+                        <div class="mh-info-card">
+                            <h3>Need help with your move?</h3>
                             <p>
                                 Send us your details and we’ll help you with relocating,
                                 moving belongings, storage, or furniture removal.
@@ -82,7 +82,7 @@ $identity = $this->request->getAttribute('identity');
                 </div>
 
                 <div class="col-lg-8">
-                    <div class="contact-form-card content">
+                    <div class="mh-form-card content">
                         <?= $this->Form->create($contactForm, ['class' => 'contact-form']) ?>
 
                         <div class="row g-3">

@@ -16,6 +16,7 @@
 $identity = $this->request->getAttribute('identity');
 $role = $identity ? $identity->get('user_type') : null;
 $isAdmin = ($identity && (int)$role === 1);
+$isUser = ($identity && (int)$role === 2);
 ?>
 <!DOCTYPE html>
 <html>
@@ -53,6 +54,7 @@ $isAdmin = ($identity && (int)$role === 1);
 
             <div class="collapse navbar-collapse" id="mainNavbar">
                 <div class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+
                     <?= $this->Html->link(
                         'Home',
                         ['controller' => 'Pages', 'action' => 'display', 'home'],
@@ -61,41 +63,49 @@ $isAdmin = ($identity && (int)$role === 1);
 
                     <?php if ($isAdmin) : ?>
                         <?= $this->Html->link(
-                            'Contact Forms',
-                            ['controller' => 'ContactForms', 'action' => 'index'],
-                            ['class' => 'nav-link mh-nav-link'],
-                        ) ?>
-                        <?= $this->Html->link(
                             'Users',
                             ['controller' => 'Users', 'action' => 'index'],
                             ['class' => 'nav-link mh-nav-link'],
                         ) ?>
+
                         <?= $this->Html->link(
                             'Manage Bookings',
                             ['controller' => 'Bookings', 'action' => 'index'],
                             ['class' => 'nav-link mh-nav-link'],
                         ) ?>
+
+                    <?php elseif ($isUser) : ?>
+                        <?= $this->Html->link(
+                            'Book a Service',
+                            ['controller' => 'Bookings', 'action' => 'add'],
+                            ['class' => 'nav-link mh-nav-link'],
+                        ) ?>
+
+                        <?= $this->Html->link(
+                            'My Bookings',
+                            ['controller' => 'Bookings', 'action' => 'myBookings'],
+                            ['class' => 'nav-link mh-nav-link'],
+                        ) ?>
+
                     <?php else : ?>
                         <?= $this->Html->link(
                             'Services',
                             ['controller' => 'Pages', 'action' => 'display', 'home', '#' => 'services'],
                             ['class' => 'nav-link mh-nav-link'],
                         ) ?>
+
+                        <?= $this->Html->link(
+                            'Contact Us',
+                            ['controller' => 'ContactForms', 'action' => 'add'],
+                            ['class' => 'nav-link mh-nav-link'],
+                        ) ?>
+
                         <?= $this->Html->link(
                             'Book a Service',
                             ['controller' => 'Bookings', 'action' => 'add'],
                             ['class' => 'nav-link mh-nav-link'],
                         ) ?>
-                        <?= $this->Html->link(
-                            'My Booking',
-                            ['controller' => 'Bookings', 'action' => 'myBookings'],
-                            ['class' => 'nav-link mh-nav-link'],
-                        ) ?>
-                        <?= $this->Html->link(
-                            'Contact',
-                            ['controller' => 'ContactForms', 'action' => 'add'],
-                            ['class' => 'nav-link mh-nav-link'],
-                        ) ?>
+
                     <?php endif; ?>
 
                     <?php if ($identity) : ?>
@@ -104,19 +114,16 @@ $isAdmin = ($identity && (int)$role === 1);
                             ['controller' => 'Users', 'action' => 'logout'],
                             ['class' => 'nav-link mh-nav-link'],
                         ) ?>
+
                     <?php else : ?>
                         <?= $this->Html->link(
                             'Log In',
                             ['controller' => 'Users', 'action' => 'login'],
-                            ['class' => 'nav-link mh-nav-link'],
+                            ['class' => 'btn mh-quote-btn ms-lg-3 mt-3 mt-lg-0'],
                         ) ?>
+
                     <?php endif; ?>
 
-                    <?= $this->Html->link(
-                        'Get a Quote',
-                        ['controller' => 'ContactForms', 'action' => 'add'],
-                        ['class' => 'btn mh-quote-btn ms-lg-3 mt-3 mt-lg-0'],
-                    ) ?>
                 </div>
             </div>
         </div>
