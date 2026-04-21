@@ -105,7 +105,16 @@
                         </tr>
                         </thead>
                         <tbody>
+                        <?php if ($bookings->isEmpty()): ?>
+                            <tr>
+                                <td colspan="11" style="text-align:center; color:gray;">
+                                    No bookings found.
+                                </td>
+                            </tr>
+                        <?php else: ?>
+
                         <?php foreach ($bookings as $booking): ?>
+
                             <tr>
                                 <td><?= h($booking->booking_id) ?></td>
                                 <td><?= h(($booking->customer->first_name ?? '') . ' ' . ($booking->customer->last_name ?? '')) ?></td>
@@ -142,6 +151,7 @@
                                 </td>
                             </tr>
                         <?php endforeach; ?>
+                        <?php endif; ?>
                         </tbody>
                     </table>
                 </div>

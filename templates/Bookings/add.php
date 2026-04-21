@@ -81,6 +81,7 @@
                                 <?=
                                 $this->Form->control('job_date', [
                                     'type' => 'date',
+                                    'min' => date('Y-m-d'),
                                     'class' => 'booking-input',
                                     'templates' => [
                                         'inputContainer' => '<div class="input booking-form-group {{type}}{{required}}">{{content}}</div>',
@@ -122,6 +123,17 @@
                                 ])
                                 ?>
                             </div>
+                        </div>
+
+                        <div class="col-12">
+                            <?= $this->Form->control('message', [
+                                'type' => 'textarea',
+                                'label' => 'Additional Message',
+                                'class' => 'booking-input',
+                                'templates' => [
+                                    'inputContainer' => '<div class="input booking-form-group {{type}}{{required}}">{{content}}</div>',
+                                ],
+                            ]) ?>
                         </div>
 
                         <div class="booking-form-actions">

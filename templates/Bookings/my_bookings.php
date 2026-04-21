@@ -10,6 +10,11 @@
     <?php if ($bookings->isEmpty()): ?>
         <p><?= __('You do not have any accepted bookings yet.') ?></p>
     <?php else: ?>
+        <?php if (!empty($popupBooking)): ?>
+            <script>
+                alert('Your booking request has been accepted.');
+            </script>
+        <?php endif; ?>
         <table>
             <thead>
             <tr>

@@ -67,6 +67,10 @@ class BookingsTable extends Table
             ->requirePresence('status', 'create')
             ->notEmptyString('status');
 
+        $validator
+            ->scalar('message')
+            ->allowEmptyString('message');
+
         return $validator;
     }
 }
