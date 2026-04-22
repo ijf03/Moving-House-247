@@ -51,7 +51,28 @@ class BookingsController extends AppController
      */
     public function view($id = null)
     {
+        $identity = $this->request->getAttribute('identity');
+
+        if (!$identity) {
+            $this->Flash->error(__('You must be logged in.'));
+            return $this->redirect(['controller' => 'Users', 'action' => 'login']);
+        }
+
         $booking = $this->Bookings->get($id, contain: ['Customers', 'JobTypes']);
+
+        if (!$this->isAdmin()) {
+            $customersTable = $this->fetchTable('Customers');
+
+            $customer = $customersTable->find()
+                ->where(['email' => $identity->get('email')])
+                ->first();
+
+            if (!$customer || $booking->customer_id !== $customer->customer_id) {
+                $this->Flash->error(__('You are not authorized to view this booking.'));
+                return $this->redirect(['action' => 'myBookings']);
+            }
+        }
+
         $this->set(compact('booking'));
     }
 
@@ -286,5 +307,11 @@ class BookingsController extends AppController
         }
 
         $this->set(compact('bookings', 'popupBooking'));
+    }
+
+    private function isAdmin(): bool
+    {
+        $identity = $this->request->getAttribute('identity');
+        return $identity && (int)$identity->get('user_type') === 1;
     }
 }
