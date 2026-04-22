@@ -16,7 +16,7 @@
 $identity = $this->request->getAttribute('identity');
 $role = $identity ? $identity->get('user_type') : null;
 $isAdmin = ($identity && (int)$role === 1);
-$isUser = ($identity && (int)$role === 2);
+$isUser = ($identity && (int)$role === 3);
 ?>
 <!DOCTYPE html>
 <html>

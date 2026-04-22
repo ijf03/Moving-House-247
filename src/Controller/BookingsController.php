@@ -230,7 +230,7 @@ class BookingsController extends AppController
             return $this->redirect(['controller' => 'Users', 'action' => 'login']);
         }
 
-        if ((int)$identity->get('user_type') !== 2) {
+        if ((int)$identity->get('user_type') !== 3) {
             $this->Flash->error(__('Only customers can access this page.'));
             return $this->redirect(['controller' => 'Pages', 'action' => 'display', 'home']);
         }
