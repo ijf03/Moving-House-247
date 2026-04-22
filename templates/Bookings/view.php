@@ -4,109 +4,123 @@
  * @var \App\Model\Entity\Booking $booking
  */
 ?>
-<div class="row">
-    <?php $identity = $this->request->getAttribute('identity'); ?>
-    <?php $isAdmin = $identity && (int)$identity->get('user_type') === 1; ?>
-
-    <aside class="column">
-        <div class="side-nav">
-            <h4 class="heading"><?= __('Actions') ?></h4>
-            <?php if ($isAdmin): ?>
-                <?= $this->Html->link(__('Edit Booking'), ['action' => 'edit', $booking->booking_id], ['class' => 'side-nav-item']) ?>
-                <?= $this->Form->postLink(__('Delete Booking'), ['action' => 'delete', $booking->booking_id], ['confirm' => __('Are you sure you want to delete # {0}?', $booking->booking_id), 'class' => 'side-nav-item']) ?>
-                <?= $this->Html->link(__('List Bookings'), ['action' => 'index'], ['class' => 'side-nav-item']) ?>
-                <?= $this->Html->link(__('New Booking'), ['action' => 'add'], ['class' => 'side-nav-item']) ?>
-                <?= $this->Html->link(__('Generate Invoice'), ['controller' => 'Invoices', 'action' => 'add', $booking->booking_id], ['class' => 'side-nav-item']) ?>
-            <?php endif; ?>
+<div class="mh-page-soft">
+    <section class="admin-hero">
+        <div class="container">
+            <div class="admin-hero-shell">
+                <div class="admin-hero-content">
+                    <span class="admin-eyebrow"><?= __('Booking') ?></span>
+                    <h1><?= __('Booking Details') ?></h1>
+                    <p class="admin-hero-text">
+                        <?= __('Review all details for this booking.') ?>
+                    </p>
+                </div>
+            </div>
         </div>
-    </aside>
-    <div class="column column-80">
-        <div class="bookings view content">
-            <h3><?= h($booking->booking_id) ?></h3>
-            <table>
-                <tr>
-                    <th><?= __('Customer') ?></th>
-                    <td><?= $booking->hasValue('customer') ? $this->Html->link($booking->customer->first_name, ['controller' => 'Customers', 'action' => 'view', $booking->customer->customer_id]) : '' ?></td>
-                </tr>
-                <tr>
-                    <th><?= __('Job Type') ?></th>
-                    <td><?= $booking->hasValue('job_type') ? $this->Html->link($booking->job_type->job_type_name, ['controller' => 'JobTypes', 'action' => 'view', $booking->job_type->job_type_id]) : '' ?></td>
-                </tr>
-                <tr>
-                    <th><?= __('Pickup Address') ?></th>
-                    <td><?= h($booking->pickup_address) ?></td>
-                </tr>
-                <tr>
-                    <th><?= __('Dropoff Address') ?></th>
-                    <td><?= h($booking->dropoff_address) ?></td>
-                </tr>
-                <tr>
-                    <th><?= __('Status') ?></th>
-                    <td><?= h($booking->status) ?></td>
-                </tr>
-                <tr>
-                    <th><?= __('Booking Id') ?></th>
-                    <td><?= $this->Number->format($booking->booking_id) ?></td>
-                </tr>
-                <tr>
-                    <th><?= __('Job Date') ?></th>
-                    <td><?= h($booking->job_date) ?></td>
-                </tr>
-                <tr>
-                    <th><?= __('Job Time') ?></th>
-                    <td><?= h($booking->job_time) ?></td>
-                </tr>
-                <tr>
-                    <th><?= __('Created') ?></th>
-                    <td><?= h($booking->created) ?></td>
-                </tr>
-            </table>
-        </div>
-    </div>
-</div>
-<div class="bookings view content">
-    <h3><?= __('Booking #') . h($booking->booking_id) ?></h3>
-    <table>
-        <tr>
-            <th><?= __('Customer Name') ?></th>
-            <td><?= h(($booking->customer->first_name ?? '') . ' ' . ($booking->customer->last_name ?? '')) ?></td>
-        </tr>
-        <tr>
-            <th><?= __('Customer Email') ?></th>
-            <td><?= h($booking->customer->email ?? '') ?></td>
-        </tr>
-        <tr>
-            <th><?= __('Customer Phone') ?></th>
-            <td><?= h($booking->customer->phone ?? '') ?></td>
-        </tr>
-        <tr>
-            <th><?= __('Service Type') ?></th>
-            <td><?= h($booking->job_type->job_type_name ?? '') ?></td>
-        </tr>
-        <tr>
-            <th><?= __('Pickup Address') ?></th>
-            <td><?= h($booking->pickup_address) ?></td>
-        </tr>
-        <tr>
-            <th><?= __('Dropoff Address') ?></th>
-            <td><?= h($booking->dropoff_address) ?></td>
-        </tr>
-        <tr>
-            <th><?= __('Job Date') ?></th>
-            <td><?= h($booking->job_date) ?></td>
-        </tr>
-        <tr>
-            <th><?= __('Job Time') ?></th>
-            <td><?= h($booking->job_time) ?></td>
-        </tr>
-        <tr>
-            <th><?= __('Status') ?></th>
-            <td><?= h($booking->status) ?></td>
-        </tr>
+    </section>
 
-        <tr>
-            <th><?= __('Message') ?></th>
-            <td><?= h($booking->message) ?></td>
-        </tr>
-    </table>
+    <section class="admin-section">
+        <div class="container">
+            <div class="row g-4">
+
+                <!-- Actions -->
+                <div class="col-lg-3">
+                    <div class="admin-table-card">
+                        <div class="admin-table-header">
+                            <h2><?= __('Actions') ?></h2>
+                        </div>
+
+                        <div class="admin-action-stack">
+                            <?= $this->Html->link(__('Edit Booking'), ['action' => 'edit', $booking->booking_id], ['class' => 'admin-action-link']) ?>
+                            <?= $this->Html->link(__('Back to List'), ['action' => 'index'], ['class' => 'admin-action-link']) ?>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Details -->
+                <div class="col-lg-9">
+                    <div class="admin-table-card">
+                        <div class="admin-table-header">
+                            <h2><?= __('Booking #') . $booking->booking_id ?></h2>
+                            <p><?= __('Summary of your move') ?></p>
+                        </div>
+
+                        <div class="row g-3">
+
+                            <div class="col-md-6">
+                                <div class="mh-info-card">
+                                    <div>
+                                        <h3><?= __('Service Type') ?></h3>
+                                        <p><?= h($booking->job_type->job_type_name ?? '') ?></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="mh-info-card">
+                                    <div>
+                                        <h3><?= __('Status') ?></h3>
+                                        <p>
+                                            <span class="admin-status-badge admin-status-replied">
+                                                <?= h($booking->status) ?>
+                                            </span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="mh-info-card">
+                                    <div>
+                                        <h3><?= __('Pickup Address') ?></h3>
+                                        <p><?= h($booking->pickup_address) ?></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="mh-info-card">
+                                    <div>
+                                        <h3><?= __('Dropoff Address') ?></h3>
+                                        <p><?= h($booking->dropoff_address) ?></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="mh-info-card">
+                                    <div>
+                                        <h3><?= __('Date') ?></h3>
+                                        <p><?= h($booking->job_date) ?></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="mh-info-card">
+                                    <div>
+                                        <h3><?= __('Time') ?></h3>
+                                        <p><?= h($booking->job_time) ?></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <?php if (!empty($booking->notes)): ?>
+                                <div class="col-12">
+                                    <div class="mh-info-card">
+                                        <div>
+                                            <h3><?= __('Notes') ?></h3>
+                                            <p><?= h($booking->notes) ?></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
 </div>
