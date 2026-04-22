@@ -54,13 +54,26 @@ class CustomersTable extends Table
             ->scalar('first_name')
             ->maxLength('first_name', 50)
             ->requirePresence('first_name', 'create')
-            ->notEmptyString('first_name', 'First name is required');
-
+            ->notEmptyString('first_name', 'First name is required')
+            ->minLength('first_name', 3, 'Must be at least 3 characters')
+            ->add('first_name', 'notSpacesOnly', [
+                'rule' => function ($value) {
+                    return trim($value) !== '';
+                },
+                'message' => 'First name cannot be empty'
+            ]);
         $validator
             ->scalar('last_name')
             ->maxLength('last_name', 50)
             ->requirePresence('last_name', 'create')
-            ->notEmptyString('last_name', 'Last name is required');
+            ->notEmptyString('last_name', 'Last name is required')
+            ->minLength('last_name', 3, 'Must be at least 3 characters')
+            ->add('last_name', 'notSpacesOnly', [
+                'rule' => function ($value) {
+                    return trim($value) !== '';
+                },
+                'message' => 'Last name cannot be empty'
+            ]);
 
         $validator
             ->email('email', false, 'Please enter a valid email address')
