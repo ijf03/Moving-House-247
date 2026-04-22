@@ -25,6 +25,11 @@ class BookingsController extends AppController
         $jobTypeId = $this->request->getQuery('job_type_id');
         $sort = $this->request->getQuery('sort');
         $direction = $this->request->getQuery('direction');
+        $booking = $this->Bookings->newEmptyEntity();
+        $job_types = $this->Bookings->JobTypes->find('list', [
+            'keyField' => 'job_type_id',
+            'valueField' => 'job_type_name'
+        ])->all();
 
         if (!empty($status)) {
             $query->where(['Bookings.status' => $status]);
@@ -40,7 +45,7 @@ class BookingsController extends AppController
         }
 
         $bookings = $this->paginate($query);
-        $this->set(compact('bookings', 'status', 'jobTypeId', 'sort', 'direction'));
+        $this->set(compact('bookings','job_types', 'status', 'jobTypeId', 'sort', 'direction'));
     }
 
     /**

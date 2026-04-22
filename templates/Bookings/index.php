@@ -56,10 +56,7 @@
                                 'type' => 'select',
                                 'label' => 'Service Type',
                                 'empty' => 'All Job Types',
-                                'options' => [
-                                    1 => 'Removal',
-                                    2 => 'Storage',
-                                ],
+                                'options' => $job_types,
                                 'default' => $jobTypeId ?? null,
                             ])
                             ?>
