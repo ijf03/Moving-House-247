@@ -230,7 +230,7 @@ class BookingsController extends AppController
             return $this->redirect(['controller' => 'Users', 'action' => 'login']);
         }
 
-        if ((int)$identity->get('user_type') !== 2) {
+        if ((int)$identity->get('user_type') !== 3) {
             $this->Flash->error(__('Only customers can access this page.'));
             return $this->redirect(['controller' => 'Pages', 'action' => 'display', 'home']);
         }
@@ -242,8 +242,24 @@ class BookingsController extends AppController
             ->first();
 
         if (!$customer) {
-            $this->Flash->error(__('No customer profile was found.'));
-            return $this->redirect(['controller' => 'Pages', 'action' => 'display', 'home']);
+            $customer = $customersTable->newEntity([
+                'first_name' => $identity->get('first_name'),
+                'last_name' => $identity->get('last_name'),
+                'email' => $identity->get('email'),
+                'phone' => $identity->get('phone'),
+            ]);
+
+
+            if (!$customersTable->save($customer)) {
+                $this->Flash->error(__('The customer profile could not be created.'));
+                return $this->redirect('/');
+            }
+
+            $customer = $customersTable->find()
+                ->where([
+                    'email' => $identity->get('email'),
+                ])
+                ->first();
         }
 
         $query = $this->Bookings->find()
