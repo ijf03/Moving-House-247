@@ -73,4 +73,9 @@ class User extends Entity
         }
         return 'No Role Assigned';
     }
+
+    protected function _getFullName() : string
+    {
+        return ($this->first_name . ' ' . $this->last_name);
+    }
 }

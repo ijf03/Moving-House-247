@@ -16,7 +16,7 @@
     </aside>
     <div class="column column-80">
         <div class="users view content">
-            <h3><?= h($user->email) ?></h3>
+            <h3><?= h($user->full_name) ?></h3>
             <table>
                 <tr>
                     <th><?= __('User Id') ?></th>
