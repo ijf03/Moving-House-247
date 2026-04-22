@@ -64,40 +64,40 @@ class JobsTable extends Table
     {
         $validator
             ->integer('job_type_id')
-            ->notEmptyString('job_type_id');
+            ->requirePresence('job_type_id', 'create')
+            ->notEmptyString('job_type_id', 'Job type is required');
 
         $validator
             ->scalar('description')
             ->requirePresence('description', 'create')
-            ->notEmptyString('description');
+            ->notEmptyString('description', 'Description is required');
 
         $validator
             ->scalar('pickup_address')
             ->maxLength('pickup_address', 95)
             ->requirePresence('pickup_address', 'create')
-            ->notEmptyString('pickup_address');
+            ->notEmptyString('pickup_address', 'Pickup address is required');
 
         $validator
             ->scalar('dropoff_address')
             ->maxLength('dropoff_address', 95)
             ->requirePresence('dropoff_address', 'create')
-            ->notEmptyString('dropoff_address');
+            ->notEmptyString('dropoff_address', 'Dropoff address is required');
 
         $validator
-            ->scalar('job_date')
-            ->maxLength('job_date', 11)
+            ->date('job_date')
             ->requirePresence('job_date', 'create')
-            ->notEmptyString('job_date');
+            ->notEmptyDate('job_date', 'Job date is required');
 
         $validator
-            ->scalar('job_time')
-            ->maxLength('job_time', 5)
+            ->time('job_time')
             ->requirePresence('job_time', 'create')
-            ->notEmptyString('job_time');
+            ->notEmptyTime('job_time', 'Job time is required');
 
         $validator
             ->integer('customer_id')
-            ->notEmptyString('customer_id');
+            ->requirePresence('customer_id', 'create')
+            ->notEmptyString('customer_id', 'Customer is required');
 
         return $validator;
     }

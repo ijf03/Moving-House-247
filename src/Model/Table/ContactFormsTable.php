@@ -64,21 +64,22 @@ class ContactFormsTable extends Table
         $validator
             ->nonNegativeInteger('customer_id')
             ->requirePresence('customer_id', 'create')
-            ->notEmptyString('customer_id');
+            ->notEmptyString('customer_id', 'Customer is required');
 
         $validator
             ->scalar('subject')
-            ->maxLength('subject', 30)
+            ->maxLength('subject', 100)
             ->requirePresence('subject', 'create')
-            ->notEmptyString('subject');
+            ->notEmptyString('subject', 'Subject is required');
 
         $validator
             ->scalar('message')
             ->requirePresence('message', 'create')
-            ->notEmptyString('message');
+            ->notEmptyString('message', 'Message is required');
 
         return $validator;
     }
+
 
     /**
      * Returns a rules checker object that will be used for validating

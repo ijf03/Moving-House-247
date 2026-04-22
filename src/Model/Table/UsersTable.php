@@ -57,45 +57,47 @@ class UsersTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->email('email')
+            ->email('email', false, 'Please enter a valid email address')
             ->requirePresence('email', 'create')
-            ->notEmptyString('email');
+            ->notEmptyString('email', 'Email is required');
 
         $validator
             ->scalar('phone')
-            ->maxLength('phone', 10)
+            ->lengthBetween('phone', [10, 10], 'Phone number must be exactly 10 digits')
             ->requirePresence('phone', 'create')
-            ->notEmptyString('phone')
+            ->notEmptyString('phone', 'Phone number is required')
             ->add('phone', 'validFormat', [
-                'rule' => ['custom', '/^[0-9]+$/'],
-                'message' => 'Please enter a valid phone number',
+                'rule' => ['custom', '/^\d{10}$/'],
+                'message' => 'Phone number must contain exactly 10 digits',
             ]);
 
         $validator
             ->scalar('password')
             ->maxLength('password', 255)
-            ->requirePresence('password', 'create');
+            ->requirePresence('password', 'create')
+            ->notEmptyString('password', 'Password is required');
 
         $validator
             ->scalar('first_name')
             ->maxLength('first_name', 46)
             ->requirePresence('first_name', 'create')
-            ->notEmptyString('first_name');
+            ->notEmptyString('first_name', 'First name is required');
 
         $validator
             ->scalar('last_name')
             ->maxLength('last_name', 46)
             ->requirePresence('last_name', 'create')
-            ->notEmptyString('last_name');
+            ->notEmptyString('last_name', 'Last name is required');
 
         $validator
             ->integer('user_type')
             ->requirePresence('user_type', 'create')
-            ->notEmptyString('user_type');
+            ->notEmptyString('user_type', 'User type is required');
 
         $validator
             ->scalar('confirm_password')
             ->requirePresence('confirm_password', 'create')
+            ->notEmptyString('confirm_password', 'Please confirm the password')
             ->add('confirm_password', 'compareWith', [
                 'rule' => ['compareWith', 'password'],
                 'message' => 'Passwords do not match',
