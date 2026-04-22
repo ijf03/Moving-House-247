@@ -303,6 +303,7 @@ body.mh-site {
     border-radius: 24px;
     padding: 1.7rem 1.5rem;
     box-shadow: 0 10px 24px rgba(7, 27, 52, 0.12);
+    color: white;
 }
 
 
@@ -555,7 +556,6 @@ body.mh-site {
 .mh-side-note p,
 .booking-form-header p {
     margin: 0;
-    color: #4e637d;
     line-height: 1.6;
     font-size: 1rem;
 }
