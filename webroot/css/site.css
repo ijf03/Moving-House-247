@@ -911,6 +911,12 @@ body.mh-site {
     line-height: 1.6;
 }
 
+/*View User*/
+.admin-table-card .admin-table {
+    min-width: 0;
+}
+
+/*Admin mobile pages*/
 @media (max-width: 991.98px) {
     .admin-hero {
         padding: 4.75rem 0 3.5rem;
