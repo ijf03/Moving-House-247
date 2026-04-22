@@ -5,14 +5,19 @@
  */
 ?>
 <div class="row">
+    <?php $identity = $this->request->getAttribute('identity'); ?>
+    <?php $isAdmin = $identity && (int)$identity->get('user_type') === 1; ?>
+
     <aside class="column">
         <div class="side-nav">
             <h4 class="heading"><?= __('Actions') ?></h4>
-            <?= $this->Html->link(__('Edit Booking'), ['action' => 'edit', $booking->booking_id], ['class' => 'side-nav-item']) ?>
-            <?= $this->Form->postLink(__('Delete Booking'), ['action' => 'delete', $booking->booking_id], ['confirm' => __('Are you sure you want to delete # {0}?', $booking->booking_id), 'class' => 'side-nav-item']) ?>
-            <?= $this->Html->link(__('List Bookings'), ['action' => 'index'], ['class' => 'side-nav-item']) ?>
-            <?= $this->Html->link(__('New Booking'), ['action' => 'add'], ['class' => 'side-nav-item']) ?>
-            <?= $this->Html->link(__('Generate Invoice'), ['controller' => 'Invoices', 'action' => 'add', $booking->booking_id], ['class' => 'side-nav-item']) ?>
+            <?php if ($isAdmin): ?>
+                <?= $this->Html->link(__('Edit Booking'), ['action' => 'edit', $booking->booking_id], ['class' => 'side-nav-item']) ?>
+                <?= $this->Form->postLink(__('Delete Booking'), ['action' => 'delete', $booking->booking_id], ['confirm' => __('Are you sure you want to delete # {0}?', $booking->booking_id), 'class' => 'side-nav-item']) ?>
+                <?= $this->Html->link(__('List Bookings'), ['action' => 'index'], ['class' => 'side-nav-item']) ?>
+                <?= $this->Html->link(__('New Booking'), ['action' => 'add'], ['class' => 'side-nav-item']) ?>
+                <?= $this->Html->link(__('Generate Invoice'), ['controller' => 'Invoices', 'action' => 'add', $booking->booking_id], ['class' => 'side-nav-item']) ?>
+            <?php endif; ?>
         </div>
     </aside>
     <div class="column column-80">
@@ -97,6 +102,11 @@
         <tr>
             <th><?= __('Status') ?></th>
             <td><?= h($booking->status) ?></td>
+        </tr>
+
+        <tr>
+            <th><?= __('Message') ?></th>
+            <td><?= h($booking->message) ?></td>
         </tr>
     </table>
 </div>

@@ -51,7 +51,28 @@ class BookingsController extends AppController
      */
     public function view($id = null)
     {
+        $identity = $this->request->getAttribute('identity');
+
+        if (!$identity) {
+            $this->Flash->error(__('You must be logged in.'));
+            return $this->redirect(['controller' => 'Users', 'action' => 'login']);
+        }
+
         $booking = $this->Bookings->get($id, contain: ['Customers', 'JobTypes']);
+
+        if (!$this->isAdmin()) {
+            $customersTable = $this->fetchTable('Customers');
+
+            $customer = $customersTable->find()
+                ->where(['email' => $identity->get('email')])
+                ->first();
+
+            if (!$customer || $booking->customer_id !== $customer->customer_id) {
+                $this->Flash->error(__('You are not authorized to view this booking.'));
+                return $this->redirect(['action' => 'myBookings']);
+            }
+        }
+
         $this->set(compact('booking'));
     }
 
@@ -114,6 +135,7 @@ class BookingsController extends AppController
                 'dropoff_address' => $data['dropoff_address'],
                 'job_date' => $data['job_date'],
                 'job_time' => $data['job_time'],
+                'message' => $data['message']?? null,
                 'status' => 'Pending',
             ];
 
@@ -176,6 +198,7 @@ class BookingsController extends AppController
 
         if ($jobsTable->save($job)) {
             $booking->status = 'Processing';
+            $booking->accepted_notified = 0;
             $this->Bookings->save($booking);
 
             $this->Flash->success(__('The booking has been accepted and converted to a job.'));
@@ -228,7 +251,7 @@ class BookingsController extends AppController
             return $this->redirect(['controller' => 'Users', 'action' => 'login']);
         }
 
-        if ((int)$identity->get('user_type') !== 2) {
+        if ((int)$identity->get('user_type') !== 3) {
             $this->Flash->error(__('Only customers can access this page.'));
             return $this->redirect(['controller' => 'Pages', 'action' => 'display', 'home']);
         }
@@ -240,8 +263,24 @@ class BookingsController extends AppController
             ->first();
 
         if (!$customer) {
-            $this->Flash->error(__('No customer profile was found.'));
-            return $this->redirect(['controller' => 'Pages', 'action' => 'display', 'home']);
+            $customer = $customersTable->newEntity([
+                'first_name' => $identity->get('first_name'),
+                'last_name' => $identity->get('last_name'),
+                'email' => $identity->get('email'),
+                'phone' => $identity->get('phone'),
+            ]);
+
+
+            if (!$customersTable->save($customer)) {
+                $this->Flash->error(__('The customer profile could not be created.'));
+                return $this->redirect('/');
+            }
+
+            $customer = $customersTable->find()
+                ->where([
+                    'email' => $identity->get('email'),
+                ])
+                ->first();
         }
 
         $query = $this->Bookings->find()
@@ -254,6 +293,25 @@ class BookingsController extends AppController
 
         $bookings = $this->paginate($query);
 
-        $this->set(compact('bookings'));
+        $popupBooking = $this->Bookings->find()
+            ->where([
+                'customer_id' => $customer->customer_id,
+                'status' => 'Processing',
+                'accepted_notified' => 0,
+            ])
+            ->first();
+
+        if ($popupBooking) {
+            $popupBooking->accepted_notified = 1;
+            $this->Bookings->save($popupBooking);
+        }
+
+        $this->set(compact('bookings', 'popupBooking'));
+    }
+
+    private function isAdmin(): bool
+    {
+        $identity = $this->request->getAttribute('identity');
+        return $identity && (int)$identity->get('user_type') === 1;
     }
 }
