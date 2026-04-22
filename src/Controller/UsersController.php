@@ -181,7 +181,7 @@ class UsersController extends AppController
             }
             $user = $this->Users->patchEntity($user, $data);
             if ($this->Users->save($user)) {
-                $this->Flash->success(__('The user has been saved.'));
+                $this->Flash->success(__($user->full_name . ' has been saved.'));
 
                 return $this->redirect(['action' => 'index']);
             }
@@ -215,12 +215,12 @@ class UsersController extends AppController
         $this->request->allowMethod(['post', 'delete']);
         $user = $this->Users->get($id);
         if ($this->Users->delete($user)) {
-            $this->Flash->success(__('The user has been deleted.'));
+            $this->Flash->success(__($user->full_name . ' has been deleted.'));
             if ($target === $userId) {
                 return $this->redirect(['controller' => 'Users', 'action' => 'logout']);
             }
         } else {
-            $this->Flash->error(__('The user could not be deleted. Please, try again.'));
+            $this->Flash->error(__($user->full_name . ' could not be deleted. Please, try again.'));
         }
 
         return $this->redirect(['action' => 'index']);

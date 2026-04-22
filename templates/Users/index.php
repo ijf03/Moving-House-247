@@ -72,7 +72,7 @@ $userId = $identity ? $identity->get('user_id') : null;
                                                 ['action' => 'delete', $user->user_id],
                                                 [
                                                     'method' => 'delete',
-                                                    'confirm' => __('Are you sure you want to delete # {0}?', $user->user_id),
+                                                    'confirm' => __('Are you sure you want to delete # {0}?', $user->full_name),
                                                     'class' => 'admin-action-link admin-action-link-danger'
                                                 ]
                                             ) ?>
