@@ -916,6 +916,26 @@ body.mh-site {
     min-width: 0;
 }
 
+/*Auth*/
+.auth-form .input,
+.auth-form .select,
+.auth-form .email,
+.auth-form .password,
+.auth-form .tel {
+    width: 100%;
+}
+
+.auth-form input,
+.auth-form select,
+.auth-form textarea {
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.mh-info-card {
+    height: 100%;
+}
+
 /*Admin mobile pages*/
 @media (max-width: 991.98px) {
     .admin-hero {
