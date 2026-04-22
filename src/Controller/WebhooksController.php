@@ -5,6 +5,7 @@ namespace App\Controller;
 
 use Cake\Core\Configure;
 use Cake\Http\Response;
+use Cake\Mailer\Mailer;
 use Stripe\Exception\SignatureVerificationException;
 use Stripe\Webhook;
 
@@ -60,6 +61,36 @@ class WebhooksController extends AppController
                 ->where(['stripe_invoice_id' => $stripeInvoice->id])
                 ->execute()
                 ->rowCount();
+
+            if ($updated > 0) {
+                $invoice = $invoicesTable->find()
+                    ->contain(['Customers', 'Bookings'])
+                    ->where(['stripe_invoice_id' => $stripeInvoice->id])
+                    ->first();
+
+                if ($invoice) {
+                    $customerName = trim(
+                        ($invoice->customer->first_name ?? '') . ' ' . ($invoice->customer->last_name ?? '')
+                    );
+
+                    $adminEmail = '	noreply@review.fit3047.u26s1158.iedev.org';
+
+                    $body = "An invoice has been paid.\n\n"
+                        . "Invoice ID: " . $invoice->invoice_id . "\n"
+                        . "Stripe Invoice ID: " . ($invoice->stripe_invoice_id ?? 'N/A') . "\n"
+                        . "Customer: " . ($customerName !== '' ? $customerName : 'N/A') . "\n"
+                        . "Customer Email: " . ($invoice->customer->email ?? 'N/A') . "\n"
+                        . "Booking ID: " . ($invoice->booking_id ?? 'N/A') . "\n"
+                        . "Amount Paid: $" . number_format(($invoice->total_cents ?? 0) / 100, 2) . "\n"
+                        . "Paid At: " . date('Y-m-d H:i:s') . "\n";
+
+                    $mailer = new Mailer('default');
+                    $mailer
+                        ->setTo($adminEmail)
+                        ->setSubject('Invoice paid - #' . $invoice->invoice_id)
+                        ->deliver($body);
+                }
+            }
 
             return $this->response
                 ->withType('application/json')
