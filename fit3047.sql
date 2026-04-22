@@ -106,7 +106,8 @@ CREATE TABLE `job_types`
 
 INSERT INTO `job_types` (`job_type_id`, `job_type_name`, `job_type_description`)
 VALUES (1, 'Removal', 'Removal of items from customer'),
-       (2, 'Storage', 'Storage of items from customer');
+       (2, 'Storage', 'Storage of items from customer'),
+       (3, 'Transfer', 'Transfer of items for customer');
 
 -- --------------------------------------------------------
 --
@@ -145,10 +146,10 @@ CREATE TABLE `users`
 -- customer123, staff123, admin123
 --
 
-INSERT INTO `users` (`user_id`, `email`, `password`, `first_name`, `last_name`, `user_type`)
-VALUES (1, 'customer@myapp.local', '$2y$12$O2mUGRcOpX4i.RgsD0Dofe9hmwPLsxC.teN0iMwi7a9Dx0ainBcum', 'Alex', 'Morgan', 1),
-       (2, 'staff@myapp.local', '$2y$12$uVkWd9a7/30M6Zc3CZ8Ou.NOtS2NHNaB8pdaZbmwq8gvFCjjnICse', 'Jordan', 'Lee', 2),
-       (3, 'admin@test.com', '$2y$12$xGvQK7AIhGg7iytP8aIEjOV1pm4Ev7hmJweuns1iNDkYW4VI69ipS', 'Alice', 'Admin', 1);
+INSERT INTO `users` (`user_id`, `phone`, `email`, `password`, `first_name`, `last_name`, `user_type`)
+VALUES (1, '0411111111', 'customer@myapp.local', '$2y$12$O2mUGRcOpX4i.RgsD0Dofe9hmwPLsxC.teN0iMwi7a9Dx0ainBcum', 'Alex', 'Morgan', 3),
+       (2, '0422222222', 'staff@myapp.local', '$2y$12$uVkWd9a7/30M6Zc3CZ8Ou.NOtS2NHNaB8pdaZbmwq8gvFCjjnICse', 'Jordan', 'Lee', 2),
+       (3, '0433333333', 'admin@test.com', '$2y$12$xGvQK7AIhGg7iytP8aIEjOV1pm4Ev7hmJweuns1iNDkYW4VI69ipS', 'Alice', 'Admin', 1);
 
 -- --------------------------------------------------------
 
@@ -201,6 +202,9 @@ CREATE TABLE `invoice_items`
     `created`          datetime       NOT NULL DEFAULT current_timestamp(),
     `modified`         datetime       NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+ALTER TABLE bookings ADD message TEXT NULL;
+ALTER TABLE bookings ADD accepted_notified TINYINT(1) NOT NULL DEFAULT 0;
 
 --
 -- Indexes for dumped tables

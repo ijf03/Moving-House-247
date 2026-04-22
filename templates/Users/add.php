@@ -16,17 +16,69 @@
             <?= $this->Form->create($user) ?>
             <fieldset>
                 <legend><?= __('Add User') ?></legend>
-                <?php
-                    echo $this->Form->control('email');
-                    echo $this->Form->control('password');
-                    echo $this->Form->control('confirm_password');
-                    echo $this->Form->control('first_name');
-                    echo $this->Form->control('last_name');
-                echo $this->Form->control('user_type', [
-                    'options' => $userTypes,
-                    'label' => 'User Role'
-                ]);
-                ?>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <?= $this->Form->control('first_name', [
+                            'label' => 'First Name*',
+                            'placeholder' => 'Enter your first name',
+                            'class' => 'auth-input',
+                            'required' => true,
+                        ]) ?>
+                    </div>
+
+                    <div class="col-md-6">
+                        <?= $this->Form->control('last_name', [
+                            'label' => 'Last Name*',
+                            'placeholder' => 'Enter your last name',
+                            'class' => 'auth-input',
+                            'required' => true,
+                        ]) ?>
+                    </div>
+
+                    <div class="col-md-6">
+                        <?= $this->Form->control('email', [
+                            'label' => 'Email*',
+                            'placeholder' => 'Enter your email',
+                            'class' => 'auth-input',
+                            'required' => true,
+                        ]) ?>
+                    </div>
+
+                    <div class="col-md-6">
+                        <?= $this->Form->control('phone', [
+                            'label' => 'Phone*',
+                            'placeholder' => 'Enter your phone number',
+                            'class' => 'auth-input',
+                            'required' => true,
+                        ]) ?>
+                    </div>
+
+                    <div class="col-md-6">
+                        <?= $this->Form->control('password', [
+                            'type' => 'password',
+                            'label' => 'Password*',
+                            'placeholder' => 'Enter your password',
+                            'class' => 'auth-input',
+                            'required' => true,
+                        ]) ?>
+                    </div>
+
+                    <div class="col-md-6">
+                        <?= $this->Form->control('confirm_password', [
+                            'type' => 'password',
+                            'label' => 'Confirm Password*',
+                            'placeholder' => 'Confirm your password',
+                            'class' => 'auth-input',
+                            'required' => true,
+                        ]) ?>
+                    </div>
+                    <div class="col-md-6">
+                        <?= $this->Form->control('user_type', [
+                            'options' => $userTypes,
+                            'label' => 'User Role',
+                        ]);
+                        ?>
+                    </div>
             </fieldset>
             <?= $this->Form->button(__('Submit')) ?>
             <?= $this->Form->end() ?>

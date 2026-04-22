@@ -99,15 +99,22 @@ class BookingsController extends AppController
                     $this->set(compact('booking'));
                     return;
                 }
+
+                $customer = $customersTable->find()
+                    ->where([
+                        'email' => $user->email,
+                    ])
+                    ->first();
             }
 
             $bookingData = [
-                'customer_id' => $data['customer_id'],
+                'customer_id' => $customer->customer_id,
                 'job_type_id' => $data['job_type_id'],
                 'pickup_address' => $data['pickup_address'],
                 'dropoff_address' => $data['dropoff_address'],
                 'job_date' => $data['job_date'],
                 'job_time' => $data['job_time'],
+                'message' => $data['message']?? null,
                 'status' => 'Pending',
             ];
 
@@ -170,6 +177,7 @@ class BookingsController extends AppController
 
         if ($jobsTable->save($job)) {
             $booking->status = 'Processing';
+            $booking->accepted_notified = 0;
             $this->Bookings->save($booking);
 
             $this->Flash->success(__('The booking has been accepted and converted to a job.'));
@@ -248,6 +256,19 @@ class BookingsController extends AppController
 
         $bookings = $this->paginate($query);
 
-        $this->set(compact('bookings'));
+        $popupBooking = $this->Bookings->find()
+            ->where([
+                'customer_id' => $customer->customer_id,
+                'status' => 'Processing',
+                'accepted_notified' => 0,
+            ])
+            ->first();
+
+        if ($popupBooking) {
+            $popupBooking->accepted_notified = 1;
+            $this->Bookings->save($popupBooking);
+        }
+
+        $this->set(compact('bookings', 'popupBooking'));
     }
 }

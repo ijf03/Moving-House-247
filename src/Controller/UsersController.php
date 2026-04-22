@@ -161,16 +161,25 @@ class UsersController extends AppController
             ->contain(['UserTypes'])
             ->first();
         $isAdmin = $roleQuery->user_type_name == 'Admin';
+        $userTypes = $isAdmin ? $this->Users->UserTypes->find('list', [
+            'keyField' => 'user_type_id',
+            'valueField' => 'name'
+        ])->all() : null;
         if ($target !== $userId and !$isAdmin){
             $this->Flash->error(__('Please access your own profile'));
             return $this->redirect(['action' => 'index']);
         }
         $user = $this->Users->get($id, contain: ['UserTypes']);
-        $original_type = $user->user_type;
         if ($this->request->is(['patch', 'post', 'put'])) {
             $data = $this->request->getData();
-            $data['user_type'] = $original_type;
-            $user = $this->Users->patchEntity($user, $this->request->getData());
+            if (!$isAdmin) {
+                $data['user_type'] = $this->request->getAttribute('identity')->get('user_type');
+            }
+            if (!$data['password']) {
+                unset($data['password']);
+                unset($data['confirm_password']);
+            }
+            $user = $this->Users->patchEntity($user, $data);
             if ($this->Users->save($user)) {
                 $this->Flash->success(__('The user has been saved.'));
 
@@ -180,7 +189,7 @@ class UsersController extends AppController
                 $this->Flash->error(__('The user could not be saved. Please, try again.'));
             }
         }
-        $this->set(compact('user'));
+        $this->set(compact('user','userTypes'));
     }
 
     /**
@@ -274,7 +283,7 @@ class UsersController extends AppController
 
         if ($this->request->is('post')) {
             $data = $this->request->getData();
-            $data['user_type'] = 2;
+            $data['user_type'] = 3;
 
             if (
                 empty($data['password']) ||

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use Cake\Core\Configure;
+use Cake\Mailer\Mailer;
 use Stripe\StripeClient;
 
 /**
@@ -218,6 +219,20 @@ class InvoicesController extends AppController
                 $invoice->invoice_url = $finalizedInvoice->hosted_invoice_url ?? null;
                 $invoice->status = $finalizedInvoice->status ?? 'open';
                 $invoice->sent_at = date('Y-m-d H:i:s');
+
+                $mailer = new Mailer('default');
+                $body = "Hi " . ($customer->first_name !== '' ? $customer : 'there') . ",\n\n"
+                    . "Your invoice is ready.\n\n"
+                    . "You can view and pay it here:\n"
+                    . $finalizedInvoice->hosted_invoice_url . "\n\n"
+                    . "If you have any questions, please reply to this email.\n\n"
+                    . "Regards,\n"
+                    . "Moving House 24/7";
+
+                $mailer
+                    ->setTo($customer->email)
+                    ->setSubject('Your invoice is ready')
+                    ->deliver($body);
 
                 $this->fetchTable('Invoices')->saveOrFail($invoice);
 
