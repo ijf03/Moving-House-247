@@ -36,8 +36,6 @@
                         <tr>
                             <th><?= __('Contact Form') ?></th>
                             <th><?= __('Customer') ?></th>
-                            <th><?= __('First Name') ?></th>
-                            <th><?= __('Last Name') ?></th>
                             <th><?= __('Email') ?></th>
                             <th><?= __('Phone') ?></th>
                             <th><?= __('Subject') ?></th>
@@ -59,8 +57,6 @@
                                         )
                                         : '' ?>
                                 </td>
-                                <td><?= h($contactForm->customer->first_name ?? '') ?></td>
-                                <td><?= h($contactForm->customer->last_name ?? '') ?></td>
                                 <td><?= h($contactForm->customer->email ?? '') ?></td>
                                 <td><?= h($contactForm->customer->phone ?? '') ?></td>
                                 <td><?= h($contactForm->subject) ?></td>
