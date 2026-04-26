@@ -350,7 +350,7 @@ class InvoicesController extends AppController
             $invoice->status = $sentInvoice->status ?? 'open';
             $invoice->sent_at = date('Y-m-d H:i:s');
 
-            /*
+
             $mailer = new Mailer('default');
             $body = "Hi " . ($customer->first_name !== '' ? $customer : 'there') . ",\n\n"
                 . "Your invoice is ready.\n\n"
@@ -364,7 +364,7 @@ class InvoicesController extends AppController
                 ->setTo($customer->email)
                 ->setSubject('Your invoice is ready')
                 ->deliver($body);
-            */
+
 
             $invoicesTable->saveOrFail($invoice);
 

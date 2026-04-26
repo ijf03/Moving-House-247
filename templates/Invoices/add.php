@@ -25,7 +25,6 @@
         <div class="container">
             <div class="row g-4 justify-content-center">
 
-                <!-- Actions -->
                 <div class="col-lg-3">
                     <div class="admin-table-card">
                         <div class="admin-table-header">
@@ -38,7 +37,6 @@
                     </div>
                 </div>
 
-                <!-- Form -->
                 <div class="col-lg-9">
                     <div class="auth-card auth-card-wide">
                         <div class="auth-header">
