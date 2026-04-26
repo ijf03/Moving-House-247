@@ -24,6 +24,9 @@
         <div class="container">
             <div class="row g-4 justify-content-center">
                 <div class="col-lg-3">
+                    <div class="mh-back-btn m-1">
+                        <?= $this->Html->link(__('← Back to List'), ['action' => 'index']) ?>
+                    </div>
                     <div class="admin-table-card">
                         <div class="admin-table-header">
                             <h2><?= __('Actions') ?></h2>
@@ -31,6 +34,7 @@
                         </div>
 
                         <div class="admin-action-stack">
+
                             <?= $this->Html->link(__('Edit User'), ['action' => 'edit', $user->user_id], ['class' => 'admin-action-link']) ?>
 
                             <?= $this->Form->postLink(
@@ -41,12 +45,6 @@
                                     'class' => 'admin-action-link admin-action-link-danger'
                                 ]
                             ) ?>
-
-                            <?= $this->Html->link(__('List Users'), ['action' => 'index'], ['class' => 'admin-action-link']) ?>
-
-                            <?= $isAdmin
-                                ? $this->Html->link(__('New User'), ['action' => 'add'], ['class' => 'admin-action-link'])
-                                : null ?>
                         </div>
                     </div>
                 </div>
