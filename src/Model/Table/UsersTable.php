@@ -67,15 +67,32 @@ class UsersTable extends Table
             ->requirePresence('phone', 'create')
             ->notEmptyString('phone', 'Phone number is required')
             ->add('phone', 'validFormat', [
-                'rule' => ['custom', '/^\d{10}$/'],
-                'message' => 'Phone number must contain exactly 10 digits',
+                'rule' => ['custom', '/^(0|\+61)4\d{8}$/'],
+                'message' => 'Phone number must be valid Australian Number',
             ]);
 
         $validator
             ->scalar('password')
             ->maxLength('password', 255)
+            ->minLength('password', 8, message: 'The password must be at least 8 characters long')
             ->requirePresence('password', 'create')
-            ->notEmptyString('password', 'Password is required');
+            ->notEmptyString('password', 'Password is required')
+            ->add('password', 'checkCap', [
+                'rule' => ['custom', '/[A-Z]/'],
+                'message' => 'Passwords should contain at least 1 capital letter.',
+            ])
+            ->add('password', 'checkSp', [
+                'rule' => ['custom', '/[!@#$%^&*=_+~-]/'],
+                'message' => 'Passwords should contain at least 1 special character.',
+            ])
+            ->add('password', 'checkNum', [
+                'rule' => ['custom', '/[0-9]/'],
+                'message' => 'Passwords should contain at least 1 number.',
+            ])
+            ->add('password', 'checkSm', [
+                'rule' => ['custom', '/[a-z]/'],
+                'message' => 'Passwords should contain at least 1 small letter.',
+            ]);
 
         $validator
             ->scalar('first_name')

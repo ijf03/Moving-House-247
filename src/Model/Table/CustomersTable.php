@@ -86,8 +86,8 @@ class CustomersTable extends Table
             ->requirePresence('phone', 'create')
             ->notEmptyString('phone', 'Phone number is required')
             ->add('phone', 'validFormat', [
-                'rule' => ['custom', '/^\d{10}$/'],
-                'message' => 'Phone number must contain exactly 10 digits',
+                'rule' => ['custom', '/^(0|\+61)4\d{8}$/'],
+                'message' => 'Phone number must be valid Australian Number',
             ]);
 
         $validator
