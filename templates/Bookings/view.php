@@ -11,25 +11,23 @@
             <div class="row g-4 align-items-start">
 
                 <div class="col-lg-3">
-                    <div class="admin-table-card">
-                        <div class="admin-table-header">
-                            <h2><?= __('Actions') ?></h2>
-                        </div>
-
-                        <div class="admin-action-stack">
-                            <?= $this->Html->link(
-                                __('Edit Booking'),
-                                ['action' => 'edit', $booking->booking_id],
-                                ['class' => 'admin-action-link']
-                            ) ?>
-
-                            <?= $this->Html->link(
-                                __('Back to List'),
-                                ['action' => 'index'],
-                                ['class' => 'admin-action-link']
-                            ) ?>
-                        </div>
+                    <div class="mh-back-btn m-1">
+                        <?= $this->Html->link(__('← Back to List'), ['action' => 'index']) ?>
                     </div>
+<!--                    <div class="admin-table-card">-->
+<!--                        <div class="admin-table-header">-->
+<!--                            <h2>--><?php //= __('Actions') ?><!--</h2>-->
+<!--                        </div>-->
+<!---->
+<!--                        <div class="admin-action-stack">-->
+<!--                            --><?php //= $this->Html->link(
+//                                __('Edit Booking'),
+//                                ['action' => 'edit', $booking->booking_id],
+//                                ['class' => 'admin-action-link']
+//                            ) ?>
+<!--                            -->
+<!--                        </div>-->
+<!--                    </div>-->
                 </div>
 
                 <div class="col-lg-9">
