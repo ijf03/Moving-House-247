@@ -44,7 +44,8 @@ CREATE TABLE `customers`
     `first_name`  varchar(50) NOT NULL,
     `last_name`   varchar(50) NOT NULL,
     `email`       varchar(62) NOT NULL,
-    `phone`       varchar(15) NOT NULL
+    `phone`       varchar(15) NOT NULL,
+    `stripe_id`   varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 --
