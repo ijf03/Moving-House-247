@@ -313,7 +313,7 @@ class UsersController extends AppController
             $user->reset_id = null;
             $user->time_limit = null;
             if (!$this->Users->save($user)){
-                $this->Flash->error('The user cannot be saved. Please try again.');
+                $this->set('user', $user);
                 return;
             }
             return $this->redirect(['action' => 'login']);
@@ -328,17 +328,6 @@ class UsersController extends AppController
         if ($this->request->is('post')) {
             $data = $this->request->getData();
             $data['user_type'] = 3;
-
-            if (
-                empty($data['password']) ||
-                empty($data['confirm_password']) ||
-                $data['password'] !== $data['confirm_password']
-            ) {
-                $this->Flash->error('Passwords do not match.');
-                $user = $this->Users->patchEntity($user, $data);
-                $this->set(compact('user', 'siteKey'));
-                return;
-            }
 
             $captchaResponse = $this->request->getData('g-recaptcha-response');
 
@@ -368,6 +357,8 @@ class UsersController extends AppController
             }
 
             $user = $this->Users->patchEntity($user, $data);
+            debug($user);
+            debug($this->Users->save($user));
 
             if ($this->Users->save($user)) {
                 $customersTable = $this->fetchTable('Customers');
