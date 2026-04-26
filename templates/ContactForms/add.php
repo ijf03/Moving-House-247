@@ -34,7 +34,7 @@ $identity = $this->request->getAttribute('identity');
         <div class="container contact-hero-shell">
             <div class="contact-hero-content text-center text-lg-start">
                 <p class="section-kicker mb-3">Contact Us</p>
-                <h1>Get a Quote or Ask a Question</h1>
+                <h1>Ask a Question</h1>
                 <p class="contact-hero-text">
                     Tell us what you need and our team will get back to you as soon as possible.
                 </p>

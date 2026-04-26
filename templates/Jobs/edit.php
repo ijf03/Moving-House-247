@@ -33,7 +33,7 @@
                     echo $this->Form->control('customer_id', ['options' => $customers]);
                 ?>
             </fieldset>
-            <?= $this->Form->button(__('Submit')) ?>
+            <?= $this->Form->button(__('Save Changes')) ?>
             <?= $this->Form->end() ?>
         </div>
     </div>
