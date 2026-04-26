@@ -35,7 +35,7 @@
                             ['action' => 'delete', $customer->customer_id],
                             [
                                 'method' => 'delete',
-                                'confirm' => __('Are you sure you want to delete # {0}?', $customer->customer_id),
+                                'confirm' => __('Are you sure you want to delete {0}?', $user->full_name),
                             ]
                         ) ?>
                     </td>

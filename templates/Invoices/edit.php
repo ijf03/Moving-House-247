@@ -35,7 +35,7 @@
                     echo $this->Form->control('paid_at', ['empty' => true]);
                 ?>
             </fieldset>
-            <?= $this->Form->button(__('Submit')) ?>
+            <?= $this->Form->button(__('Save Changes')) ?>
             <?= $this->Form->end() ?>
         </div>
     </div>

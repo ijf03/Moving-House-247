@@ -14,12 +14,15 @@
 html, body {
     margin: 0;
     padding: 0;
+    font-size: 100%;
 }
 
 body.mh-site {
     font-family: Arial, sans-serif;
     background: #ffffff;
     color: var(--mh-text);
+    font-size: 1rem;
+    line-height: 1.6;
 }
 
 .mh-header {
@@ -698,6 +701,20 @@ body.mh-site {
     padding: 4rem 0 5rem;
 }
 
+.admin-section .container {
+    max-width: 1500px;
+}
+
+.admin-table-card {
+    width: 100%;
+}
+
+.admin-table {
+    width: 100%;
+    min-width: 100%;
+    table-layout: auto;
+}
+
 .admin-table-card {
     border-radius: 28px;
     padding: 2rem;
@@ -739,17 +756,11 @@ body.mh-site {
     border-radius: 20px;
 }
 
-.admin-table {
-    width: 100%;
-    border-collapse: collapse;
-    background: #fff;
-    min-width: 980px;
-}
 
 .admin-table thead th {
     background: #f6f8fb;
     color: #04142b;
-    font-size: 0.95rem;
+    font-size: 1rem;
     font-weight: 700;
     padding: 1rem 1rem;
     border-bottom: 1px solid #e1e7ef;
@@ -766,6 +777,13 @@ body.mh-site {
 
 .admin-table tbody tr:hover {
     background: #fafcff;
+}
+
+.admin-table th,
+.admin-table td {
+    white-space: normal;
+    overflow-wrap: normal;
+    word-break: normal;
 }
 
 .admin-row-highlight {
@@ -852,10 +870,13 @@ body.mh-site {
     min-height: 34px;
     padding: 0.35rem 0.8rem;
     border-radius: 999px;
-    font-size: 0.9rem;
+    font-size: 1rem;
     font-weight: 700;
     background: rgba(0, 59, 115, 0.08);
     color: #003b73;
+    white-space: nowrap;
+    word-break: normal;
+    overflow-wrap: normal;
 }
 
 .admin-status-new {
@@ -943,8 +964,8 @@ body.mh-site {
 }
 
 .mh-error-card {
-    padding-top: 2.5rem;
     padding-bottom: 2.5rem;
+    padding-top: 2.5rem;
 }
 
 .mh-error-emoji {
@@ -976,7 +997,7 @@ body.mh-site {
 .mh-error-note {
     margin-top: 1rem;
     color: #6b7c93;
-    font-size: 0.98rem;
+    font-size: 1rem;
 }
 
 .mh-error-actions {
@@ -1004,18 +1025,81 @@ body.mh-site {
     background: rgba(0, 59, 115, 0.14);
 }
 
-@media (max-width: 767.98px) {
-    .mh-error-emoji {
-        font-size: 2.4rem;
-    }
-
-    .mh-error-card {
-        padding-top: 1.75rem;
-        padding-bottom: 1.75rem;
+/* Larger desktop screens */
+@media (min-width: 1800px) {
+    .admin-section .container {
+        max-width: 1850px;
     }
 }
 
-/*Admin mobile pages*/
+@media (min-width: 1600px) {
+    body.mh-site {
+        font-size: 1.15rem;
+    }
+
+    .mh-navbar,
+    .mh-nav-link,
+    .mh-quote-btn {
+        font-size: 1.1rem;
+    }
+
+    .mh-brand-text {
+        font-size: 1.35rem;
+    }
+}
+
+/* Large screen improvements */
+@media (min-width: 1400px) {
+    .hero-shell,
+    .services-shell,
+    .how-shell,
+    .trust-shell {
+        max-width: 1500px;
+        padding-left: 5rem;
+        padding-right: 5rem;
+    }
+
+    .hero h1 {
+        font-size: clamp(4.5rem, 4vw, 7rem);
+    }
+
+    .hero p {
+        font-size: clamp(1.2rem, 1vw, 1.6rem);
+        max-width: 760px;
+    }
+
+    .hero-content {
+        max-width: 760px;
+    }
+
+    .hero-stats-panel {
+        max-width: 520px;
+        margin-left: auto;
+    }
+
+    .admin-section .container {
+        max-width: 1650px;
+    }
+
+    .admin-table-card {
+        padding: 2.5rem;
+    }
+
+    .admin-table thead th,
+    .admin-table tbody td {
+        font-size: 1.08rem;
+        padding: 1.15rem 1.25rem;
+    }
+
+    .admin-table-header h2 {
+        font-size: 1.8rem;
+    }
+
+    .admin-table-header p {
+        font-size: 1.1rem;
+    }
+}
+
 @media (max-width: 991.98px) {
     .admin-hero {
         padding: 4.75rem 0 3.5rem;
@@ -1024,28 +1108,46 @@ body.mh-site {
     .admin-table-card {
         padding: 1.5rem;
     }
-}
 
-@media (max-width: 767.98px) {
-    .admin-section {
-        padding: 3rem 0 4rem;
+    .admin-table thead {
+        display: none;
     }
 
-    .admin-hero-content h1 {
-        font-size: 2.35rem;
+    .admin-table,
+    .admin-table tbody,
+    .admin-table tr,
+    .admin-table td {
+        display: block;
+        width: 100%;
     }
 
-    .admin-hero-text {
-        font-size: 1rem;
+    .admin-table tr {
+        margin-bottom: 1rem;
+        border: 1px solid #e1e7ef;
+        border-radius: 16px;
+        padding: 1rem;
+        background: #fff;
     }
 
-    .admin-table-card {
-        padding: 1.2rem;
+    .admin-table td {
+        border-bottom: none;
+        padding: 0.5rem 0;
+        max-width: 220px;
     }
-}
 
-/*Booking form*/
-@media (max-width: 991.98px) {
+    .admin-table td:nth-child(1),
+    .admin-table th:nth-child(1) {
+        width: 90px;
+        white-space: nowrap;
+    }
+
+    .admin-table td:nth-child(4),
+    .admin-table th:nth-child(4),
+    .admin-table td:nth-child(9),
+    .admin-table th:nth-child(9) {
+        white-space: nowrap;
+    }
+
     .booking-hero {
         padding: 4.75rem 0 3.5rem;
     }
@@ -1053,70 +1155,12 @@ body.mh-site {
     .mh-form-card {
         padding: 1.6rem;
     }
-}
 
-@media (max-width: 767.98px) {
-    .booking-section {
-        padding: 3rem 0 4rem;
-    }
-
-    .booking-hero-content h1 {
-        font-size: 2.35rem;
-    }
-
-    .booking-hero-text {
-        font-size: 1rem;
-    }
-}
-
-/* Auth mobile pages */
-
-@media (max-width: 991.98px) {
     .auth-card,
     .auth-card-wide {
         padding: 1.75rem;
     }
-}
 
-@media (max-width: 767.98px) {
-    .auth-title {
-        font-size: 2.2rem;
-    }
-
-    .auth-subtitle {
-        font-size: 0.98rem;
-    }
-}
-
-/*Contact page mobile website*/
-
-@media (max-width: 991.98px) {
-    .contact-hero {
-        padding: 5rem 0 3.5rem;
-    }
-
-    .contact-form-card {
-        padding: 1.5rem;
-    }
-}
-
-@media (max-width: 767.98px) {
-    .contact-section {
-        padding: 3rem 0 4rem;
-    }
-
-    .contact-hero-content h1 {
-        font-size: 2.5rem;
-    }
-
-    .contact-hero-text {
-        font-size: 1.02rem;
-        color: #ff8a00;
-    }
-}
-
-/*Main Moving house Mobile Website*/
-@media (max-width: 991.98px) {
     .mh-navbar {
         min-height: auto;
     }
@@ -1139,5 +1183,140 @@ body.mh-site {
 
     .mh-footer-cta-btn {
         width: 100%;
+    }
+
+    .hero {
+        min-height: auto;
+        padding: 5rem 0;
+    }
+
+    .hero-shell {
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+
+    .hero-content {
+        max-width: 100%;
+        text-align: center;
+        margin: 0 auto;
+    }
+
+    .hero-buttons,
+    .hero-features {
+        justify-content: center;
+    }
+
+    .hero-stats-panel {
+        margin-top: 3rem;
+    }
+
+    .services-grid,
+    .steps {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .mh-error-emoji {
+        font-size: 2.4rem;
+    }
+
+    .mh-error-card {
+        padding-top: 1.75rem;
+        padding-bottom: 1.75rem;
+    }
+
+    .admin-section {
+        padding: 3rem 0 4rem;
+    }
+
+    .admin-hero-content h1 {
+        font-size: 2.35rem;
+    }
+
+    .admin-hero-text {
+        font-size: 1rem;
+    }
+
+    .admin-table-card {
+        padding: 1.2rem;
+    }
+
+    .booking-section {
+        padding: 3rem 0 4rem;
+    }
+
+    .booking-hero-content h1 {
+        font-size: 2.35rem;
+    }
+
+    .booking-hero-text {
+        font-size: 1rem;
+    }
+
+    .auth-title {
+        font-size: 2.2rem;
+    }
+
+    .auth-subtitle {
+        font-size: 1rem;
+    }
+
+    .contact-hero {
+        padding: 5rem 0 3.5rem;
+    }
+
+    .contact-form-card {
+        padding: 1.5rem;
+    }
+
+    .contact-section {
+        padding: 3rem 0 4rem;
+    }
+
+    .contact-hero-content h1 {
+        font-size: 2.5rem;
+    }
+
+    .contact-hero-text {
+        font-size: 1.02rem;
+        color: #ff8a00;
+    }
+}
+
+
+@media (max-width: 575.98px) {
+    .hero-shell,
+    .services-shell,
+    .how-shell,
+    .trust-shell {
+        padding-left: 1.25rem;
+        padding-right: 1.25rem;
+    }
+
+    .hero h1 {
+        font-size: 3rem;
+        line-height: 1;
+    }
+
+    .hero p {
+        font-size: 1rem;
+    }
+
+    .btn-primary-custom,
+    .btn-outline-custom {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .hero-stats-panel {
+        padding: 1.5rem;
+        border-radius: 24px;
+    }
+
+    .hero-stat-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.4rem;
     }
 }
