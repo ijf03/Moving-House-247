@@ -89,14 +89,13 @@
                         <thead>
                         <tr>
                             <th><?= __('Booking ID') ?></th>
-                            <th><?= __('Customer Name') ?></th>
-                            <th><?= __('Customer Email') ?></th>
-                            <th><?= __('Customer Phone') ?></th>
-                            <th><?= __('Service Type') ?></th>
-                            <th><?= __('Pickup Address') ?></th>
-                            <th><?= __('Dropoff Address') ?></th>
-                            <th><?= __('Job Date') ?></th>
-                            <th><?= __('Job Time') ?></th>
+                            <th><?= __('Customer') ?></th>
+                            <th><?= __('Contact') ?></th>
+                            <th><?= __('Service') ?></th>
+                            <th><?= __('Pickup') ?></th>
+                            <th><?= __('Dropoff') ?></th>
+                            <th><?= __('Date') ?></th>
+                            <th><?= __('Time') ?></th>
                             <th><?= __('Status') ?></th>
                             <th class="actions"><?= __('Actions') ?></th>
                         </tr>
@@ -115,19 +114,20 @@
                             <tr>
                                 <td><?= h($booking->booking_id) ?></td>
                                 <td><?= h(($booking->customer->first_name ?? '') . ' ' . ($booking->customer->last_name ?? '')) ?></td>
-                                <td><?= h($booking->customer->email ?? '') ?></td>
-                                <td><?= h($booking->customer->phone ?? '') ?></td>
+                                <td><?= h($booking->customer->email ?? '').' '.($booking->customer->phone ?? '')?></td>
                                 <td><?= h($booking->job_type->job_type_name ?? '') ?></td>
+
+
                                 <td><?= h($booking->pickup_address) ?></td>
                                 <td><?= h($booking->dropoff_address) ?></td>
                                 <td><?= h($booking->job_date) ?></td>
                                 <td><?= h($booking->job_time) ?></td>
                                 <td>
-                                    <span class="admin-status-badge admin-status-<?= strtolower((string)$booking->status) ?>">
+                                    <span class="admin-status-badge">
                                         <?= h($booking->status) ?>
                                     </span>
                                 </td>
-                                <td class="actions">
+                                <td>
                                     <div class="admin-action-stack">
                                         <?= $this->Html->link(__('View'), ['action' => 'view', $booking->booking_id], ['class' => 'admin-action-link']) ?>
 

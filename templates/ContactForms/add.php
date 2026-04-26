@@ -34,7 +34,7 @@ $identity = $this->request->getAttribute('identity');
         <div class="container contact-hero-shell">
             <div class="contact-hero-content text-center text-lg-start">
                 <p class="section-kicker mb-3">Contact Us</p>
-                <h1>Get a Quote or Ask a Question</h1>
+                <h1>Ask a Question</h1>
                 <p class="contact-hero-text">
                     Tell us what you need and our team will get back to you as soon as possible.
                 </p>
@@ -46,37 +46,29 @@ $identity = $this->request->getAttribute('identity');
             <div class="row g-4 g-lg-5 align-items-stretch">
 
                 <div class="col-lg-4">
-                    <div class="contact-info-stack h-100">
+                    <div class="contact-info-stack">
                         <div class="mh-info-card">
-                            <span class="contact-info-icon">📞</span>
+                            <div class="mh-info-icon">📞</div>
                             <div>
-                                <h3>Call us</h3>
-                                <p>1800 24 7 247</p>
+                                <h3>Call Us</h3>
+                                <p>Speak with our team for quick moving support.</p>
                             </div>
                         </div>
 
                         <div class="mh-info-card">
-                            <span class="contact-info-icon">✉️</span>
+                            <div class="mh-info-icon">✉️</div>
                             <div>
-                                <h3>Email</h3>
-                                <p>hello@movinghouse247.com.au</p>
+                                <h3>Email Us</h3>
+                                <p>Send us your enquiry and we will get back to you soon.</p>
                             </div>
                         </div>
 
                         <div class="mh-info-card">
-                            <span class="contact-info-icon">📍</span>
+                            <div class="mh-info-icon">📍</div>
                             <div>
                                 <h3>Service Area</h3>
-                                <p>Victoria, Australia</p>
+                                <p>We support local removal and storage enquiries.</p>
                             </div>
-                        </div>
-
-                        <div class="mh-info-card">
-                            <h3>Need help with your move?</h3>
-                            <p>
-                                Send us your details and we’ll help you with relocating,
-                                moving belongings, storage, or furniture removal.
-                            </p>
                         </div>
                     </div>
                 </div>
