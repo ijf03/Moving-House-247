@@ -54,6 +54,7 @@
 
                             <div class="col-md-6 auth-form-group">
                                 <?= $this->Form->control('booking_id', [
+                                    'empty' => 'Select a booking',
                                     'options' => $bookings,
                                     'label' => 'Booking',
                                     'class' => 'auth-input'
@@ -61,16 +62,10 @@
                             </div>
 
                             <div class="col-md-6 auth-form-group">
-                                <?= $this->Form->control('amount', [
-                                    'label' => 'Amount ($)',
-                                    'placeholder' => 'Enter total amount',
-                                    'class' => 'auth-input'
-                                ]) ?>
-                            </div>
-
-                            <div class="col-md-6 auth-form-group">
-                                <?= $this->Form->control('status', [
-                                    'options' => ['Pending' => 'Pending', 'Paid' => 'Paid'],
+                                <?= $this->Form->control('status_display', [
+                                    'type' => 'text',
+                                    'value' => 'Pending',
+                                    'readonly' => true,
                                     'label' => 'Status',
                                     'class' => 'auth-input'
                                 ]) ?>
@@ -80,14 +75,15 @@
                                 <?= $this->Form->control('due_date', [
                                     'type' => 'date',
                                     'label' => 'Due Date',
-                                    'class' => 'auth-input'
+                                    'class' => 'auth-input',
+                                    'min' => date('Y-m-d')
                                 ]) ?>
                             </div>
 
                         </div>
 
                         <div class="auth-form-actions">
-                            <?= $this->Form->button(__('Create Invoice'), ['class' => 'mh-btn-primary']) ?>
+                            <?= $this->Form->button(__('Create Invoice and add items'), ['class' => 'mh-btn-primary']) ?>
                         </div>
 
                         <?= $this->Form->end() ?>

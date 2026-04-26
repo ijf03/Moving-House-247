@@ -17,7 +17,7 @@
 
             <?php if (!empty($invoice->invoice_url)): ?>
                 <a class="side-nav-item" href="<?= h($invoice->invoice_url) ?>" target="_blank" rel="noopener noreferrer">
-                    <?= __('Open Hosted Invoice') ?>
+                    <?= __('View Invoice in Stripe') ?>
                 </a>
             <?php endif; ?>
         </div>
