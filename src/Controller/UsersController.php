@@ -298,7 +298,7 @@ class UsersController extends AppController
 
     public function resetpassword($reset_id = null)
     {
-        $this->request->allowMethod(['get', 'post']);
+        $this->request->allowMethod(['get', 'post','put']);
         $user = $this->Users->find()
             ->where(['reset_id' => $reset_id])
             ->first();
