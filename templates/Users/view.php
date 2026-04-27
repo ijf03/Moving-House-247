@@ -24,6 +24,9 @@
         <div class="container">
             <div class="row g-4 justify-content-center">
                 <div class="col-lg-3">
+                    <div class="mh-back-btn m-1">
+                        <?= $this->Html->link(__('← Back to List'), ['action' => 'index']) ?>
+                    </div>
                     <div class="admin-table-card">
                         <div class="admin-table-header">
                             <h2><?= __('Actions') ?></h2>
@@ -37,7 +40,7 @@
                                 __('Delete User'),
                                 ['action' => 'delete', $user->user_id],
                                 [
-                                    'confirm' => __('Are you sure you want to delete # {0}?', $user->user_id),
+                                    'confirm' => __('Are you sure you want to delete {0}?', $user->full_name),
                                     'class' => 'admin-action-link admin-action-link-danger'
                                 ]
                             ) ?>

@@ -25,7 +25,6 @@
         <div class="container">
             <div class="row g-4 justify-content-center">
 
-                <!-- Actions -->
                 <div class="col-lg-3">
                     <div class="admin-table-card">
                         <div class="admin-table-header">
@@ -38,7 +37,6 @@
                     </div>
                 </div>
 
-                <!-- Form -->
                 <div class="col-lg-9">
                     <div class="auth-card auth-card-wide">
                         <div class="auth-header">
@@ -95,14 +93,15 @@
                                 <?= $this->Form->control('due_date', [
                                     'type' => 'date',
                                     'label' => 'Due Date',
-                                    'class' => 'auth-input'
+                                    'class' => 'auth-input',
+                                    'min' => date('Y-m-d')
                                 ]) ?>
                             </div>
 
                         </div>
 
                         <div class="auth-form-actions">
-                            <?= $this->Form->button(__('Create Invoice'), ['class' => 'mh-btn-primary']) ?>
+                            <?= $this->Form->button(__('Create Invoice and add items'), ['class' => 'mh-btn-primary']) ?>
                         </div>
 
                         <?= $this->Form->end() ?>

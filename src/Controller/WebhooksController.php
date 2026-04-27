@@ -53,10 +53,14 @@ class WebhooksController extends AppController
         if ($event->type === 'invoice.paid') {
             $stripeInvoice = $event->data->object;
 
+            $paidAt = isset($stripeInvoice->status_transitions->paid_at)
+                ? date('Y-m-d H:i:s', $stripeInvoice->status_transitions->paid_at)
+                : date('Y-m-d H:i:s');
+
             $updated = $invoicesTable->updateQuery()
                 ->set([
                     'status' => 'paid',
-                    'paid_at' => date('Y-m-d H:i:s'),
+                    'paid_at' => $paidAt,
                 ])
                 ->where(['stripe_invoice_id' => $stripeInvoice->id])
                 ->execute()
@@ -93,6 +97,7 @@ class WebhooksController extends AppController
             }
 
             return $this->response
+                ->withStatus(200)
                 ->withType('application/json')
                 ->withStringBody(json_encode([
                     'ok' => true,
@@ -103,6 +108,7 @@ class WebhooksController extends AppController
         }
 
         return $this->response
+            ->withStatus(200)
             ->withType('application/json')
             ->withStringBody(json_encode([
                 'ok' => true,

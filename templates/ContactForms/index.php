@@ -79,7 +79,7 @@
                                             ['action' => 'delete', $contactForm->contact_form_id],
                                             [
                                                 'method' => 'delete',
-                                                'confirm' => __('Are you sure you want to delete # {0}?', $contactForm->contact_form_id),
+                                                'confirm' => __('Are you sure you want to delete the message from {0}? This action cannot be undone.', $contactForm->customer->first_name),
                                                 'class' => 'admin-action-link admin-action-link-danger'
                                             ]
                                         ) ?>

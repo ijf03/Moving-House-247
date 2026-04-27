@@ -24,12 +24,21 @@
         <div class="container">
             <div class="row g-4 align-items-start">
                 <div class="col-lg-3">
+                    <div class="mh-back-btn m-1">
+                        <?= $this->Html->link(__('← Back to List'), ['action' => 'index']) ?>
+                    </div>
                     <div class="mh-form-card">
                         <div class="admin-table-header">
                             <h2><?= __('Actions') ?></h2>
                         </div>
 
                         <div class="admin-action-stack">
+                            <?= $this->Html->link(
+                                __('Reply to Message'),
+                                ['action' => 'reply', $contactForm->contact_form_id],
+                                ['class' => 'admin-primary-link']
+                            ) ?>
+
                             <?= $this->Html->link(
                                 __('Edit Contact Form'),
                                 ['action' => 'edit', $contactForm->contact_form_id],

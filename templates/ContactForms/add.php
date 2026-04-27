@@ -48,23 +48,23 @@ $identity = $this->request->getAttribute('identity');
                 <div class="col-lg-4">
                     <div class="contact-info-stack h-100">
                         <div class="mh-info-card">
-                            <span class="contact-info-icon">📞</span>
+                            <div class="mh-info-icon">📞</div>
                             <div>
-                                <h3>Call us</h3>
-                                <p>1800 24 7 247</p>
+                                <h3>Call Us</h3>
+                                <p>Speak with our team for quick moving support.</p>
                             </div>
                         </div>
 
                         <div class="mh-info-card">
-                            <span class="contact-info-icon">✉️</span>
+                            <div class="mh-info-icon">✉️</div>
                             <div>
-                                <h3>Email</h3>
-                                <p>hello@movinghouse247.com.au</p>
+                                <h3>Email Us</h3>
+                                <p>Send us your enquiry and we will get back to you soon.</p>
                             </div>
                         </div>
 
                         <div class="mh-info-card">
-                            <span class="contact-info-icon">📍</span>
+                            <div class="mh-info-icon">📍</div>
                             <div>
                                 <h3>Service Area</h3>
                                 <p>Victoria, Australia</p>

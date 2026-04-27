@@ -34,12 +34,12 @@
                 </div>
 
                 <?php if (!empty($popupBooking)) : ?>
-                    <div class="alert alert-success">
-                        <?= __('Your booking request has been accepted.') ?>
-                    </div>
+                    <script>
+                        alert('Your booking request has been accepted.');
+                    </script>
                 <?php endif; ?>
 
-                <?php if (count($bookings) === 0) : ?>
+                <?php if ($bookings->isEmpty()) : ?>
                     <p><?= __('You do not have any accepted bookings yet.') ?></p>
                 <?php else : ?>
                     <div class="admin-table-wrap">
@@ -60,7 +60,7 @@
                             <?php foreach ($bookings as $booking) : ?>
                                 <tr>
                                     <td><?= h($booking->booking_id) ?></td>
-                                    <td><?= h($booking->job_type?->job_type_name ?? '') ?></td>
+                                    <td><?= h($booking->job_type->job_type_name ?? '') ?></td>
                                     <td><?= h($booking->pickup_address) ?></td>
                                     <td><?= h($booking->dropoff_address) ?></td>
                                     <td><?= h($booking->job_date?->format('Y-m-d')) ?></td>
@@ -75,7 +75,7 @@
                                             <?= $this->Html->link(
                                                 __('View'),
                                                 ['action' => 'view', $booking->booking_id],
-                                                ['class' => 'admin-action-link']
+                                                ['class' => 'admin-action-link'],
                                             ) ?>
                                         </div>
                                     </td>

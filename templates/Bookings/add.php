@@ -28,7 +28,7 @@
                 <div class="col-lg-4">
                     <div class="booking-info-stack">
                         <div class="mh-info-card">
-                            <div class="booking-info-icon">📦</div>
+                            <div class="mh-info-icon">📦</div>
                             <div>
                                 <h3>Simple Booking</h3>
                                 <p>
@@ -38,7 +38,7 @@
                         </div>
 
                         <div class="mh-info-card">
-                            <div class="booking-info-icon">🚚</div>
+                            <div class="mh-info-icon">🚚</div>
                             <div>
                                 <h3>Removal, Storage, or Transfer</h3>
                                 <p>
@@ -121,15 +121,16 @@
                             </div>
                         </div>
 
-                        <div class="col-12">
-                            <?= $this->Form->control('message', [
-                                'type' => 'textarea',
-                                'label' => 'Additional Message',
-                                'class' => 'booking-input',
-                                'templates' => [
-                                    'inputContainer' => '<div class="input booking-form-group {{type}}{{required}}">{{content}}</div>',
-                                ],
-                            ]) ?>
+                            <div class="col-12">
+                                <?= $this->Form->control('message', [
+                                    'type' => 'textarea',
+                                    'label' => 'Additional Message',
+                                    'class' => 'booking-input',
+                                    'templates' => [
+                                        'inputContainer' => '<div class="input booking-form-group {{type}}{{required}}">{{content}}</div>',
+                                    ],
+                                ]) ?>
+                            </div>
                         </div>
 
                         <div class="booking-form-actions">

@@ -31,7 +31,7 @@
                     echo $this->Form->control('sort_order');
                 ?>
             </fieldset>
-            <?= $this->Form->button(__('Submit')) ?>
+            <?= $this->Form->button(__('Save Changes')) ?>
             <?= $this->Form->end() ?>
         </div>
     </div>
