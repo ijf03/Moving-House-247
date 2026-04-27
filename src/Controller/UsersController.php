@@ -281,7 +281,7 @@ class UsersController extends AppController
                     }
                 }
                 $mailer = new Mailer('default');
-                $mailer->setFrom(['noreply@zentrix.com'])
+                $mailer
                     ->setTo($user->email)
                     ->setSubject('Password Reset')
                     ->deliver('Link to reset your password: ' . Configure::read('App.fullBaseUrl') . '/users/resetpassword/' . $reset_id);
