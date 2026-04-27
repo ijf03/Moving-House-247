@@ -21,8 +21,8 @@
     </section>
 
     <?php
-$identity = $this->request->getAttribute('identity');
-?>
+    $identity = $this->request->getAttribute('identity');
+    ?>
 
     <section class="admin-section">
         <div class="container">
@@ -32,20 +32,20 @@ $identity = $this->request->getAttribute('identity');
                     <div class="mh-back-btn m-1">
                         <?= $this->Html->link(__('← Back to List'), ['action' => 'index']) ?>
                     </div>
-<!--                    <div class="admin-table-card">-->
-<!--                        <div class="admin-table-header">-->
-<!--                            <h2>--><?php //= __('Actions') ?><!--</h2>-->
-<!--                        </div>-->
-<!---->
-<!--                        <div class="admin-action-stack">-->
-<!--                            --><?php //= $this->Html->link(
-//                                __('Edit Booking'),
-//                                ['action' => 'edit', $booking->booking_id],
-//                                ['class' => 'admin-action-link']
-//                            ) ?>
-<!--                            -->
-<!--                        </div>-->
-<!--                    </div>-->
+                    <!--                    <div class="admin-table-card">-->
+                    <!--                        <div class="admin-table-header">-->
+                    <!--                            <h2>--><?php //= __('Actions') ?><!--</h2>-->
+                    <!--                        </div>-->
+                    <!---->
+                    <!--                        <div class="admin-action-stack">-->
+                    <!--                            --><?php //= $this->Html->link(
+                    //                                __('Edit Booking'),
+                    //                                ['action' => 'edit', $booking->booking_id],
+                    //                                ['class' => 'admin-action-link']
+                    //                            ) ?>
+                    <!--                            -->
+                    <!--                        </div>-->
+                    <!--                    </div>-->
                 </div>
 
                 <div class="col-lg-9">
@@ -165,23 +165,16 @@ $identity = $this->request->getAttribute('identity');
                                 <p><?= __('Additional notes submitted with the booking') ?></p>
                             </div>
 
-                            <?php if (!empty($booking->notes)): ?>
-                                <div class="col-12">
-                                    <div class="mh-info-card">
-                                        <div>
-                                            <h3><?= __('Notes') ?></h3>
-                                            <p><?= h($booking->notes) ?></p>
-                                </div>
+                            <div class="mh-info-card">
+                                <div>
                                     <p><?= $this->Text->autoParagraph(h($booking->message)) ?></p>
                                 </div>
                             </div>
                         <?php endif; ?>
-
-                        </div>
                     </div>
                 </div>
-
             </div>
         </div>
-    </section>
+</div>
+</section>
 </div>

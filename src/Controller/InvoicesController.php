@@ -123,7 +123,7 @@ class InvoicesController extends AppController
 
             if (empty($bookingId)) {
                 $this->Flash->error(__('Please select a booking.'));
-                $this->set(compact( 'invoice', 'bookings'));
+                $this->set(compact('invoice', 'bookings'));
                 return;
             }
 
@@ -142,7 +142,7 @@ class InvoicesController extends AppController
 
             if ($invoices->save($invoice)) {
                 $this->Flash->success(__('Invoice created. You can now add invoice items.'));
-                return $this->redirect(['action' => 'edit',$invoice->invoice_id]);
+                return $this->redirect(['action' => 'edit', $invoice->invoice_id]);
             } else {
                 $this->Flash->error(__('Invoice validation failed.'));
                 $this->set(compact('bookings', 'invoice'));
@@ -195,6 +195,7 @@ class InvoicesController extends AppController
         }
         if ($this->request->is(['patch', 'post', 'put'])) {
             $action = $this->request->getData('action');
+            $subtotal = 0;
 
             if ($action === 'add_item') {
                 $presetKey = (string)$this->request->getData('preset');
@@ -256,12 +257,12 @@ class InvoicesController extends AppController
                     return $this->redirect(['action' => 'edit', $invoice->invoice_id]);
                 }
 
-            if (empty($validItems)) {
-                $this->Flash->error(__('Please add at least one valid invoice item.'));
-                $this->set(compact('booking', 'invoice', 'presets'));
-                return;
+                if (empty($validItems)) {
+                    $this->Flash->error(__('Please add at least one valid invoice item.'));
+                    $this->set(compact('booking', 'invoice', 'presets'));
+                    return;
+                }
             }
-        }
 
             $invoiceData = [
                 'booking_id' => $booking->booking_id,
@@ -271,13 +272,13 @@ class InvoicesController extends AppController
                 'total_cents' => $subtotal,
             ];
 
-        $invoice = $invoicesTable->get($id, [
-            'contain' => [
-                'InvoiceItems' => [
-                    'sort' => ['InvoiceItems.sort_order' => 'ASC']
+            $invoice = $invoicesTable->get($id, [
+                'contain' => [
+                    'InvoiceItems' => [
+                        'sort' => ['InvoiceItems.sort_order' => 'ASC']
+                    ]
                 ]
-            ]
-        ]);
+            ]);
 
             if ($invoice->hasErrors()) {
                 $this->Flash->error(__('Invoice validation failed.'));
@@ -290,13 +291,14 @@ class InvoicesController extends AppController
                 ));
                 return;
             }
-        $this->set(compact(
-            'invoice',
-            'booking',
-            'customer',
-            'presets',
-            'presetOptions'
-        ));
+            $this->set(compact(
+                'invoice',
+                'booking',
+                'customer',
+                'presets',
+                'presetOptions'
+            ));
+        }
     }
 
     public function send($id = null)
@@ -304,15 +306,16 @@ class InvoicesController extends AppController
         $connection = $this->fetchTable('Invoices')->getConnection();
         $connection->begin();
 
-        try{
+        try {
             $invoicesTable = $this->fetchTable('Invoices');
-        $customersTable = $this->fetchTable('Customers');
-        $invoiceItemsTable = $this->fetchTable('InvoiceItems');
+            $customersTable = $this->fetchTable('Customers');
+            $invoiceItemsTable = $this->fetchTable('InvoiceItems');
+            $invoiceItemsTable = $this->fetchTable('Bookings');
 
-        $invoice = $invoicesTable->get($id, [
-            'contain' => ['InvoiceItems']
-        ]);
-        $customer = $customersTable->get($invoice->customer_id);
+            $invoice = $invoicesTable->get($id, [
+                'contain' => ['InvoiceItems']
+            ]);
+            $customer = $customersTable->get($invoice->customer_id);
 
             $stripe = new StripeClient(Configure::read('Stripe.secretKey'));
 
@@ -322,30 +325,30 @@ class InvoicesController extends AppController
                     ($customer->last_name ?? '')
                 );
 
-                    $stripeCustomer = $stripe->customers->create([
-                        'name' => $fullName !== '' ? $fullName : null,
-                        'email' => $customer->email ?: null,
-                        'phone' => $customer->phone ?: null,
-                        'description' => 'Customer for booking invoice',
-                        'metadata' => [
-                            'local_customer_id' => (string)$customer->customer_id,
-                        ],
-                    ]);
+                $stripeCustomer = $stripe->customers->create([
+                    'name' => $fullName !== '' ? $fullName : null,
+                    'email' => $customer->email ?: null,
+                    'phone' => $customer->phone ?: null,
+                    'description' => 'Customer for booking invoice',
+                    'metadata' => [
+                        'local_customer_id' => (string)$customer->customer_id,
+                    ],
+                ]);
 
                 $customer->stripe_id = $stripeCustomer->id;
                 $this->fetchTable('Customers')->saveOrFail($customer);
             }
 
-                $stripeInvoice = $stripe->invoices->create([
-                    'customer' => $customer->stripe_id,
-                    'collection_method' => 'send_invoice',
-                    'days_until_due' => 7,
-                    'auto_advance' => false,
-                    'metadata' => [
-                        'local_invoice_id' => (string)$invoice->invoice_id,
-                        'booking_id' => (string)$booking->booking_id,
-                    ],
-                ]);
+            $stripeInvoice = $stripe->invoices->create([
+                'customer' => $customer->stripe_id,
+                'collection_method' => 'send_invoice',
+                'days_until_due' => 7,
+                'auto_advance' => false,
+                'metadata' => [
+                    'local_invoice_id' => (string)$invoice->invoice_id,
+                    'booking_id' => (string)$invoice->booking_id,
+                ],
+            ]);
 
             $invoiceItems = $invoiceItemsTable
                 ->find()
@@ -379,19 +382,19 @@ class InvoicesController extends AppController
             $invoice->status = $sentInvoice->status ?? 'open';
             $invoice->sent_at = date('Y-m-d H:i:s');
 
-                $mailer = new Mailer('default');
-                $body = "Hi " . ($customer->first_name !== '' ? $customer->first_name : 'there') . ",\n\n"
-                    . "Your invoice is ready.\n\n"
-                    . "You can view and pay it here:\n"
-                    . $finalizedInvoice->hosted_invoice_url . "\n\n"
-                    . "If you have any questions, please reply to this email.\n\n"
-                    . "Regards,\n"
-                    . "Moving House 24/7";
+            $mailer = new Mailer('default');
+            $body = "Hi " . ($customer->first_name !== '' ? $customer->first_name : 'there') . ",\n\n"
+                . "Your invoice is ready.\n\n"
+                . "You can view and pay it here:\n"
+                . $finalizedInvoice->hosted_invoice_url . "\n\n"
+                . "If you have any questions, please reply to this email.\n\n"
+                . "Regards,\n"
+                . "Moving House 24/7";
 
-                $mailer
-                    ->setTo($customer->email)
-                    ->setSubject('Your invoice is ready')
-                    ->deliver($body);
+            $mailer
+                ->setTo($customer->email)
+                ->setSubject('Your invoice is ready')
+                ->deliver($body);
 
 
             $invoicesTable->saveOrFail($invoice);
@@ -407,7 +410,7 @@ class InvoicesController extends AppController
             $this->Flash->error(__('Invoice could not be sent: {0}', $e->getMessage()));
             return $this->redirect(['action' => 'edit', $invoice->invoice_id]);
         }
-    }}
+    }
 
     private function recalculateInvoiceTotals($invoiceId)
     {
