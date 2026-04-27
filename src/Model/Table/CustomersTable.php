@@ -82,12 +82,11 @@ class CustomersTable extends Table
 
         $validator
             ->scalar('phone')
-            ->lengthBetween('phone', [10, 10], 'Phone number must be exactly 10 digits')
             ->requirePresence('phone', 'create')
             ->notEmptyString('phone', 'Phone number is required')
             ->add('phone', 'validFormat', [
-                'rule' => ['custom', '/^(0|\+61)4\d{8}$/'],
-                'message' => 'Phone number must be valid Australian Number',
+                'rule' => ['custom', '/04\d{8}$/'],
+                'message' => 'Phone number must be valid Australian Number (04xxxxxxxx)',
             ]);
 
         $validator
