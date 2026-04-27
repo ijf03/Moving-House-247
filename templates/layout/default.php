@@ -80,6 +80,12 @@ $isUser = ($identity && (int)$role === 3);
                             ['class' => 'nav-link mh-nav-link'],
                         ) ?>
 
+                        <?= $this->Html->link(
+                            'Manage Invoices',
+                            ['controller' => 'Invoices', 'action' => 'index'],
+                            ['class' => 'nav-link mh-nav-link'],
+                        ) ?>
+
                     <?php elseif ($isUser) : ?>
                         <?= $this->Html->link(
                             'Book a Service',
