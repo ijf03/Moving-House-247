@@ -28,9 +28,17 @@ CREATE TABLE `contact_forms`
 -- Dumping data for table `contact_forms`
 --
 
-INSERT INTO `contact_forms` (`contact_form_id`, `customer_id`, `subject`, `message`, `created`, `status`, `admin_reply`,
-                             `replied_at`)
-VALUES (0, 1, 'vfjefkebfjgej', 'asdasda', '2026-04-15 15:18:28', 'new', NULL, NULL);
+INSERT INTO `contact_forms` (`contact_form_id`, `customer_id`, `subject`, `message`, `created`, `status`, `admin_reply`, `replied_at`) VALUES
+                                                                                                                                           (1, 1, 'Quote for apartment move', 'Hi, I would like a quote for moving a 2-bedroom apartment from Clayton to Melbourne.', '2026-04-18 09:30:00', 'replied', 'Thanks Emily. We have sent you a preliminary quote and will confirm availability shortly.', '2026-04-18 11:05:00'),
+                                                                                                                                           (2, 2, 'Short-term storage question', 'Do you offer storage for furniture while renovations are happening?', '2026-04-18 13:20:00', 'replied', 'Yes, we offer short-term storage options. We can include this in your quote.', '2026-04-18 15:10:00'),
+                                                                                                                                           (3, 3, 'Office relocation availability', 'We need help moving office equipment next week. Are morning slots available?', '2026-04-19 08:45:00', 'new', NULL, NULL),
+                                                                                                                                           (4, 4, 'Transfer booking request', 'Can you transfer packed boxes from South Yarra to Carlton?', '2026-04-19 12:00:00', 'replied', 'Yes, we can assist with transfer jobs. Please provide your preferred date.', '2026-04-19 14:35:00'),
+                                                                                                                                           (5, 5, 'Fragile items handling', 'I have glassware and framed artwork. Can your movers handle fragile items?', '2026-04-20 10:25:00', 'new', NULL, NULL),
+                                                                                                                                           (6, 6, 'Storage unit size', 'What storage unit size would suit a studio apartment?', '2026-04-20 16:15:00', 'replied', 'A small to medium unit is usually suitable for a studio apartment.', '2026-04-20 17:40:00'),
+                                                                                                                                           (7, 7, 'Packing materials', 'Can I request wardrobe boxes and packing tape with my booking?', '2026-04-21 09:10:00', 'new', NULL, NULL),
+                                                                                                                                           (8, 8, 'Student move inquiry', 'I am moving from Bundoora to the city and only have a few furniture items.', '2026-04-21 13:55:00', 'replied', 'We can help with smaller student moves. Please submit a booking request online.', '2026-04-21 15:25:00'),
+                                                                                                                                           (9, 9, 'Large family move', 'We are moving a family home and need help with heavy furniture.', '2026-04-22 11:35:00', 'new', NULL, NULL),
+                                                                                                                                           (10, 10, 'Storage before settlement', 'Can my items be stored for two weeks before delivery to my new address?', '2026-04-22 14:50:00', 'replied', 'Yes, we can arrange storage before final delivery.', '2026-04-22 16:20:00');
 
 -- --------------------------------------------------------
 
@@ -52,11 +60,18 @@ CREATE TABLE `customers`
 -- Dumping data for table `customers`
 --
 
-INSERT INTO `customers` (`customer_id`, `first_name`, `last_name`, `email`, `phone`)
-VALUES (1, 'Emily', 'Carter', 'emily.carter@example.com', '0412345678'),
-       (2, 'Liam', 'Nguyen', 'liam.nguyen@example.com', '0423456789'),
-       (3, 'Sophie', 'Patel', 'sophie.patel@example.com', '0434567890'),
-       (4, 'first', 'last', 'email@mail.com', '0987654321');
+INSERT INTO `customers` (`customer_id`, `first_name`, `last_name`, `email`, `phone`) VALUES
+                                                                                         (1, 'Emily', 'Carter', 'emily.carter@example.com', '0412345678'),
+                                                                                         (2, 'Liam', 'Nguyen', 'liam.nguyen@example.com', '0423456789'),
+                                                                                         (3, 'Sophie', 'Patel', 'sophie.patel@example.com', '0434567890'),
+                                                                                         (4, 'Daniel', 'Reyes', 'daniel.reyes@example.com', '0445678901'),
+                                                                                         (5, 'Mia', 'Thompson', 'mia.thompson@example.com', '0456789012'),
+                                                                                         (6, 'Joshua', 'Tan', 'joshua.tan@example.com', '0467890123'),
+                                                                                         (7, 'Hannah', 'Lim', 'hannah.lim@example.com', '0478901234'),
+                                                                                         (8, 'Noah', 'Brown', 'noah.brown@example.com', '0489012345'),
+                                                                                         (9, 'Ava', 'Williams', 'ava.williams@example.com', '0490123456'),
+                                                                                         (10, 'Marcus', 'Smith', 'marcus.smith@example.com', '0401234567');
+
 -- --------------------------------------------------------
 
 --
@@ -79,15 +94,17 @@ CREATE TABLE `jobs`
 -- Dumping data for table `jobs`
 --
 
-INSERT INTO `jobs` (`job_id`, `job_type_id`, `description`, `pickup_address`, `dropoff_address`, `job_date`, `job_time`,
-                    `customer_id`)
-VALUES (1, 1, 'Move 2-bedroom apartment including fridge, sofa, washing machine, and boxes.',
-        '12 King St, Clayton VIC 3168', '88 Collins St, Melbourne VIC 3000', '2026-03-28', '09:00:00', 1),
-       (2, 2, 'Store household furniture and personal boxes for temporary relocation.',
-        '5 Princes Hwy, Dandenong VIC 3175', 'Unit 4, Storage Hub, Springvale VIC 3171', '2026-03-30', '13:30:00', 2),
-       (3, 1, 'Office equipment relocation including desks, monitors, and chairs.',
-        '21 Wellington Rd, Mulgrave VIC 3170', '9 Queen St, Melbourne VIC 3000', '2026-04-02', '08:15:00', 3);
-
+INSERT INTO `jobs` (`job_id`, `job_type_id`, `description`, `pickup_address`, `dropoff_address`, `job_date`, `job_time`, `customer_id`) VALUES
+                                                                                                                                            (1, 1, 'Move 2-bedroom apartment including fridge, sofa, washing machine, and boxes.', '12 King Street, Clayton VIC 3168', '88 Collins Street, Melbourne VIC 3000', '2026-05-01', '09:00:00', 1),
+                                                                                                                                            (2, 2, 'Store household furniture and personal boxes during apartment renovation.', '5 Princes Highway, Dandenong VIC 3175', 'Unit 4, Storage Hub, Springvale VIC 3171', '2026-05-02', '13:30:00', 2),
+                                                                                                                                            (3, 1, 'Office equipment relocation including desks, monitors, and chairs.', '21 Wellington Road, Mulgrave VIC 3170', '9 Queen Street, Melbourne VIC 3000', '2026-05-03', '08:15:00', 3),
+                                                                                                                                            (4, 3, 'Transfer packed boxes between rental properties.', '44 Chapel Street, South Yarra VIC 3141', '72 Lygon Street, Carlton VIC 3053', '2026-05-04', '10:30:00', 4),
+                                                                                                                                            (5, 1, 'Move 2-bedroom unit with lift access and fragile items.', '18 High Street, Glen Iris VIC 3146', '120 Burke Road, Camberwell VIC 3124', '2026-05-05', '11:00:00', 5),
+                                                                                                                                            (6, 2, 'Store boxes and small appliances from a studio apartment.', '7 Sydney Road, Brunswick VIC 3056', 'Storage King, Preston VIC 3072', '2026-05-06', '14:00:00', 6),
+                                                                                                                                            (7, 1, 'Move apartment furniture and provide wardrobe boxes.', '33 Bay Street, Port Melbourne VIC 3207', '54 Smith Street, Collingwood VIC 3066', '2026-05-07', '09:45:00', 7),
+                                                                                                                                            (8, 3, 'Transfer student room furniture and personal boxes.', '90 Plenty Road, Bundoora VIC 3083', '27 Swanston Street, Melbourne VIC 3000', '2026-05-08', '12:15:00', 8),
+                                                                                                                                            (9, 1, 'Move family home furniture including outdoor setting and dining table.', '14 Main Road, Eltham VIC 3095', '65 Toorak Road, Toorak VIC 3142', '2026-05-09', '08:30:00', 9),
+                                                                                                                                            (10, 2, 'Store household items while customer waits for property settlement.', '101 Bridge Road, Richmond VIC 3121', 'Secure Store, Moorabbin VIC 3189', '2026-05-10', '15:30:00', 10);
 -- --------------------------------------------------------
 
 --
