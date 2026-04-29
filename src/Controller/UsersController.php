@@ -358,8 +358,6 @@ class UsersController extends AppController
             }
 
             $user = $this->Users->patchEntity($user, $data);
-            debug($user);
-            debug($this->Users->save($user));
 
             if ($this->Users->save($user)) {
                 $customersTable = $this->fetchTable('Customers');
