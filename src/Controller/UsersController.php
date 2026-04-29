@@ -72,9 +72,10 @@ class UsersController extends AppController
     public function login()
     {
         $this->request->allowMethod(['get', 'post']);
+        $redirect = $this->Authentication->getLoginRedirect();
 
         if ($this->request->getAttribute('identity')) {
-            return $this->redirect('/');
+            return $this->redirect($redirect ? $redirect : '/');
         }
 
         if ($this->request->is('post')) {
@@ -84,10 +85,10 @@ class UsersController extends AppController
                 $user = $result->getData();
 
                 if ((int)$user->user_type === 1) {
-                    return $this->redirect(['controller' => 'Users', 'action' => 'index']);
+                    return $this->redirect($redirect ? $redirect : ['controller' => 'Users', 'action' => 'index']);
                 }
 
-                return $this->redirect('/');
+                return $this->redirect($redirect ? $redirect : '/');
             }
 
             if (!$result->isValid()) {
