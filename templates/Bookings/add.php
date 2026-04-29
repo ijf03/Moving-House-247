@@ -91,9 +91,6 @@
                                 ?>
                             </div>
 
-                            <div class="col-12">
-                                <h4 class="booking-address-heading">Pickup Address</h4>
-                            </div>
 
                             <div class="col-12">
                                 <?= $this->Form->control('pickup_street_address', [
@@ -130,9 +127,6 @@
                                 ]) ?>
                             </div>
 
-                            <div class="col-12">
-                                <h4 class="booking-address-heading">Dropoff Address</h4>
-                            </div>
 
                             <div class="col-12">
                                 <?= $this->Form->control('dropoff_street_address', [
