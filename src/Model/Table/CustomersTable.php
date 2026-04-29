@@ -82,6 +82,7 @@ class CustomersTable extends Table
 
         $validator
             ->scalar('phone')
+            ->lengthBetween('phone', [10, 10], 'Phone number must be exactly 10 digits')
             ->requirePresence('phone', 'create')
             ->notEmptyString('phone', 'Phone number is required')
             ->add('phone', 'validFormat', [

@@ -272,6 +272,18 @@ body.mh-site {
     box-shadow: 0 8px 22px rgba(7, 27, 52, 0.08);
 }
 
+.contact-info-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    background: #ff8a00;
+    color: #111;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    flex-shrink: 0;
+}
 
 .mh-info-card h3 {
     margin-bottom: 0.35rem;
@@ -746,6 +758,12 @@ body.mh-site {
     border-radius: 20px;
 }
 
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    min-width: 980px;
+}
 
 .admin-table thead th {
     background: #f6f8fb;
@@ -954,8 +972,8 @@ body.mh-site {
 }
 
 .mh-error-card {
-    padding-bottom: 2.5rem;
     padding-top: 2.5rem;
+    padding-bottom: 2.5rem;
 }
 
 .mh-error-emoji {
@@ -1215,7 +1233,20 @@ body.mh-site {
         padding-top: 1.75rem;
         padding-bottom: 1.75rem;
     }
+}
 
+/*Admin mobile pages*/
+@media (max-width: 991.98px) {
+    .admin-hero {
+        padding: 4.75rem 0 3.5rem;
+    }
+
+    .admin-table-card {
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 767.98px) {
     .admin-section {
         padding: 3rem 0 4rem;
     }
@@ -1231,7 +1262,20 @@ body.mh-site {
     .admin-table-card {
         padding: 1.2rem;
     }
+}
 
+/*Booking form*/
+@media (max-width: 991.98px) {
+    .booking-hero {
+        padding: 4.75rem 0 3.5rem;
+    }
+
+    .mh-form-card {
+        padding: 1.6rem;
+    }
+}
+
+@media (max-width: 767.98px) {
     .booking-section {
         padding: 3rem 0 4rem;
     }
@@ -1243,7 +1287,18 @@ body.mh-site {
     .booking-hero-text {
         font-size: 1rem;
     }
+}
 
+/* Auth mobile pages */
+
+@media (max-width: 991.98px) {
+    .auth-card,
+    .auth-card-wide {
+        padding: 1.75rem;
+    }
+}
+
+@media (max-width: 767.98px) {
     .auth-title {
         font-size: 2.2rem;
     }
@@ -1251,7 +1306,11 @@ body.mh-site {
     .auth-subtitle {
         font-size: 1rem;
     }
+}
 
+/*Contact page mobile website*/
+
+@media (max-width: 991.98px) {
     .contact-hero {
         padding: 5rem 0 3.5rem;
     }
@@ -1259,7 +1318,9 @@ body.mh-site {
     .contact-form-card {
         padding: 1.5rem;
     }
+}
 
+@media (max-width: 767.98px) {
     .contact-section {
         padding: 3rem 0 4rem;
     }

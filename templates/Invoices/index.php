@@ -7,7 +7,6 @@
 <div class="invoices index content">
     <?= $this->Html->link(__('New Invoice'), ['action' => 'add'], ['class' => 'button float-right']) ?>
     <h3><?= __('Invoices') ?></h3>
-
     <div class="table-responsive">
         <table>
             <thead>
@@ -76,7 +75,7 @@
                     <td><?= h($invoice->sent_at) ?></td>
                     <td><?= h($invoice->paid_at) ?></td>
                     <td><?= h($invoice->created) ?></td>
-
+                    <td><?= h($invoice->modified) ?></td>
                     <td class="actions">
                         <?= $this->Html->link(__('View'), ['action' => 'view', $invoice->invoice_id]) ?>
                         <?php if (strtolower($invoice->status) !== 'paid'): ?>

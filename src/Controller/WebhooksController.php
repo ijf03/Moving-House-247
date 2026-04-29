@@ -93,7 +93,6 @@ class WebhooksController extends AppController
                         ->setTo($adminEmail)
                         ->setSubject('Invoice paid - #' . $invoice->invoice_id)
                         ->deliver($body);
-
                 }
             }
 

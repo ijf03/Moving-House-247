@@ -34,7 +34,6 @@
                         </div>
 
                         <div class="admin-action-stack">
-
                             <?= $this->Html->link(__('Edit User'), ['action' => 'edit', $user->user_id], ['class' => 'admin-action-link']) ?>
 
                             <?= $this->Form->postLink(
