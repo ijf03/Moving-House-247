@@ -92,7 +92,7 @@
                             </div>
 
                             <div class="col-12">
-                                <h4>Pickup Address</h4>
+                                <h4 class="booking-address-heading">Pickup Address</h4>
                             </div>
 
                             <div class="col-12">
@@ -131,7 +131,7 @@
                             </div>
 
                             <div class="col-12">
-                                <h4>Dropoff Address</h4>
+                                <h4 class="booking-address-heading">Dropoff Address</h4>
                             </div>
 
                             <div class="col-12">
@@ -173,6 +173,7 @@
                                 <?=
                                 $this->Form->control('job_time', [
                                     'type' => 'time',
+                                    'step' => 60,
                                     'class' => 'booking-input',
                                     'templates' => [
                                         'inputContainer' => '<div class="input booking-form-group {{type}}{{required}}">{{content}}</div>',
