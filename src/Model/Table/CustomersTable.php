@@ -54,28 +54,46 @@ class CustomersTable extends Table
             ->scalar('first_name')
             ->maxLength('first_name', 50)
             ->requirePresence('first_name', 'create')
-            ->notEmptyString('first_name');
-
+            ->notEmptyString('first_name', 'First name is required')
+            ->minLength('first_name', 3, 'Must be at least 3 characters')
+            ->add('first_name', 'notSpacesOnly', [
+                'rule' => function ($value) {
+                    return trim($value) !== '';
+                },
+                'message' => 'First name cannot be empty'
+            ]);
         $validator
             ->scalar('last_name')
             ->maxLength('last_name', 50)
             ->requirePresence('last_name', 'create')
-            ->notEmptyString('last_name');
+            ->notEmptyString('last_name', 'Last name is required')
+            ->minLength('last_name', 3, 'Must be at least 3 characters')
+            ->add('last_name', 'notSpacesOnly', [
+                'rule' => function ($value) {
+                    return trim($value) !== '';
+                },
+                'message' => 'Last name cannot be empty'
+            ]);
 
         $validator
-            ->email('email',message: 'Invalid Email')
+            ->email('email', false, 'Please enter a valid email address')
             ->requirePresence('email', 'create')
-            ->notEmptyString('email');
+            ->notEmptyString('email', 'Email is required');
 
         $validator
             ->scalar('phone')
-            ->maxLength('phone', 10)
+            ->lengthBetween('phone', [10, 10], 'Phone number must be exactly 10 digits')
             ->requirePresence('phone', 'create')
-            ->notEmptyString('phone')
+            ->notEmptyString('phone', 'Phone number is required')
             ->add('phone', 'validFormat', [
-                'rule' => ['custom', '/^[0-9]+$/'],
-                'message' => 'Please enter a valid phone number',
+                'rule' => ['custom', '/04\d{8}$/'],
+                'message' => 'Phone number must be valid Australian Number (04xxxxxxxx)',
             ]);
+
+        $validator
+            ->scalar('stripe_id')
+            ->maxLength('stripe_id', 255)
+            ->allowEmptyString('stripe_id');
 
         return $validator;
     }

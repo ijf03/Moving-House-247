@@ -47,7 +47,7 @@ $this->assign('title', 'Login');
                         <?= $this->Form->end() ?>
 
                         <div class="auth-links text-center">
-                            <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'resetpassword']) ?>">
+                            <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'forgetpassword']) ?>">
                                 Forgot Password?
                             </a>
                             <p class="mt-3 mb-0">

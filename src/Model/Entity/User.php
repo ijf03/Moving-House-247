@@ -16,6 +16,8 @@ use Cake\ORM\TableRegistry;
  * @property string $first_name
  * @property string $last_name
  * @property int $user_type
+ * @property varchar $reset_id
+ * @property varchar $time_limit
  */
 class User extends Entity
 {
@@ -37,6 +39,8 @@ class User extends Entity
         'user_type' => true,
         'user_type_name' => true,
         'confirm_password' => true,
+        'reset_id' => true,
+        'time_limit' => true,
     ];
 
     /**
@@ -72,5 +76,10 @@ class User extends Entity
             return empty($this->role->name) ? 'Invalid user type' : $this->role->name;
         }
         return 'No Role Assigned';
+    }
+
+    protected function _getFullName() : string
+    {
+        return ($this->first_name . ' ' . $this->last_name);
     }
 }

@@ -7,7 +7,7 @@
 use Cake\Core\Configure;
 use Cake\Error\Debugger;
 
-$this->setLayout('error');
+$this->setLayout('default');
 
 if (Configure::read('debug')) :
     $this->setLayout('dev_error');
@@ -29,8 +29,67 @@ if (Configure::read('debug')) :
     $this->end();
 endif;
 ?>
-<h2><?= __d('cake', 'An Internal Error Has Occurred.') ?></h2>
-<p class="error">
-    <strong><?= __d('cake', 'Error') ?>: </strong>
-    <?= h($message) ?>
-</p>
+
+<div class="mh-page-soft mh-error-page">
+    <section class="admin-hero mh-error-hero">
+        <div class="container">
+            <div class="admin-hero-shell">
+                <div class="admin-hero-content">
+                    <span class="admin-eyebrow"><?= __('Oops!') ?></span>
+                    <h1><?= __('500') ?></h1>
+                    <p class="admin-hero-text">
+                        <?= __('This server is taking a rest.') ?>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="admin-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="admin-table-card mh-error-card text-center">
+                        <div class="mh-error-emoji">📦🚚</div>
+
+                        <div class="admin-table-header">
+                            <h2><?= __('Internal Error') ?></h2>
+                            <p>
+                                <?= __('The server has left the service desk.') ?>
+                            </p>
+                        </div>
+
+                        <div class="mh-info-card mh-error-message-card">
+                            <div class="w-100">
+                                <h3><?= __('What happened?') ?></h3>
+                                <p>
+                                    <?= __('An Internal Error has Occurred.', "<strong>" . h($url) . "</strong>") ?>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="mh-error-actions">
+                            <?= $this->Html->link(
+                                __('Back to Home'),
+                                '/',
+                                ['class' => 'admin-primary-link']
+                            ) ?>
+
+                            <button
+                                onclick="history.back()"
+                                class="admin-action-link mh-back-btn"
+                                type="button"
+                            >
+                                <?= __('Go Back') ?>
+                            </button>
+                        </div>
+
+                        <p class="mh-error-note">
+                            <?= __('Try using the navigation bar to head back to a valid page.') ?>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
