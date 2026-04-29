@@ -38,9 +38,9 @@ $this->assign('title', 'Login');
                             ]) ?>
                         </div>
 
-                        <div class="auth-form-actions">
+                        <div class="auth-form-actions d-flex justify-content-center">
                             <?= $this->Form->button('Log In', [
-                                'class' => 'auth-btn',
+                                'class' => 'auth-btn w-75',
                             ]) ?>
                         </div>
 
