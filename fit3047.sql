@@ -44,7 +44,8 @@ CREATE TABLE `customers`
     `first_name`  varchar(50) NOT NULL,
     `last_name`   varchar(50) NOT NULL,
     `email`       varchar(62) NOT NULL,
-    `phone`       varchar(15) NOT NULL
+    `phone`       varchar(15) NOT NULL,
+    `stripe_id`   varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 --
@@ -106,7 +107,8 @@ CREATE TABLE `job_types`
 
 INSERT INTO `job_types` (`job_type_id`, `job_type_name`, `job_type_description`)
 VALUES (1, 'Removal', 'Removal of items from customer'),
-       (2, 'Storage', 'Storage of items from customer');
+       (2, 'Storage', 'Storage of items from customer'),
+       (3, 'Transfer', 'Transfer of items for customer');
 
 -- --------------------------------------------------------
 --
@@ -137,7 +139,9 @@ CREATE TABLE `users`
     `password`   varchar(255) NOT NULL,
     `first_name` varchar(46)  NOT NULL,
     `last_name`  varchar(46)  NOT NULL,
-    `user_type`  int(1) NOT NULL
+    `user_type`  int(1) NOT NULL,
+    `reset_id` varchar(20) DEFAULT NULL,
+    `time_limit` varchar(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 --

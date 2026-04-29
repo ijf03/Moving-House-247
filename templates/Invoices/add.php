@@ -6,66 +6,89 @@
  * @var array $presets
  */
 ?>
-<div class="row">
-    <aside class="column">
-        <div class="side-nav">
-            <h4 class="heading"><?= __('Actions') ?></h4>
-            <?= $this->Html->link(__('Back to Booking'), ['controller' => 'Bookings', 'action' => 'view', $booking->booking_id], ['class' => 'side-nav-item']) ?>
+<div class="mh-page-soft">
+    <section class="admin-hero">
+        <div class="container">
+            <div class="admin-hero-shell">
+                <div class="admin-hero-content">
+                    <span class="admin-eyebrow"><?= __('Admin') ?></span>
+                    <h1><?= __('Create Invoice') ?></h1>
+                    <p class="admin-hero-text">
+                        <?= __('Generate a new invoice for a booking.') ?>
+                    </p>
+                </div>
+            </div>
         </div>
-    </aside>
+    </section>
 
-    <div class="column column-80">
-        <div class="invoices form content">
-            <h3><?= __('Generate Invoice for Booking #{0}', $booking->booking_id) ?></h3>
+    <section class="admin-section">
+        <div class="container">
+            <div class="row g-4 justify-content-center">
 
-            <p><strong><?= __('Customer:') ?></strong> <?= h($booking->customer->first_name . ' ' . $booking->customer->last_name) ?></p>
-            <p><strong><?= __('Email:') ?></strong> <?= h($booking->customer->email) ?></p>
-            <p><strong><?= __('Job Type:') ?></strong> <?= h($booking->job_type->job_type_name ?? '') ?></p>
-            <p><strong><?= __('Pickup:') ?></strong> <?= h($booking->pickup_address) ?></p>
-            <p><strong><?= __('Dropoff:') ?></strong> <?= h($booking->dropoff_address) ?></p>
+                <div class="col-lg-3">
+                    <div class="admin-table-card">
+                        <div class="admin-table-header">
+                            <h2><?= __('Actions') ?></h2>
+                        </div>
 
-            <?= $this->Form->create($invoice) ?>
-            <fieldset>
-                <legend><?= __('Invoice Items') ?></legend>
-
-                <?php for ($i = 0; $i < 5; $i++): ?>
-                    <div style="border:1px solid #ddd; padding:12px; margin-bottom:12px;">
-                        <?= $this->Form->control("items.$i.preset", [
-                            'type' => 'select',
-                            'label' => 'Preset',
-                            'options' => array_merge(['' => 'Custom item'], array_combine(
-                                array_keys(array_filter($presets, fn($k) => $k !== '', ARRAY_FILTER_USE_KEY)),
-                                array_map(
-                                    fn($p) => is_array($p) ? $p['description'] . ' ($' . number_format($p['unit_price_cents'] / 100, 2) . ')' : '',
-                                    array_filter($presets, fn($k) => $k !== '', ARRAY_FILTER_USE_KEY)
-                                )
-                            )),
-                            'empty' => false,
-                        ]) ?>
-
-                        <?= $this->Form->control("items.$i.description", [
-                            'label' => 'Description',
-                        ]) ?>
-
-                        <?= $this->Form->control("items.$i.quantity", [
-                            'type' => 'number',
-                            'step' => '0.01',
-                            'min' => '0',
-                            'label' => 'Quantity',
-                        ]) ?>
-
-                        <?= $this->Form->control("items.$i.unit_price", [
-                            'type' => 'number',
-                            'step' => '0.01',
-                            'min' => '0',
-                            'label' => 'Unit Price (AUD)',
-                        ]) ?>
+                        <div class="admin-action-stack">
+                            <?= $this->Html->link(__('Back to Invoices'), ['action' => 'index'], ['class' => 'admin-action-link']) ?>
+                        </div>
                     </div>
-                <?php endfor; ?>
-            </fieldset>
+                </div>
 
-            <?= $this->Form->button(__('Generate and Send Invoice')) ?>
-            <?= $this->Form->end() ?>
+                <div class="col-lg-9">
+                    <div class="auth-card auth-card-wide">
+                        <div class="auth-header">
+                            <h2 class="auth-title"><?= __('New Invoice') ?></h2>
+                            <p class="auth-subtitle">
+                                <?= __('Fill in the details to generate an invoice.') ?>
+                            </p>
+                        </div>
+
+                        <?= $this->Form->create($invoice, ['class' => 'auth-form']) ?>
+
+                        <div class="row g-3">
+
+                            <div class="col-md-6 auth-form-group">
+                                <?= $this->Form->control('booking_id', [
+                                    'empty' => 'Select a booking',
+                                    'options' => $bookings,
+                                    'label' => 'Booking',
+                                    'class' => 'auth-input'
+                                ]) ?>
+                            </div>
+
+                            <div class="col-md-6 auth-form-group">
+                                <?= $this->Form->control('status_display', [
+                                    'type' => 'text',
+                                    'value' => 'Pending',
+                                    'readonly' => true,
+                                    'label' => 'Status',
+                                    'class' => 'auth-input'
+                                ]) ?>
+                            </div>
+
+                            <div class="col-md-6 auth-form-group">
+                                <?= $this->Form->control('due_date', [
+                                    'type' => 'date',
+                                    'label' => 'Due Date',
+                                    'class' => 'auth-input',
+                                    'min' => date('Y-m-d')
+                                ]) ?>
+                            </div>
+
+                        </div>
+
+                        <div class="auth-form-actions">
+                            <?= $this->Form->button(__('Create Invoice and add items'), ['class' => 'mh-btn-primary']) ?>
+                        </div>
+
+                        <?= $this->Form->end() ?>
+                    </div>
+                </div>
+
+            </div>
         </div>
-    </div>
+    </section>
 </div>

@@ -26,7 +26,7 @@
                     echo $this->Form->control('job_type_description');
                 ?>
             </fieldset>
-            <?= $this->Form->button(__('Submit')) ?>
+            <?= $this->Form->button(__('Save Changes')) ?>
             <?= $this->Form->end() ?>
         </div>
     </div>

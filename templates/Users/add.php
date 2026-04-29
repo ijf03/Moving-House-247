@@ -4,32 +4,123 @@
  * @var \App\Model\Entity\User $user
  */
 ?>
-<div class="row">
-    <aside class="column">
-        <div class="side-nav">
-            <h4 class="heading"><?= __('Actions') ?></h4>
-            <?= $this->Html->link(__('List Users'), ['action' => 'index'], ['class' => 'side-nav-item']) ?>
+
+<div class="mh-page-soft">
+    <section class="admin-hero">
+        <div class="container">
+            <div class="admin-hero-shell">
+                <div class="admin-hero-content">
+                    <span class="admin-eyebrow"><?= __('Admin') ?></span>
+                    <h1><?= __('Add User') ?></h1>
+                    <p class="admin-hero-text">
+                        <?= __('Create a new user account and assign the appropriate role.') ?>
+                    </p>
+                </div>
+            </div>
         </div>
-    </aside>
-    <div class="column column-80">
-        <div class="users form content">
-            <?= $this->Form->create($user) ?>
-            <fieldset>
-                <legend><?= __('Add User') ?></legend>
-                <?php
-                    echo $this->Form->control('email');
-                    echo $this->Form->control('password');
-                    echo $this->Form->control('confirm_password');
-                    echo $this->Form->control('first_name');
-                    echo $this->Form->control('last_name');
-                echo $this->Form->control('user_type', [
-                    'options' => $userTypes,
-                    'label' => 'User Role'
-                ]);
-                ?>
-            </fieldset>
-            <?= $this->Form->button(__('Submit')) ?>
-            <?= $this->Form->end() ?>
+    </section>
+
+    <section class="admin-section">
+        <div class="container">
+            <div class="row g-4 justify-content-center">
+                <div class="col-lg-3">
+                    <div class="admin-table-card">
+                        <div class="admin-table-header">
+                            <h2><?= __('Actions') ?></h2>
+                            <p><?= __('Quick links for user management.') ?></p>
+                        </div>
+
+                        <div class="admin-action-stack">
+                            <?= $this->Html->link(__('List Users'), ['action' => 'index'], ['class' => 'admin-action-link']) ?>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-9">
+                    <div class="auth-card auth-card-wide">
+                        <div class="auth-header">
+                            <h2 class="auth-title"><?= __('Add User') ?></h2>
+                            <p class="auth-subtitle">
+                                <?= __('Fill in the user details below to create a new account.') ?>
+                            </p>
+                        </div>
+
+                        <?= $this->Form->create($user, ['class' => 'auth-form']) ?>
+
+                        <div class="row g-3">
+                            <div class="col-md-6 auth-form-group">
+                                <?= $this->Form->control('first_name', [
+                                    'label' => 'First Name*',
+                                    'placeholder' => 'Enter first name',
+                                    'class' => 'auth-input',
+                                    'required' => true,
+                                ]) ?>
+                            </div>
+
+                            <div class="col-md-6 auth-form-group">
+                                <?= $this->Form->control('last_name', [
+                                    'label' => 'Last Name*',
+                                    'placeholder' => 'Enter last name',
+                                    'class' => 'auth-input',
+                                    'required' => true,
+                                ]) ?>
+                            </div>
+
+                            <div class="col-md-6 auth-form-group">
+                                <?= $this->Form->control('email', [
+                                    'label' => 'Email*',
+                                    'placeholder' => 'Enter email address',
+                                    'class' => 'auth-input',
+                                    'required' => true,
+                                ]) ?>
+                            </div>
+
+                            <div class="col-md-6 auth-form-group">
+                                <?= $this->Form->control('phone', [
+                                    'label' => 'Phone*',
+                                    'placeholder' => 'Enter phone number',
+                                    'class' => 'auth-input',
+                                    'required' => true,
+                                ]) ?>
+                            </div>
+
+                            <div class="col-md-6 auth-form-group">
+                                <?= $this->Form->control('password', [
+                                    'type' => 'password',
+                                    'label' => 'Password*',
+                                    'placeholder' => 'Enter password',
+                                    'class' => 'auth-input',
+                                    'required' => true,
+                                ]) ?>
+                            </div>
+
+                            <div class="col-md-6 auth-form-group">
+                                <?= $this->Form->control('confirm_password', [
+                                    'type' => 'password',
+                                    'label' => 'Confirm Password*',
+                                    'placeholder' => 'Confirm password',
+                                    'class' => 'auth-input',
+                                    'required' => true,
+                                ]) ?>
+                            </div>
+
+                            <div class="col-md-6 auth-form-group">
+                                <?= $this->Form->control('user_type', [
+                                    'options' => $userTypes,
+                                    'label' => 'User Role',
+                                    'class' => 'auth-input',
+                                ]) ?>
+                            </div>
+                        </div>
+
+                        <div class="auth-form-actions">
+                            <?= $this->Form->button(__('Create User'), ['class' => 'mh-btn-primary']) ?>
+                        </div>
+
+                        <?= $this->Form->end() ?>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
+    </section>
 </div>
