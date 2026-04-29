@@ -64,7 +64,12 @@
                                 $this->Form->control('job_type_id', [
                                     'type' => 'select',
                                     'label' => 'Service Type',
-                                    'options' => $jobTypes,
+                                    'empty' => 'Please select a service type',
+                                    'options' => [
+                                        1 => 'Removal',
+                                        2 => 'Storage',
+                                        3 => 'Transfer',
+                                    ],
                                     'class' => 'booking-input',
                                     'templates' => [
                                         'inputContainer' => '<div class="input booking-form-group {{type}}{{required}}">{{content}}</div>',
@@ -87,25 +92,81 @@
                             </div>
 
                             <div class="col-12">
-                                <?=
-                                $this->Form->control('pickup_address', [
-                                    'class' => 'booking-input',
-                                    'templates' => [
-                                        'inputContainer' => '<div class="input booking-form-group {{type}}{{required}}">{{content}}</div>',
-                                    ],
-                                ])
-                                ?>
+                                <h4>Pickup Address</h4>
                             </div>
 
                             <div class="col-12">
-                                <?=
-                                $this->Form->control('dropoff_address', [
+                                <?= $this->Form->control('pickup_street_address', [
+                                    'label' => 'Pickup Street Address',
+                                    'placeholder' => 'e.g. 123 Queen Street',
                                     'class' => 'booking-input',
                                     'templates' => [
                                         'inputContainer' => '<div class="input booking-form-group {{type}}{{required}}">{{content}}</div>',
                                     ],
-                                ])
-                                ?>
+                                ]) ?>
+                            </div>
+
+                            <div class="col-md-6">
+                                <?= $this->Form->control('pickup_suburb', [
+                                    'label' => 'Pickup Suburb',
+                                    'placeholder' => 'e.g. Melbourne',
+                                    'class' => 'booking-input',
+                                    'templates' => [
+                                        'inputContainer' => '<div class="input booking-form-group {{type}}{{required}}">{{content}}</div>',
+                                    ],
+                                ]) ?>
+                            </div>
+
+                            <div class="col-md-6">
+                                <?= $this->Form->control('pickup_postcode', [
+                                    'label' => 'Pickup Postcode',
+                                    'placeholder' => 'e.g. 3000',
+                                    'pattern' => '[0-9]{4}',
+                                    'inputmode' => 'numeric',
+                                    'class' => 'booking-input',
+                                    'templates' => [
+                                        'inputContainer' => '<div class="input booking-form-group {{type}}{{required}}">{{content}}</div>',
+                                    ],
+                                ]) ?>
+                            </div>
+
+                            <div class="col-12">
+                                <h4>Dropoff Address</h4>
+                            </div>
+
+                            <div class="col-12">
+                                <?= $this->Form->control('dropoff_street_address', [
+                                    'label' => 'Dropoff Street Address',
+                                    'placeholder' => 'e.g. 456 Collins Street',
+                                    'class' => 'booking-input',
+                                    'templates' => [
+                                        'inputContainer' => '<div class="input booking-form-group {{type}}{{required}}">{{content}}</div>',
+                                    ],
+                                ]) ?>
+                            </div>
+
+                            <div class="col-md-6">
+                                <?= $this->Form->control('dropoff_suburb', [
+                                    'label' => 'Dropoff Suburb',
+                                    'placeholder' => 'e.g. Richmond',
+                                    'class' => 'booking-input',
+                                    'templates' => [
+                                        'inputContainer' => '<div class="input booking-form-group {{type}}{{required}}">{{content}}</div>',
+                                    ],
+                                ]) ?>
+                            </div>
+
+                            <div class="col-md-6">
+                                <?= $this->Form->control('dropoff_postcode', [
+                                    'label' => 'Dropoff Postcode',
+                                    'placeholder' => 'e.g. 3121',
+                                    'pattern' => '[0-9]{4}',
+                                    'inputmode' => 'numeric',
+                                    'class' => 'booking-input',
+                                    'templates' => [
+                                        'inputContainer' => '<div class="input booking-form-group {{type}}{{required}}">{{content}}</div>',
+                                    ],
+                                ]) ?>
                             </div>
 
                             <div class="col-md-6">
