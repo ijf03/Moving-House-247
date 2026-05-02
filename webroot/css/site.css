@@ -444,6 +444,7 @@ body.mh-site {
 
 .auth-form-actions {
     margin-top: 1rem;
+    margin-bottom: 1rem;
 }
 
 .auth-links {
@@ -629,8 +630,10 @@ body.mh-site {
 .mh-btn-primary,
 .mh-btn-primary.button,
 .mh-btn-primary[type='submit'] {
+    justify-content: center;
     width: 100%;
     min-height: 54px;
+    padding: 0.9rem 1.4rem;
     border-radius: 16px;
     background: #ff8a00;
     border: 1px solid #ff8a00;
@@ -641,7 +644,6 @@ body.mh-site {
     letter-spacing: 0;
     line-height: 1.2;
     box-shadow: 0 8px 20px rgba(255, 138, 0, 0.2);
-    margin-bottom: 0;
 }
 
 .mh-btn-primary:hover,

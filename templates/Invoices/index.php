@@ -80,7 +80,7 @@
                         <?= $this->Html->link(__('View'), ['action' => 'view', $invoice->invoice_id]) ?>
                         <?php if (strtolower($invoice->status) !== 'paid'): ?>
                             <?= $this->Html->link(__('Edit'), ['action' => 'edit', $invoice->invoice_id]) ?>
-                        <?php endif; ?>
+
                         <?= $this->Form->postLink(
                             __('Delete'),
                             ['action' => 'delete', $invoice->invoice_id],
@@ -89,6 +89,7 @@
                                 'confirm' => __('Are you sure you want to delete # {0}?', $invoice->invoice_id),
                             ]
                         ) ?>
+                        <?php endif; ?>
                     </td>
                 </tr>
             <?php endforeach; ?>
