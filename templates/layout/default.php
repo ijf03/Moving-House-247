@@ -94,7 +94,7 @@ $isUser = ($identity && (int)$role === 3);
 
                         <?= $this->Html->link(
                             'Resource Management',
-                            ['controller' => 'Resources', 'action' => 'index'],
+                            ['plugin' => false, 'controller' => 'Resources', 'action' => 'index'],
                             ['class' => 'nav-link mh-nav-link'],
                         ) ?>
 

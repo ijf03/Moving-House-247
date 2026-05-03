@@ -72,6 +72,13 @@ CREATE TABLE `content_blocks_phinxlog` (
 INSERT INTO `content_blocks_phinxlog` (`version`, `migration_name`, `start_time`, `end_time`, `breakpoint`) VALUES
     (20230402063959, 'ContentBlocksMigration', '2026-05-02 11:25:48', '2026-05-02 11:25:48', 0);
 
+CREATE TABLE `phinxlog` (
+                            `version` bigint(20) NOT NULL,
+                            `migration_name` varchar(100) DEFAULT NULL,
+                            `start_time` timestamp NULL DEFAULT NULL,
+                            `end_time` timestamp NULL DEFAULT NULL,
+                            `breakpoint` tinyint(1) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 CREATE TABLE `contact_forms` (
                                  `contact_form_id` int(11) NOT NULL,
@@ -373,7 +380,6 @@ ALTER TABLE `jobs`
 
 ALTER TABLE `job_types`
     ADD PRIMARY KEY (`job_type_id`);
-
 
 ALTER TABLE `phinxlog`
   ADD PRIMARY KEY (`version`);
