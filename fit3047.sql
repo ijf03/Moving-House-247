@@ -1,8 +1,29 @@
+-- phpMyAdmin SQL Dump
+-- version 5.2.3
+-- https://www.phpmyadmin.net/
+--
+-- Host: 127.0.0.1
+-- Generation Time: May 03, 2026 at 05:05 PM
+-- Server version: 11.8.6-MariaDB
+-- PHP Version: 8.4.16
+
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
 
 
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Database: `fit3047`
+--
+
+-- --------------------------------------------------------
+DROP TABLE IF EXISTS `content_blocks`;
+DROP TABLE IF EXISTS `content_blocks_phinxlog`;
 DROP TABLE IF EXISTS `booking_resources`;
 DROP TABLE IF EXISTS `invoice_items`;
 DROP TABLE IF EXISTS `invoice_item_presets`;
@@ -18,6 +39,38 @@ DROP TABLE IF EXISTS `users`;
 DROP TABLE IF EXISTS `customers`;
 DROP TABLE IF EXISTS `job_types`;
 DROP TABLE IF EXISTS `user_types`;
+
+CREATE TABLE `content_blocks` (
+                                  `id` int(11) NOT NULL,
+                                  `parent` varchar(128) NOT NULL,
+                                  `slug` varchar(128) NOT NULL,
+                                  `label` varchar(255) NOT NULL,
+                                  `description` varchar(255) NOT NULL,
+                                  `type` varchar(32) NOT NULL,
+                                  `value` text DEFAULT NULL,
+                                  `previous_value` text DEFAULT NULL,
+                                  `modified` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+INSERT INTO `content_blocks` (`id`, `parent`, `slug`, `label`, `description`, `type`, `value`, `previous_value`, `modified`) VALUES
+                                                                                                                                 (1, 'global', 'website-title-main', 'Website Title (Main)', 'Shown on the home page, as well as any tabs in the users browser.', 'text', 'Move done right,', NULL, '2026-05-03 06:54:39'),
+                                                                                                                                 (2, 'global', 'website-title-accent', 'Website Title (Accent)', 'Shown on the home page, as well as any tabs in the users browser.', 'text', 'any time of day.', NULL, '2026-05-03 06:54:55'),
+                                                                                                                                 (3, 'global', 'logo', 'Logo', 'Shown in the centre of the home page, and also in the top corner of all administration pages.', 'image', NULL, NULL, '2026-05-03 06:53:07'),
+                                                                                                                                 (4, 'home', 'home-content', 'Home Page Content', 'The main content shown in the centre of the home page.', 'html', '<p>Example app showcasing the <code>ugie-cake/cakephp-content-blocks</code> plugin.</p>', NULL, '2026-05-03 06:53:07'),
+                                                                                                                                 (5, 'home', 'copyright-message', 'Copyright Message', 'Copyright information shown at the bottom of the home page.', 'text', '(c) Copyright 2026, enter copyright owner here.', NULL, '2026-05-03 06:53:07');
+
+
+CREATE TABLE `content_blocks_phinxlog` (
+                                           `version` bigint(20) NOT NULL,
+                                           `migration_name` varchar(100) DEFAULT NULL,
+                                           `start_time` timestamp NULL DEFAULT NULL,
+                                           `end_time` timestamp NULL DEFAULT NULL,
+                                           `breakpoint` tinyint(1) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+
+INSERT INTO `content_blocks_phinxlog` (`version`, `migration_name`, `start_time`, `end_time`, `breakpoint`) VALUES
+    (20230402063959, 'ContentBlocksMigration', '2026-05-02 11:25:48', '2026-05-02 11:25:48', 0);
 
 
 CREATE TABLE `contact_forms` (
@@ -304,6 +357,11 @@ VALUES
     ('Packing tape', 'Packing', 60, 10, 'roll', 'Warehouse Shelf B'),
     ('Bubble wrap', 'Packing', 25, 5, 'roll', 'Warehouse Shelf C');
 
+ALTER TABLE `content_blocks`
+    ADD PRIMARY KEY (`id`);
+
+ALTER TABLE `content_blocks_phinxlog`
+    ADD PRIMARY KEY (`version`);
 
 ALTER TABLE `customers`
     ADD PRIMARY KEY (`customer_id`);
@@ -315,6 +373,10 @@ ALTER TABLE `jobs`
 
 ALTER TABLE `job_types`
     ADD PRIMARY KEY (`job_type_id`);
+
+
+ALTER TABLE `phinxlog`
+  ADD PRIMARY KEY (`version`);
 
 ALTER TABLE `users`
     ADD PRIMARY KEY (`user_id`),
@@ -355,6 +417,12 @@ ALTER TABLE `bookings`
 
 ALTER TABLE `contact_forms`
     MODIFY `contact_form_id` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `content_blocks`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=0;
+
+ALTER TABLE `customers`
+  MODIFY `customer_id` int(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=0;
 
 ALTER TABLE `invoices`
     MODIFY `invoice_id` int(11) NOT NULL AUTO_INCREMENT;

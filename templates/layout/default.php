@@ -57,32 +57,38 @@ $isUser = ($identity && (int)$role === 3);
 
                     <?= $this->Html->link(
                         'Home',
-                        ['controller' => 'Pages', 'action' => 'display', 'home'],
+                        ['plugin' => false, 'controller' => 'Pages', 'action' => 'display', 'home'],
                         ['class' => 'nav-link mh-nav-link'],
                     ) ?>
 
                     <?php if ($isAdmin) : ?>
                         <?= $this->Html->link(
                             'Users',
-                            ['controller' => 'Users', 'action' => 'index'],
+                            ['plugin' => false, 'controller' => 'Users', 'action' => 'index'],
                             ['class' => 'nav-link mh-nav-link'],
                         ) ?>
 
                         <?= $this->Html->link(
                             'Contact Forms',
-                            ['controller' => 'ContactForms', 'action' => 'index'],
+                            ['plugin' => false, 'controller' => 'ContactForms', 'action' => 'index'],
                             ['class' => 'nav-link mh-nav-link'],
                         ) ?>
 
                         <?= $this->Html->link(
                             'Manage Bookings',
-                            ['controller' => 'Bookings', 'action' => 'index'],
+                            ['plugin' => false, 'controller' => 'Bookings', 'action' => 'index'],
                             ['class' => 'nav-link mh-nav-link'],
                         ) ?>
 
                         <?= $this->Html->link(
                             'Manage Invoices',
-                            ['controller' => 'Invoices', 'action' => 'index'],
+                            ['plugin' => false, 'controller' => 'Invoices', 'action' => 'index'],
+                            ['class' => 'nav-link mh-nav-link'],
+                        ) ?>
+
+                        <?= $this->Html->link(
+                            'Content Blocks',
+                            ['plugin' => 'ContentBlocks', 'controller' => 'ContentBlocks', 'action' => 'index'],
                             ['class' => 'nav-link mh-nav-link'],
                         ) ?>
 
