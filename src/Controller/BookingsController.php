@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 namespace App\Controller;
+use Cake\Core\Configure;
 
 
 class BookingsController extends AppController
@@ -175,8 +176,9 @@ class BookingsController extends AppController
             'valueField' => 'job_type_name',
         ])->toArray();
 
+        $geoapifyApiKey = Configure::read('Geoapify.apiKey');
 
-        $this->set(compact('booking', 'customers','jobTypes'));
+        $this->set(compact('booking', 'customers','jobTypes','geoapifyApiKey'));
     }
 
     /**

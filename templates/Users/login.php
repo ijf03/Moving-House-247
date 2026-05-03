@@ -2,6 +2,8 @@
 $this->assign('title', 'Login');
 ?>
 
+<script src="https://www.google.com/recaptcha/api.js?hl=en" async defer></script>
+
 <main class="mh-page-soft">
     <section class="auth-section">
         <div class="container">
@@ -36,6 +38,12 @@ $this->assign('title', 'Login');
                                 'class' => 'auth-input',
                                 'required' => true,
                             ]) ?>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="auth-recaptcha">
+                                <div class="g-recaptcha" data-sitekey="<?= h($siteKey ?? '') ?>"></div>
+                            </div>
                         </div>
 
                         <div class="auth-form-actions">

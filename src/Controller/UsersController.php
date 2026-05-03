@@ -72,28 +72,46 @@ class UsersController extends AppController
     public function login()
     {
         $this->request->allowMethod(['get', 'post']);
-        $redirect = $this->Authentication->getLoginRedirect();
 
-        if ($this->request->getAttribute('identity')) {
-            return $this->redirect($redirect ? $redirect : '/');
-        }
+        $siteKey = Configure::read('Recaptcha.siteKey');
+        $this->set(compact('siteKey'));
 
         if ($this->request->is('post')) {
+            $captchaResponse = $this->request->getData('g-recaptcha-response');
+            if (empty($captchaResponse)) {
+                $this->Flash->error('Please complete the CAPTCHA.');
+                return;
+            }
+
+            $secretKey = Configure::read('Recaptcha.secretKey');
+
+            $verifyResponse = file_get_contents(
+                'https://www.google.com/recaptcha/api/siteverify?secret=' .
+                urlencode($secretKey) .
+                '&response=' .
+                urlencode($captchaResponse)
+            );
+
+            $responseData = json_decode($verifyResponse, true);
+
+            if (!isset($responseData['success']) || $responseData['success'] !== true) {
+                $this->Flash->error('CAPTCHA verification failed. Please try again.');
+                return;
+            }
             $result = $this->Authentication->getResult();
 
             if ($result->isValid()) {
                 $user = $result->getData();
+                $redirect = $this->Authentication->getLoginRedirect();
 
+                // Admin
                 if ((int)$user->user_type === 1) {
-                    return $this->redirect($redirect ? $redirect : ['controller' => 'Users', 'action' => 'index']);
+                    return $this->redirect($redirect ?: ['controller' => 'Users', 'action' => 'index']);
                 }
 
-                return $this->redirect($redirect ? $redirect : '/');
+                return $this->redirect($redirect ?: '/');
             }
-
-            if (!$result->isValid()) {
-                $this->Flash->error('Invalid email or password');
-            }
+            $this->Flash->error('Invalid email or password');
         }
     }
 

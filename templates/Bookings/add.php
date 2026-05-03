@@ -94,6 +94,8 @@
 
                             <div class="col-12">
                                 <?= $this->Form->control('pickup_street_address', [
+                                    'id'   => 'pickup-street-address',
+                                    'autocomplete' => 'off',
                                     'label' => 'Pickup Street Address',
                                     'placeholder' => 'e.g. 123 Queen Street',
                                     'class' => 'booking-input',
@@ -130,6 +132,8 @@
 
                             <div class="col-12">
                                 <?= $this->Form->control('dropoff_street_address', [
+                                    'id' => 'dropoff-street-address',
+                                    'autocomplete' => 'off',
                                     'label' => 'Dropoff Street Address',
                                     'placeholder' => 'e.g. 456 Collins Street',
                                     'class' => 'booking-input',
@@ -199,3 +203,131 @@
         </div>
     </section>
 </div>
+
+<?php if (!empty($geoapifyApiKey)): ?>
+    <style>
+        .address-suggestions {
+            position: relative;
+            z-index: 1000;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            margin-top: 4px;
+            max-height: 220px;
+            overflow-y: auto;
+        }
+
+        .address-suggestion-item {
+            padding: 10px;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
+        }
+
+        .address-suggestion-item:hover {
+            background: #f5f5f5;
+        }
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const apiKey = <?= json_encode($geoapifyApiKey) ?>;
+
+            function setupAutocomplete(streetId, suburbName, postcodeName) {
+                const streetInput = document.getElementById(streetId);
+                const suburbInput = document.querySelector(`[name="${suburbName}"]`);
+                const postcodeInput = document.querySelector(`[name="${postcodeName}"]`);
+
+                if (!streetInput) {
+                    return;
+                }
+
+                const suggestionsBox = document.createElement('div');
+                suggestionsBox.className = 'address-suggestions';
+                streetInput.parentNode.appendChild(suggestionsBox);
+
+                let timer = null;
+
+                streetInput.addEventListener('input', function () {
+                    const text = streetInput.value.trim();
+
+                    clearTimeout(timer);
+                    suggestionsBox.innerHTML = '';
+
+                    if (text.length < 3) {
+                        return;
+                    }
+
+                    timer = setTimeout(function () {
+                        const url =
+                            'https://api.geoapify.com/v1/geocode/autocomplete' +
+                            '?text=' + encodeURIComponent(text) +
+                            '&format=json' +
+                            '&filter=countrycode:au' +
+                            '&limit=30' +
+                            '&apiKey=' + encodeURIComponent(apiKey);
+
+                        fetch(url)
+                            .then(response => response.json())
+                            .then(data => {
+                                suggestionsBox.innerHTML = '';
+
+                                if (!data.results || data.results.length === 0) {
+                                    return;
+                                }
+
+                                data.results.forEach(result => {
+                                    const isVictoria =
+                                        result.state === 'Victoria' ||
+                                        result.state_code === 'VIC';
+
+                                    if (!isVictoria) {
+                                        return;
+                                    }
+
+                                    const item = document.createElement('div');
+                                    item.className = 'address-suggestion-item';
+                                    item.textContent = result.formatted;
+
+                                    item.addEventListener('click', function () {
+                                        streetInput.value = result.address_line1 || result.formatted;
+
+                                        const suburb =
+                                            result.suburb ||
+                                            result.city ||
+                                            result.town ||
+                                            result.village ||
+                                            result.district ||
+                                            '';
+
+                                        if (suburbInput) {
+                                            suburbInput.value = suburb;
+                                        }
+
+                                        if (postcodeInput) {
+                                            postcodeInput.value = result.postcode || '';
+                                        }
+
+                                        suggestionsBox.innerHTML = '';
+                                    });
+
+                                    suggestionsBox.appendChild(item);
+                                });
+                            })
+                            .catch(() => {
+                                suggestionsBox.innerHTML = '';
+                            });
+                    }, 300);
+                });
+
+                document.addEventListener('click', function (event) {
+                    if (!suggestionsBox.contains(event.target) && event.target !== streetInput) {
+                        suggestionsBox.innerHTML = '';
+                    }
+                });
+            }
+
+            setupAutocomplete('pickup-street-address', 'pickup_suburb', 'pickup_postcode');
+            setupAutocomplete('dropoff-street-address', 'dropoff_suburb', 'dropoff_postcode');
+        });
+    </script>
+<?php endif; ?>
