@@ -14,32 +14,6 @@ use Stripe\StripeClient;
  */
 class InvoicesController extends AppController
 {
-    private function presetOptions(): array
-    {
-        return [
-            '' => 'Custom item',
-            'labour_hour' => [
-                'description' => 'Labour - per hour',
-                'unit_price_cents' => 8500,
-            ],
-            'truck_small' => [
-                'description' => 'Truck rental - small truck',
-                'unit_price_cents' => 18000,
-            ],
-            'truck_large' => [
-                'description' => 'Truck rental - large truck',
-                'unit_price_cents' => 28000,
-            ],
-            'packing_materials' => [
-                'description' => 'Packing materials',
-                'unit_price_cents' => 5000,
-            ],
-            'stairs_surcharge' => [
-                'description' => 'Stairs surcharge',
-                'unit_price_cents' => 7500,
-            ],
-        ];
-    }
 
     /**
      * Index method
@@ -176,7 +150,13 @@ class InvoicesController extends AppController
 
         $booking = $bookingsTable->get($invoice->booking_id);
         $customer = $customersTable->get($invoice->customer_id);
-        $presets = $this->presetOptions();
+        $presetsTable = $this->fetchTable('InvoiceItemPresets');
+
+        $presets = $presetsTable->find()
+            ->where(['is_active' => 1])
+            ->orderBy(['sort_order' => 'ASC', 'name' => 'ASC'])
+            ->all();
+
         $presetOptions = ['' => 'Custom item'];
 
         foreach ($presets as $key => $preset) {
@@ -191,14 +171,15 @@ class InvoicesController extends AppController
             $action = $this->request->getData('action');
 
             if ($action === 'add_item') {
-                $presetKey = (string)$this->request->getData('preset');
+                $presetId = (int)$this->request->getData('preset_id');
                 $description = trim((string)$this->request->getData('description'));
                 $quantity = (float)$this->request->getData('quantity');
                 $unitPriceDollars = (float)$this->request->getData('unit_price');
 
-                if ($presetKey !== '' && isset($presets[$presetKey])) {
-                    $description = $presets[$presetKey]['description'];
-                    $unitPriceCents = (int)$presets[$presetKey]['unit_price_cents'];
+                if ($presetId > 0) {
+                    $preset = $presetsTable->get($presetId);
+                    $description = $preset->description;
+                    $unitPriceCents = (int)$preset->unit_price_cents;
                 } else {
                     $unitPriceCents = (int)round($unitPriceDollars * 100);
                 }

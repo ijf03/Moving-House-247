@@ -86,6 +86,12 @@ $isUser = ($identity && (int)$role === 3);
                             ['class' => 'nav-link mh-nav-link'],
                         ) ?>
 
+                        <?= $this->Html->link(
+                            'Resource Management',
+                            ['controller' => 'Resources', 'action' => 'index'],
+                            ['class' => 'nav-link mh-nav-link'],
+                        ) ?>
+
                     <?php elseif ($isUser) : ?>
                         <?= $this->Html->link(
                             'Book a Service',
