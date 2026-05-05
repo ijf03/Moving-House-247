@@ -57,6 +57,17 @@ class StaffController extends AppController
      */
     public function view($id = null)
     {
+        $target = (int)$this->request->getParam('pass')[0];
+        $userId = $this->request->getAttribute('identity')->get('user_id');
+        $roleQuery = $this->Users->find()
+            ->where(['user_id' => $userId])
+            ->contain(['UserTypes'])
+            ->first();
+        $isAdmin = $roleQuery->user_type_name == 'Admin';
+        if ($target !== $userId and !$isAdmin){
+            $this->Flash->error(__('Please access your own profile'));
+            return $this->redirect(['action' => 'index']);
+        }
         $staffEntity = $this->Staff->get($id, contain: []);
         $this->set(compact('staffEntity'));
     }
@@ -90,6 +101,17 @@ class StaffController extends AppController
      */
     public function edit($id = null)
     {
+        $target = (int)$this->request->getParam('pass')[0];
+        $userId = $this->request->getAttribute('identity')->get('user_id');
+        $roleQuery = $this->Users->find()
+            ->where(['user_id' => $userId])
+            ->contain(['UserTypes'])
+            ->first();
+        $isAdmin = $roleQuery->user_type_name == 'Admin';
+        if ($target !== $userId and !$isAdmin){
+            $this->Flash->error(__('Please access your own profile'));
+            return $this->redirect(['action' => 'index']);
+        }
         $staffEntity = $this->Staff->get($id, contain: []);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $staffEntity = $this->Staff->patchEntity($staffEntity, $this->request->getData());
@@ -112,10 +134,25 @@ class StaffController extends AppController
      */
     public function delete($id = null)
     {
+        $targetStaffID = (int)$this->request->getParam('pass')[0];
+        $target = $this->Staff->get($id, contain: []);
+        $userId = $this->request->getAttribute('identity')->get('user_id');
+        $roleQuery = $this->Users->find()
+            ->where(['user_id' => $userId])
+            ->contain(['UserTypes'])
+            ->first();
+        $isAdmin = $roleQuery->user_type_name == 'Admin';
+        if ($target !== $userId && !$isAdmin){
+            $this->Flash->error(__('You are not allowed to delete this user'));
+            return $this->redirect(['action' => 'index']);
+        }
         $this->request->allowMethod(['post', 'delete']);
-        $staffEntity = $this->Staff->get($id);
-        if ($this->Staff->delete($staffEntity)) {
-            $this->Flash->success(__('The staff has been deleted.'));
+        $staff = $this->Staff->get($id);
+        if ($this->Staff->delete($staff)) {
+            $this->Flash->success(__($staff->full_name . ' has been deleted.'));
+            if ($target === $userId) {
+                return $this->redirect(['controller' => 'Users', 'action' => 'logout']);
+            }
         } else {
             $this->Flash->error(__('The staff could not be deleted. Please, try again.'));
         }

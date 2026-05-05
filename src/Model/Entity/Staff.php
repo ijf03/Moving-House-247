@@ -33,4 +33,9 @@ class Staff extends Entity
         'phone' => true,
         'isDriver' => true,
     ];
+
+    protected function _getFullName() : string
+    {
+        return ($this->first_name . ' ' . $this->last_name);
+    }
 }

@@ -111,6 +111,17 @@
                                     'class' => 'auth-input',
                                 ]) ?>
                             </div>
+
+                            <?php if ($this->get('user_type')){?>
+                            <div class="col-md-6 auth-form-group">
+                                <?= $this->Form->control('is_driver', [
+                                    'type' => 'checkbox',
+                                    'label' => 'Owns a valid driving license?',
+                                    'value' => 0,
+                                    'class' => 'auth-input',
+                                ]) ?>
+                            </div>
+                            <?php } ?>
                         </div>
 
                         <div class="auth-form-actions">
