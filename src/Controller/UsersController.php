@@ -78,7 +78,9 @@ class UsersController extends AppController
 
         if ($this->request->is('post')) {
             $captchaResponse = $this->request->getData('g-recaptcha-response');
+
             if (empty($captchaResponse)) {
+                $this->Authentication->logout();
                 $this->Flash->error('Please complete the CAPTCHA.');
                 return;
             }
@@ -95,9 +97,11 @@ class UsersController extends AppController
             $responseData = json_decode($verifyResponse, true);
 
             if (!isset($responseData['success']) || $responseData['success'] !== true) {
+                $this->Authentication->logout();
                 $this->Flash->error('CAPTCHA verification failed. Please try again.');
                 return;
             }
+
             $result = $this->Authentication->getResult();
 
             if ($result->isValid()) {
@@ -111,6 +115,7 @@ class UsersController extends AppController
 
                 return $this->redirect($redirect ?: '/');
             }
+
             $this->Flash->error('Invalid email or password');
         }
     }
