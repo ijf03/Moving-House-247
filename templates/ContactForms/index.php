@@ -36,8 +36,6 @@
                         <tr>
                             <th><?= __('Contact Form') ?></th>
                             <th><?= __('Customer') ?></th>
-                            <th><?= __('First Name') ?></th>
-                            <th><?= __('Last Name') ?></th>
                             <th><?= __('Email') ?></th>
                             <th><?= __('Phone') ?></th>
                             <th><?= __('Subject') ?></th>
@@ -59,8 +57,6 @@
                                         )
                                         : '' ?>
                                 </td>
-                                <td><?= h($contactForm->customer->first_name ?? '') ?></td>
-                                <td><?= h($contactForm->customer->last_name ?? '') ?></td>
                                 <td><?= h($contactForm->customer->email ?? '') ?></td>
                                 <td><?= h($contactForm->customer->phone ?? '') ?></td>
                                 <td><?= h($contactForm->subject) ?></td>
@@ -79,7 +75,7 @@
                                             ['action' => 'delete', $contactForm->contact_form_id],
                                             [
                                                 'method' => 'delete',
-                                                'confirm' => __('Are you sure you want to delete # {0}?', $contactForm->contact_form_id),
+                                                'confirm' => __('Are you sure you want to delete the message from {0}? This action cannot be undone.', $contactForm->customer->first_name),
                                                 'class' => 'admin-action-link admin-action-link-danger'
                                             ]
                                         ) ?>

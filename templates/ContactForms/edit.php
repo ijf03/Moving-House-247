@@ -92,7 +92,7 @@
                         </div>
 
                         <div class="mt-4">
-                            <?= $this->Form->button(__('Submit'), ['class' => 'mh-btn-primary']) ?>
+                            <?= $this->Form->button(__('Save Changes'), ['class' => 'mh-btn-primary']) ?>
                         </div>
 
                         <?= $this->Form->end() ?>

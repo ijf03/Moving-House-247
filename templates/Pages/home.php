@@ -39,8 +39,9 @@ $this->assign('title', 'Moving House 24/7');
                             </div>
 
                             <h1>
-                                Moves done right,<br>
-                                <span class="accent">any time of day.</span>
+                                <?= $this->ContentBlock->text('website-title-main'); ?>
+                                <br>
+                                <span class="accent"><?= $this->ContentBlock->text('website-title-accent'); ?></span>
                             </h1>
 
                             <p>

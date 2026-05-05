@@ -3,8 +3,10 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use Cake\I18n\FrozenTime;
 use Cake\Mailer\Mailer;
 use Cake\Core\Configure;
+use Cake\I18n\DateTime;
 
 /**
  * Users Controller
@@ -19,7 +21,7 @@ class UsersController extends AppController
         parent::beforeFilter($event);
         // Configure the login action to not require authentication, preventing
         // the infinite redirect loop issue
-        $this->Authentication->allowUnauthenticated(['login','resetpassword', 'register']);
+        $this->Authentication->allowUnauthenticated(['login','forgetpassword','resetpassword', 'register']);
     }
 
     /**
@@ -106,6 +108,7 @@ class UsersController extends AppController
                 $user = $result->getData();
                 $redirect = $this->Authentication->getLoginRedirect();
 
+                // Admin
                 if ((int)$user->user_type === 1) {
                     return $this->redirect($redirect ?: ['controller' => 'Users', 'action' => 'index']);
                 }
@@ -188,7 +191,7 @@ class UsersController extends AppController
             'keyField' => 'user_type_id',
             'valueField' => 'name'
         ])->all() : null;
-        if ($target !== $userId and !$isAdmin){
+        if ($target !== $userId && !$isAdmin){
             $this->Flash->error(__('Please access your own profile'));
             return $this->redirect(['action' => 'index']);
         }
@@ -231,7 +234,7 @@ class UsersController extends AppController
             ->contain(['UserTypes'])
             ->first();
         $isAdmin = $roleQuery->user_type_name == 'Admin';
-        if ($target !== $userId and !$isAdmin){
+        if ($target !== $userId && !$isAdmin){
             $this->Flash->error(__('You are not allowed to delete this user'));
             return $this->redirect(['action' => 'index']);
         }
@@ -249,7 +252,8 @@ class UsersController extends AppController
         return $this->redirect(['action' => 'index']);
     }
 
-    public function resetpassword(){
+    public function forgetpassword()
+    {
         $siteKey = Configure::read('Recaptcha.siteKey');
         $this->set(compact('siteKey'));
 
@@ -282,20 +286,61 @@ class UsersController extends AppController
                 ->first();
 
             if ($user) {
-                $newPwd = bin2hex(random_bytes(10));
+                $reset_id = bin2hex(random_bytes(10));
+                $reset_id_check = $this->Users->find()
+                    ->where(['reset_id' => $reset_id])
+                    ->first();
+                while($reset_id_check){
+                    $reset_id = bin2hex(random_bytes(10));
+                    $reset_id_check = $this->Users->find()
+                        ->where(['reset_id' => $reset_id])
+                        ->first();
+                    if($reset_id_check){
+                        $time_limit = new FrozenTime($reset_id_check->time_limit);
+                        if ($time_limit->isPast()){
+                            $reset_id_check->reset_id = null;
+                            $reset_id_check->time_limit = null;
+                            $this->Users->save($reset_id_check);
+                        }
+                    }
+                }
                 $mailer = new Mailer('default');
-                $mailer->setFrom(['noreply@test.com'])
+                $mailer
                     ->setTo($user->email)
                     ->setSubject('Password Reset')
-                    ->deliver('Your new password: ' . $newPwd);
-                $user->password = $newPwd;
+                    ->deliver('Link to reset your password: ' . Configure::read('App.fullBaseUrl') . '/users/resetpassword/' . $reset_id);
+                $user->reset_id = $reset_id;
+                $user->time_limit = DateTime::now()->modify('+30 minutes');
                 $this->Users->save($user);
-                $this->log('Email sent, new password: ' . $newPwd);
-                $this->Flash->error('Email with new password sent to ' . $user->email);
+                $this->Flash->error('Email with password reset link sent to ' . $user->email);
                 return $this->redirect(['action' => 'login']);
             } else {
                 $this->Flash->error('Email is not registered');
             }
+        }
+    }
+
+    public function resetpassword($reset_id = null)
+    {
+        $this->request->allowMethod(['get', 'post','put']);
+        $user = $this->Users->find()
+            ->where(['reset_id' => $reset_id])
+            ->first();
+        $time_limit = new FrozenTime($user->time_limit);
+        if ($time_limit->isPast()){
+            $this->Flash->error('The link has expired.');
+            return $this->redirect(['action' => 'forgetpassword']);
+        }
+        if ($this->request->is(['post', 'put'])) {
+            $data = $this->request->getData();
+            $user = $this->Users->patchEntity($user, $data);
+            $user->reset_id = null;
+            $user->time_limit = null;
+            if (!$this->Users->save($user)){
+                $this->set('user', $user);
+                return;
+            }
+            return $this->redirect(['action' => 'login']);
         }
     }
 
@@ -307,17 +352,6 @@ class UsersController extends AppController
         if ($this->request->is('post')) {
             $data = $this->request->getData();
             $data['user_type'] = 3;
-
-            if (
-                empty($data['password']) ||
-                empty($data['confirm_password']) ||
-                $data['password'] !== $data['confirm_password']
-            ) {
-                $this->Flash->error('Passwords do not match.');
-                $user = $this->Users->patchEntity($user, $data);
-                $this->set(compact('user', 'siteKey'));
-                return;
-            }
 
             $captchaResponse = $this->request->getData('g-recaptcha-response');
 

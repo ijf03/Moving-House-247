@@ -2,6 +2,8 @@
 declare(strict_types=1);
 
 namespace App\Controller;
+use Cake\Core\Configure;
+
 
 class BookingsController extends AppController
 {
@@ -25,6 +27,11 @@ class BookingsController extends AppController
         $jobTypeId = $this->request->getQuery('job_type_id');
         $sort = $this->request->getQuery('sort');
         $direction = $this->request->getQuery('direction');
+        $booking = $this->Bookings->newEmptyEntity();
+        $job_types = $this->Bookings->JobTypes->find('list', [
+            'keyField' => 'job_type_id',
+            'valueField' => 'job_type_name'
+        ])->all();
 
         if (!empty($status)) {
             $query->where(['Bookings.status' => $status]);
@@ -40,7 +47,7 @@ class BookingsController extends AppController
         }
 
         $bookings = $this->paginate($query);
-        $this->set(compact('bookings', 'status', 'jobTypeId', 'sort', 'direction'));
+        $this->set(compact('bookings','job_types', 'status', 'jobTypeId', 'sort', 'direction'));
     }
 
     /**
@@ -84,7 +91,6 @@ class BookingsController extends AppController
     public function add()
     {
         $booking = $this->Bookings->newEmptyEntity();
-
         if ($this->request->is('post')) {
             $data = $this->request->getData();
 
@@ -128,17 +134,28 @@ class BookingsController extends AppController
                     ->first();
             }
 
+            $pickupAddress = implode(', ', array_filter([
+                $data['pickup_street_address'] ?? '',
+                $data['pickup_suburb'] ?? '',
+                $data['pickup_postcode'] ?? '',
+            ]));
+
+            $dropoffAddress = implode(', ', array_filter([
+                $data['dropoff_street_address'] ?? '',
+                $data['dropoff_suburb'] ?? '',
+                $data['dropoff_postcode'] ?? '',
+            ]));
+
             $bookingData = [
                 'customer_id' => $customer->customer_id,
                 'job_type_id' => $data['job_type_id'],
-                'pickup_address' => $data['pickup_address'],
-                'dropoff_address' => $data['dropoff_address'],
+                'pickup_address' => $pickupAddress,
+                'dropoff_address' => $dropoffAddress,
                 'job_date' => $data['job_date'],
                 'job_time' => $data['job_time'],
-                'message' => $data['message']?? null,
+                'message' => $data['message'] ?? null,
                 'status' => 'Pending',
             ];
-
             $booking = $this->Bookings->patchEntity($booking, $bookingData);
 
             if ($this->Bookings->save($booking)) {
@@ -159,7 +176,9 @@ class BookingsController extends AppController
             'valueField' => 'job_type_name',
         ])->toArray();
 
-        $this->set(compact('booking', 'customers','jobTypes'));
+        $geoapifyApiKey = Configure::read('Geoapify.apiKey');
+
+        $this->set(compact('booking', 'customers','jobTypes','geoapifyApiKey'));
     }
 
     /**

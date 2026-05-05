@@ -43,6 +43,11 @@ class ErrorController extends AppController
      */
     public function beforeFilter(EventInterface $event): void
     {
+        parent::beforeFilter($event);
+        // Make error pages accessible to public
+        if ($this->components()->has('Authentication')) {
+            $this->Authentication->allowUnauthenticated(['display']);
+        }
     }
 
     /**
