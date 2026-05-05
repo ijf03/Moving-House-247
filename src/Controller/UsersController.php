@@ -71,6 +71,10 @@ class UsersController extends AppController
     }
     public function login()
     {
+        if($this->Authentication->getIdentity())
+        {
+            return $this->redirect('/');
+        }
         $this->request->allowMethod(['get', 'post']);
 
         $siteKey = Configure::read('Recaptcha.siteKey');
@@ -155,9 +159,49 @@ class UsersController extends AppController
             'valueField' => 'name'
         ])->all();
         if ($this->request->is('post')) {
-            $user = $this->Users->patchEntity($user, $this->request->getData());
+            $data = $this->request->getData();
+            $data['isDriver'] = null;
+            $user = $this->Users->patchEntity($user, $data);
+            $roleQuery = $this->Users->find()
+                ->where(['user_id' => $user->user_id])
+                ->contain(['UserTypes'])
+                ->first();
             if ($this->Users->save($user)) {
                 $this->Flash->success(__('The user has been saved.'));
+                if ($roleQuery->user_type_name == 'Customer')
+                {
+                    $staffTable = $this->fetchTable('Staff');
+                    $staffData = $this->request->getData();
+
+                    $staff = $staffTable->newEntity([
+                        'first_name' => $staffData->first_name,
+                        'last_name' => $staffData->last_name,
+                        'email' => $staffData->email,
+                        'phone' => $staffData->phone,
+                        'isDriver' => $staffData->isAdmin
+                    ]);
+
+                    if (!$customersTable->save($customer)) {
+                        $this->Flash->error('User account created, but customer profile could not be created.');
+                        return;
+                    }
+                }
+                elseif ($roleQuery->user_type_name == 'Staff')
+                {
+                    $customersTable = $this->fetchTable('Customers');
+
+                    $customer = $customersTable->newEntity([
+                        'first_name' => $user->first_name,
+                        'last_name' => $user->last_name,
+                        'email' => $user->email,
+                        'phone' => $user->phone,
+                    ]);
+
+                    if (!$customersTable->save($customer)) {
+                        $this->Flash->error('User account created, but customer profile could not be created.');
+                        return;
+                    }
+                }
 
                 return $this->redirect(['action' => 'index']);
             }
