@@ -253,7 +253,18 @@ class BookingsController extends AppController
             return $this->redirect(['action' => 'index']);
         }
 
-        $this->Flash->error(__('The booking could not be converted to a job.'));
+        $errors = $job->getErrors();
+
+        if (!empty($errors)) {
+            foreach ($errors as $field => $fieldErrors) {
+                foreach ($fieldErrors as $message) {
+                    $this->Flash->error(ucfirst(str_replace('_', ' ', (string)$field)) . ': ' . $message);
+                }
+            }
+        } else {
+            $this->Flash->error(__('The booking could not be converted to a job.'));
+        }
+
         return $this->redirect(['action' => 'index']);
     }
 

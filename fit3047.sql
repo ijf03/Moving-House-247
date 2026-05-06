@@ -24,6 +24,7 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 DROP TABLE IF EXISTS `content_blocks`;
 DROP TABLE IF EXISTS `content_blocks_phinxlog`;
+DROP TABLE IF EXISTS `phinxlog`;
 DROP TABLE IF EXISTS `booking_resources`;
 DROP TABLE IF EXISTS `invoice_items`;
 DROP TABLE IF EXISTS `invoice_item_presets`;
