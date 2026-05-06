@@ -101,7 +101,7 @@ $isUser = ($identity && (int)$role === 3);
                     <?php elseif ($isUser) : ?>
                         <?= $this->Html->link(
                             'Book a Service',
-                            ['controller' => 'Bookings', 'action' => 'add'],
+                            ['controller' => 'Bookings', 'action' => 'chooseType'],
                             ['class' => 'nav-link mh-nav-link'],
                         ) ?>
 
@@ -132,7 +132,7 @@ $isUser = ($identity && (int)$role === 3);
 
                         <?= $this->Html->link(
                             'Book a Service',
-                            ['controller' => 'Bookings', 'action' => 'add'],
+                            ['controller' => 'Bookings', 'action' => 'chooseType'],
                             ['class' => 'nav-link mh-nav-link'],
                         ) ?>
 

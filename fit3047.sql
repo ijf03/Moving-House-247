@@ -105,7 +105,7 @@ CREATE TABLE `jobs` (
                         `job_type_id` int(1) NOT NULL,
                         `description` text NOT NULL,
                         `pickup_address` varchar(95) NOT NULL,
-                        `dropoff_address` varchar(95) NOT NULL,
+                        `dropoff_address` varchar(95) NULL,
                         `job_date` date NOT NULL,
                         `job_time` time NOT NULL,
                         `customer_id` int(3) NOT NULL
@@ -122,7 +122,7 @@ CREATE TABLE `bookings` (
                             `customer_id` int(3) NOT NULL,
                             `job_type_id` int(1) NOT NULL,
                             `pickup_address` varchar(95) NOT NULL,
-                            `dropoff_address` varchar(95) NOT NULL,
+                            `dropoff_address` varchar(95) NULL,
                             `job_date` date NOT NULL,
                             `job_time` time NOT NULL,
                             `status` varchar(20) NOT NULL DEFAULT 'Pending',
