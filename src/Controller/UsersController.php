@@ -71,23 +71,19 @@ class UsersController extends AppController
     }
     public function login()
     {
-        if($this->Authentication->getIdentity())
-        {
-            return $this->redirect('/');
-        }
         $this->request->allowMethod(['get', 'post']);
+        if ($this->request->is('get')) {
+            if($this->Authentication->getIdentity())
+            {
+                return $this->redirect('/');
+            }
+        }
 
         $siteKey = Configure::read('Recaptcha.siteKey');
         $this->set(compact('siteKey'));
 
         if ($this->request->is('post')) {
             $captchaResponse = $this->request->getData('g-recaptcha-response');
-
-            if (empty($captchaResponse)) {
-                $this->Authentication->logout();
-                $this->Flash->error('Please complete the CAPTCHA.');
-                return;
-            }
 
             $secretKey = Configure::read('Recaptcha.secretKey');
 
