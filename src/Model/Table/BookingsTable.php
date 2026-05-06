@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Model\Table;
 
+use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
@@ -37,7 +38,8 @@ class BookingsTable extends Table
         $validator
             ->integer('job_type_id')
             ->requirePresence('job_type_id', 'create')
-            ->notEmptyString('job_type_id', 'Job type is required');
+            ->notEmptyString('job_type_id', 'Job type is required')
+            ->inList('job_type_id', [1, 2, 3], 'Please select a valid booking type');
 
         $validator
             ->scalar('pickup_address')
@@ -48,8 +50,20 @@ class BookingsTable extends Table
         $validator
             ->scalar('dropoff_address')
             ->maxLength('dropoff_address', 95)
-            ->requirePresence('dropoff_address', 'create')
-            ->notEmptyString('dropoff_address', 'Dropoff address is required');
+            ->allowEmptyString('dropoff_address');
+
+        $validator->add('dropoff_address', 'requiredForTransfer', [
+            'rule' => function ($value, $context) {
+                $jobTypeId = (int)($context['data']['job_type_id'] ?? 0);
+
+                if ($jobTypeId === 3) {
+                    return trim((string)$value) !== '';
+                }
+
+                return true;
+            },
+            'message' => 'Dropoff address is required for transfer bookings',
+        ]);
 
         $validator
             ->date('job_date')
@@ -65,12 +79,28 @@ class BookingsTable extends Table
             ->scalar('status')
             ->maxLength('status', 20)
             ->requirePresence('status', 'create')
-            ->notEmptyString('status', 'Status is required');
+            ->notEmptyString('status', 'Status is required')
+            ->inList('status', ['Pending', 'Processing', 'Done', 'Rejected'], 'Please select a valid status');
 
         $validator
             ->scalar('message')
             ->allowEmptyString('message');
 
         return $validator;
+    }
+
+    public function buildRules(RulesChecker $rules): RulesChecker
+    {
+        $rules->add($rules->existsIn(['customer_id'], 'Customers'), [
+            'errorField' => 'customer_id',
+            'message' => 'Customer must exist',
+        ]);
+
+        $rules->add($rules->existsIn(['job_type_id'], 'JobTypes'), [
+            'errorField' => 'job_type_id',
+            'message' => 'Job type must exist',
+        ]);
+
+        return $rules;
     }
 }

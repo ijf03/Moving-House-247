@@ -2,16 +2,11 @@
 declare(strict_types=1);
 
 namespace App\Controller;
-use Cake\Core\Configure;
 
+use Cake\Core\Configure;
 
 class BookingsController extends AppController
 {
-    /**
-     * Index method
-     *
-     * @return \Cake\Http\Response|null|void Renders view
-     */
     public function index()
     {
         $identity = $this->request->getAttribute('identity');
@@ -47,15 +42,9 @@ class BookingsController extends AppController
         }
 
         $bookings = $this->paginate($query);
-        $this->set(compact('bookings','job_types', 'status', 'jobTypeId', 'sort', 'direction'));
+        $this->set(compact('bookings', 'job_types', 'status', 'jobTypeId', 'sort', 'direction'));
     }
 
-    /**
-     * View method
-     *
-     * @param string|null $id Booking id.
-     * @return \Cake\Http\Response|null|void Renders view
-     */
     public function view($id = null)
     {
         $identity = $this->request->getAttribute('identity');
@@ -83,17 +72,28 @@ class BookingsController extends AppController
         $this->set(compact('booking'));
     }
 
-    /**
-     * Add method
-     *
-     * @return \Cake\Http\Response|null|void Redirects on successful add, renders view otherwise.
-     */
+    public function chooseType()
+    {
+        $bookingTypes = $this->bookingTypeConfig();
+        $this->set(compact('bookingTypes'));
+    }
+
     public function add()
     {
         $booking = $this->Bookings->newEmptyEntity();
-        if ($this->request->is('post')) {
-            $data = $this->request->getData();
+        $bookingTypes = $this->bookingTypeConfig();
 
+        $selectedJobTypeId = (int)($this->request->getQuery('job_type_id') ?: $this->request->getData('job_type_id'));
+
+        if (!isset($bookingTypes[$selectedJobTypeId])) {
+            $this->Flash->error(__('Please select a booking type first.'));
+            return $this->redirect(['action' => 'chooseType']);
+        }
+
+        $selectedJobType = $bookingTypes[$selectedJobTypeId];
+        $requiresDropoff = (bool)$selectedJobType['requires_dropoff'];
+
+        if ($this->request->is('post')) {
             $identity = $this->request->getAttribute('identity');
 
             if (!$identity) {
@@ -101,15 +101,15 @@ class BookingsController extends AppController
                 return $this->redirect(['controller' => 'Users', 'action' => 'login']);
             }
 
+            $data = $this->request->getData();
+
             $usersTable = $this->fetchTable('Users');
             $customersTable = $this->fetchTable('Customers');
 
             $user = $usersTable->get($identity->get('user_id'));
 
             $customer = $customersTable->find()
-                ->where([
-                    'email' => $user->email,
-                ])
+                ->where(['email' => $user->email])
                 ->first();
 
             if (!$customer) {
@@ -120,35 +120,72 @@ class BookingsController extends AppController
                     'phone' => $user->phone,
                 ]);
 
-
                 if (!$customersTable->save($customer)) {
                     $this->Flash->error(__('The customer profile could not be created.'));
-                    $this->set(compact('booking'));
+                    $geoapifyApiKey = Configure::read('Geoapify.apiKey');
+                    $this->set(compact('booking', 'bookingTypes', 'selectedJobTypeId', 'selectedJobType', 'requiresDropoff', 'geoapifyApiKey'));
                     return;
                 }
-
-                $customer = $customersTable->find()
-                    ->where([
-                        'email' => $user->email,
-                    ])
-                    ->first();
             }
 
-            $pickupAddress = implode(', ', array_filter([
-                $data['pickup_street_address'] ?? '',
-                $data['pickup_suburb'] ?? '',
-                $data['pickup_postcode'] ?? '',
-            ]));
+            $errors = [];
 
-            $dropoffAddress = implode(', ', array_filter([
-                $data['dropoff_street_address'] ?? '',
-                $data['dropoff_suburb'] ?? '',
-                $data['dropoff_postcode'] ?? '',
-            ]));
+            if (trim((string)($data['pickup_street_address'] ?? '')) === '') {
+                $errors[] = __('Pickup street address is required.');
+            }
+            if (trim((string)($data['pickup_suburb'] ?? '')) === '') {
+                $errors[] = __('Pickup suburb is required.');
+            }
+            if (trim((string)($data['pickup_postcode'] ?? '')) === '') {
+                $errors[] = __('Pickup postcode is required.');
+            }
+            if (empty($data['job_date'])) {
+                $errors[] = __('Job date is required.');
+            }
+            if (empty($data['job_time'])) {
+                $errors[] = __('Job time is required.');
+            }
+
+            if ($requiresDropoff) {
+                if (trim((string)($data['dropoff_street_address'] ?? '')) === '') {
+                    $errors[] = __('Dropoff street address is required.');
+                }
+                if (trim((string)($data['dropoff_suburb'] ?? '')) === '') {
+                    $errors[] = __('Dropoff suburb is required.');
+                }
+                if (trim((string)($data['dropoff_postcode'] ?? '')) === '') {
+                    $errors[] = __('Dropoff postcode is required.');
+                }
+            }
+
+            if (!empty($errors)) {
+                foreach ($errors as $error) {
+                    $this->Flash->error($error);
+                }
+
+                $geoapifyApiKey = Configure::read('Geoapify.apiKey');
+                $this->set(compact('booking', 'bookingTypes', 'selectedJobTypeId', 'selectedJobType', 'requiresDropoff', 'geoapifyApiKey'));
+                return;
+            }
+
+            $pickupAddress = $this->buildAddress(
+                (string)($data['pickup_street_address'] ?? ''),
+                (string)($data['pickup_suburb'] ?? ''),
+                (string)($data['pickup_postcode'] ?? '')
+            );
+
+            $dropoffAddress = null;
+            if ($requiresDropoff) {
+                $dropoffAddress = $this->buildAddress(
+                    (string)($data['dropoff_street_address'] ?? ''),
+                    (string)($data['dropoff_suburb'] ?? ''),
+                    (string)($data['dropoff_postcode'] ?? '')
+                );
+            }
 
             $bookingData = [
                 'customer_id' => $customer->customer_id,
-                'job_type_id' => $data['job_type_id'],
+                'job_type_id' => $selectedJobTypeId,
                 'pickup_address' => $pickupAddress,
                 'dropoff_address' => $dropoffAddress,
                 'job_date' => $data['job_date'],
@@ -156,6 +193,7 @@ class BookingsController extends AppController
                 'message' => $data['message'] ?? null,
                 'status' => 'Pending',
             ];
+
             $booking = $this->Bookings->patchEntity($booking, $bookingData);
 
             if ($this->Bookings->save($booking)) {
@@ -163,30 +201,21 @@ class BookingsController extends AppController
                 return $this->redirect(['controller' => 'Pages', 'action' => 'display', 'home']);
             }
 
-            $this->Flash->error(__('The booking could not be saved.'));
+            $this->Flash->error(__('The booking could not be saved. Please try again.'));
         }
-
-        $customers = $this->Bookings->Customers->find('list', [
-            'keyField' => 'customer_id',
-            'valueField' => 'first_name',
-        ])->toArray();
-
-        $jobTypes = $this->Bookings->JobTypes->find('list', [
-            'keyField' => 'job_type_id',
-            'valueField' => 'job_type_name',
-        ])->toArray();
 
         $geoapifyApiKey = Configure::read('Geoapify.apiKey');
 
-        $this->set(compact('booking', 'customers','jobTypes','geoapifyApiKey'));
+        $this->set(compact(
+            'booking',
+            'bookingTypes',
+            'selectedJobTypeId',
+            'selectedJobType',
+            'requiresDropoff',
+            'geoapifyApiKey'
+        ));
     }
 
-    /**
-     * Accept method
-     *
-     * @param string|null $id Booking id.
-     * @return \Cake\Http\Response|null Redirects to index.
-     */
     public function accept($id = null)
     {
         $identity = $this->request->getAttribute('identity');
@@ -228,12 +257,6 @@ class BookingsController extends AppController
         return $this->redirect(['action' => 'index']);
     }
 
-    /**
-     * Reject method
-     *
-     * @param string|null $id Booking id.
-     * @return \Cake\Http\Response|null Redirects to index.
-     */
     public function reject($id = null)
     {
         $identity = $this->request->getAttribute('identity');
@@ -278,7 +301,7 @@ class BookingsController extends AppController
         $customersTable = $this->fetchTable('Customers');
 
         $customer = $customersTable->find()
-            ->where(['email' => $identity-> get('email')])
+            ->where(['email' => $identity->get('email')])
             ->first();
 
         if (!$customer) {
@@ -289,16 +312,13 @@ class BookingsController extends AppController
                 'phone' => $identity->get('phone'),
             ]);
 
-
             if (!$customersTable->save($customer)) {
                 $this->Flash->error(__('The customer profile could not be created.'));
                 return $this->redirect('/');
             }
 
             $customer = $customersTable->find()
-                ->where([
-                    'email' => $identity->get('email'),
-                ])
+                ->where(['email' => $identity->get('email')])
                 ->first();
         }
 
@@ -332,5 +352,41 @@ class BookingsController extends AppController
     {
         $identity = $this->request->getAttribute('identity');
         return $identity && (int)$identity->get('user_type') === 1;
+    }
+
+    private function bookingTypeConfig(): array
+    {
+        return [
+            1 => [
+                'name' => 'Removal',
+                'description' => 'Book a removal service.',
+                'requires_dropoff' => false,
+                'pickup_label' => 'Pickup Address',
+                'dropoff_label' => 'Dropoff Address',
+            ],
+            2 => [
+                'name' => 'Storage',
+                'description' => 'Book a storage pickup request.',
+                'requires_dropoff' => false,
+                'pickup_label' => 'Pickup Address',
+                'dropoff_label' => 'Storage Destination',
+            ],
+            3 => [
+                'name' => 'Transfer',
+                'description' => 'Book a transfer between two locations.',
+                'requires_dropoff' => true,
+                'pickup_label' => 'Pickup Address',
+                'dropoff_label' => 'Dropoff Address',
+            ],
+        ];
+    }
+
+    private function buildAddress(string $street, string $suburb, string $postcode): string
+    {
+        return implode(', ', array_filter([
+            trim($street),
+            trim($suburb),
+            trim($postcode),
+        ]));
     }
 }
