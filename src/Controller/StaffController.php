@@ -104,6 +104,17 @@ class StaffController extends AppController
 }
     public function add()
     {
+        $usersTable = $this->fetchTable('Users');
+        $userId = $this->request->getAttribute('identity')->get('user_id');
+        $roleQuery = $usersTable->find()
+            ->where(['user_id' => $userId])
+            ->contain(['UserTypes'])
+            ->first();
+        $isAdmin = $roleQuery->user_type_name == 'Admin';
+        if(!$isAdmin){
+            $this->Flash->error('You are not allowed to register staff');
+            return $this->redirect(['action'=>'index']);
+        }
         $staffEntity = $this->Staff->newEmptyEntity();
         if ($this->request->is('post')) {
             $staffEntity = $this->Staff->patchEntity($staffEntity, $this->request->getData());
@@ -223,6 +234,10 @@ class StaffController extends AppController
         $staff = $this->Staff->get($id);
         if ($this->Staff->delete($staff)) {
             $this->Flash->success(__($staff->full_name . ' has been deleted.'));
+            if(!$user){
+                $this->Flash->error('User not found');
+                return;
+            }
             if(!$usersTable->delete($user)){
                 $this->Flash->error(__('The user could not be deleted. Please, try again.'));
             }
