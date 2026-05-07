@@ -14,6 +14,19 @@
                     <div class="mh-back-btn m-1">
                         <?= $this->Html->link(__('← Back to List'), ['action' => 'index']) ?>
                     </div>
+                    <?php if ($booking->status === 'Pending'): ?>
+                        <?= $this->Form->postLink(
+                            __('Accept'),
+                            ['action' => 'accept', $booking->booking_id],
+                            ['class' => 'admin-action-link admin-action-link-success']
+                        ) ?>
+
+                        <?= $this->Form->postLink(
+                            __('Reject'),
+                            ['action' => 'reject', $booking->booking_id],
+                            ['class' => 'admin-action-link admin-action-link-danger']
+                        ) ?>
+                    <?php endif; ?>
                 </div>
 
                 <div class="col-lg-9">
