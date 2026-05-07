@@ -39,13 +39,13 @@
                 <div class="col-lg-9">
                     <div class="auth-card auth-card-wide">
                         <div class="auth-header">
-                            <h2 class="auth-title"><?= __('Add User') ?></h2>
+                            <h2 class="auth-title"><?= __('Add Staff') ?></h2>
                             <p class="auth-subtitle">
                                 <?= __('Fill in the user details below to create a new account.') ?>
                             </p>
                         </div>
 
-                        <?= $this->Form->create($user, ['class' => 'auth-form']) ?>
+                        <?= $this->Form->create($staff, ['class' => 'auth-form']) ?>
 
                         <div class="row g-3">
                             <div class="col-md-6 auth-form-group">
@@ -111,17 +111,6 @@
                                     'class' => 'auth-input',
                                 ]) ?>
                             </div>
-
-                            <?php if ($this->get('user_type')){?>
-                            <div class="col-md-6 auth-form-group">
-                                <?= $this->Form->control('is_driver', [
-                                    'type' => 'checkbox',
-                                    'label' => 'Owns a valid driving license?',
-                                    'value' => 0,
-                                    'class' => 'auth-input',
-                                ]) ?>
-                            </div>
-                            <?php } ?>
                         </div>
 
                         <div class="auth-form-actions">

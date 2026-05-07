@@ -16,19 +16,20 @@
                     <th><?= $this->Paginator->sort('last_name') ?></th>
                     <th><?= $this->Paginator->sort('email') ?></th>
                     <th><?= $this->Paginator->sort('phone') ?></th>
-                    <th><?= $this->Paginator->sort('isDriver') ?></th>
+                    <th><?= $this->Paginator->sort('Owns a driver license') ?></th>
                     <th class="actions"><?= __('Actions') ?></th>
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($staff as $staffEntity): ?>
+                <?php foreach ($staff as $staffEntity):
+                    if ($staffEntity->email == $userEmail || $isAdmin) {?>
                 <tr>
                     <td><?= $this->Number->format($staffEntity->staff_id) ?></td>
                     <td><?= h($staffEntity->first_name) ?></td>
                     <td><?= h($staffEntity->last_name) ?></td>
                     <td><?= h($staffEntity->email) ?></td>
                     <td><?= h($staffEntity->phone) ?></td>
-                    <td><?= h($staffEntity->isDriver) ?></td>
+                    <td><?= h($staffEntity->isDriverText) ?></td>
                     <td class="actions">
                         <?= $this->Html->link(__('View'), ['action' => 'view', $staffEntity->staff_id]) ?>
                         <?= $this->Html->link(__('Edit'), ['action' => 'edit', $staffEntity->staff_id]) ?>
@@ -37,12 +38,13 @@
                             ['action' => 'delete', $staffEntity->staff_id],
                             [
                                 'method' => 'delete',
-                                'confirm' => __('Are you sure you want to delete # {0}?', $staffEntity->staff_id),
+                                'confirm' => __('Are you sure you want to delete {0}?', $staffEntity->full_name),
                             ]
                         ) ?>
                     </td>
                 </tr>
-                <?php endforeach; ?>
+                <?php }
+                    endforeach; ?>
             </tbody>
         </table>
     </div>

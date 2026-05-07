@@ -34,6 +34,10 @@ class Staff extends Entity
         'isDriver' => true,
     ];
 
+    protected function _getIsDriverText() : string
+    {
+        return $this->isDriver ? 'Yes' : 'No';
+    }
     protected function _getFullName() : string
     {
         return ($this->first_name . ' ' . $this->last_name);

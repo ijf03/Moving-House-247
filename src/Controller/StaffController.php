@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use Cake\Mailer\Mailer;
+use Cake\Core\Configure;
+
 /**
  * Staff Controller
  *
@@ -35,9 +38,11 @@ class StaffController extends AppController
      */
     public function index()
     {
+        $usersTable = $this->fetchTable('Users');
         $user = $this->Authentication->getIdentity();
         $userId = $user->user_id;
-        $roleQuery = $this->Users->find()
+        $userEmail = $user->email;
+        $roleQuery = $usersTable->find()
             ->where(['user_id' => $userId])
             ->contain(['UserTypes'])
             ->first();
@@ -45,7 +50,7 @@ class StaffController extends AppController
         $query = $this->Staff->find();
         $staff = $this->paginate($query);
 
-        $this->set(compact('staff','isAdmin'));
+        $this->set(compact('staff','isAdmin', 'userEmail'));
     }
 
     /**
@@ -84,6 +89,37 @@ class StaffController extends AppController
             $staffEntity = $this->Staff->patchEntity($staffEntity, $this->request->getData());
             if ($this->Staff->save($staffEntity)) {
                 $this->Flash->success(__('The staff has been saved.'));
+                $usersTable = $this->fetchTable('Users');
+                $userTypesTable = $this->fetchTable('UserTypes');
+                $email_check = $usersTable->find()
+                    ->where(['email' => $staffEntity->email])
+                    ->first();
+                if(!$email_check)
+                {
+                    $randomPwd = bin2hex(random_bytes(10));
+                    $staffType = $userTypesTable->find()
+                        ->where(['name' => 'Staff'])
+                        ->first();
+                    $user = $usersTable->newEntity([
+                        'email' => $staffEntity->email,
+                        'first_name' => $staffEntity->first_name,
+                        'last_name' => $staffEntity->last_name,
+                        'phone' => $staffEntity->phone,
+                        'password' => $randomPwd,
+                        'user_type_id' => $staffType->user_type_id,
+                    ]);
+                    if (!$this->Staff->save($user)) {
+                        $this->Flash->error(__('The user could not be saved. Please, try again.'));
+                        return;
+                    }
+                    $mailer = new Mailer('default');
+                    $mailer
+                        ->setTo($user->email)
+                        ->setSubject('Staff Account')
+                        ->deliver('Welcome to MovingHouse24/7! \nYour credentials are: \n    '
+                    .$user->email.'\n    '.$randomPwd.'\nPlease go to '. Configure::read('App.fullBaseUrl')
+                            . ' to start taking jobs. You are strongly recommended to change your password after first login.');
+                }
 
                 return $this->redirect(['action' => 'index']);
             }
@@ -122,7 +158,7 @@ class StaffController extends AppController
             }
             $this->Flash->error(__('The staff could not be saved. Please, try again.'));
         }
-        $this->set(compact('staffEntity'));
+        $this->set(compact('staffEntity','isAdmin'));
     }
 
     /**

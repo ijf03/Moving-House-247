@@ -16,13 +16,59 @@
             <?= $this->Form->create($staffEntity) ?>
             <fieldset>
                 <legend><?= __('Add Staff') ?></legend>
-                <?php
-                    echo $this->Form->control('first_name');
-                    echo $this->Form->control('last_name');
-                    echo $this->Form->control('email');
-                    echo $this->Form->control('phone');
-                    echo $this->Form->control('isDriver');
-                ?>
+                <?= $this->Form->create($staffEntity, ['class' => 'auth-form']) ?>
+
+                <div class="row g-3">
+                    <div class="col-md-6 auth-form-group">
+                        <?= $this->Form->control('first_name', [
+                            'label' => 'First Name*',
+                            'placeholder' => 'Enter first name',
+                            'class' => 'auth-input',
+                            'required' => true,
+                        ]) ?>
+                    </div>
+
+                    <div class="col-md-6 auth-form-group">
+                        <?= $this->Form->control('last_name', [
+                            'label' => 'Last Name*',
+                            'placeholder' => 'Enter last name',
+                            'class' => 'auth-input',
+                            'required' => true,
+                        ]) ?>
+                    </div>
+
+                    <div class="col-md-6 auth-form-group">
+                        <?= $this->Form->control('email', [
+                            'label' => 'Email*',
+                            'placeholder' => 'Enter email address',
+                            'class' => 'auth-input',
+                            'required' => true,
+                        ]) ?>
+                    </div>
+
+                    <div class="col-md-6 auth-form-group">
+                        <?= $this->Form->control('phone', [
+                            'label' => 'Phone*',
+                            'placeholder' => 'Enter phone number',
+                            'class' => 'auth-input',
+                            'required' => true,
+                        ]) ?>
+                    </div>
+                    <div class="col-md-6 auth-form-group">
+                        <?= $this->Form->control('isDriver', [
+                            'label' => 'Owns a valid driving license?',
+                            'type' => 'checkbox',
+                            'value' => 0,
+                            'class' => 'auth-input',
+                        ]) ?>
+                    </div>
+                </div>
+
+                <div class="auth-form-actions">
+                    <?= $this->Form->button(__('Register Staff'), ['class' => 'mh-btn-primary']) ?>
+                </div>
+
+                <?= $this->Form->end() ?>
             </fieldset>
             <?= $this->Form->button(__('Submit')) ?>
             <?= $this->Form->end() ?>

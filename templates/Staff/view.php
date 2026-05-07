@@ -19,6 +19,10 @@
             <h3><?= h($staffEntity->first_name) ?></h3>
             <table>
                 <tr>
+                    <th><?= __('Staff Id') ?></th>
+                    <td><?= $this->Number->format($staffEntity->staff_id) ?></td>
+                </tr>
+                <tr>
                     <th><?= __('First Name') ?></th>
                     <td><?= h($staffEntity->first_name) ?></td>
                 </tr>
@@ -33,10 +37,6 @@
                 <tr>
                     <th><?= __('Phone') ?></th>
                     <td><?= h($staffEntity->phone) ?></td>
-                </tr>
-                <tr>
-                    <th><?= __('Staff Id') ?></th>
-                    <td><?= $this->Number->format($staffEntity->staff_id) ?></td>
                 </tr>
                 <tr>
                     <th><?= __('IsDriver') ?></th>

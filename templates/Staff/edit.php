@@ -11,7 +11,7 @@
             <?= $this->Form->postLink(
                 __('Delete'),
                 ['action' => 'delete', $staffEntity->staff_id],
-                ['confirm' => __('Are you sure you want to delete # {0}?', $staffEntity->staff_id), 'class' => 'side-nav-item']
+                ['confirm' => __('Are you sure you want to delete {0}?', $staffEntity->full_name), 'class' => 'side-nav-item']
             ) ?>
             <?= $this->Html->link(__('List Staff'), ['action' => 'index'], ['class' => 'side-nav-item']) ?>
         </div>
@@ -21,13 +21,61 @@
             <?= $this->Form->create($staffEntity) ?>
             <fieldset>
                 <legend><?= __('Edit Staff') ?></legend>
-                <?php
-                    echo $this->Form->control('first_name');
-                    echo $this->Form->control('last_name');
-                    echo $this->Form->control('email');
-                    echo $this->Form->control('phone');
-                    echo $this->Form->control('isDriver');
-                ?>
+                <?= $this->Form->create($staffEntity, ['class' => 'auth-form']) ?>
+
+                <div class="row g-3">
+                    <div class="col-md-6 auth-form-group">
+                        <?= $this->Form->control('first_name', [
+                            'label' => 'First Name*',
+                            'placeholder' => 'Enter first name',
+                            'class' => 'auth-input',
+                            'required' => true,
+                        ]) ?>
+                    </div>
+
+                    <div class="col-md-6 auth-form-group">
+                        <?= $this->Form->control('last_name', [
+                            'label' => 'Last Name*',
+                            'placeholder' => 'Enter last name',
+                            'class' => 'auth-input',
+                            'required' => true,
+                        ]) ?>
+                    </div>
+
+                    <div class="col-md-6 auth-form-group">
+                        <?= $this->Form->control('email', [
+                            'label' => 'Email*',
+                            'placeholder' => 'Enter email address',
+                            'class' => 'auth-input',
+                            'required' => true,
+                        ]) ?>
+                    </div>
+
+                    <div class="col-md-6 auth-form-group">
+                        <?= $this->Form->control('phone', [
+                            'label' => 'Phone*',
+                            'placeholder' => 'Enter phone number',
+                            'class' => 'auth-input',
+                            'required' => true,
+                        ]) ?>
+                    </div>
+                    <?php if($isAdmin){?>
+                    <div class="col-md-6 auth-form-group">
+                        <?= $this->Form->control('isDriver', [
+                            'label' => 'Owns a valid driving license?',
+                            'type' => 'checkbox',
+                            'value' => 0,
+                            'class' => 'auth-input',
+                        ]) ?>
+                    </div>
+                    <?php } ?>
+                </div>
+
+                <div class="auth-form-actions">
+                    <?= $this->Form->button(__('Register Staff'), ['class' => 'mh-btn-primary']) ?>
+                </div>
+
+                <?= $this->Form->end() ?>
             </fieldset>
             <?= $this->Form->button(__('Submit')) ?>
             <?= $this->Form->end() ?>
