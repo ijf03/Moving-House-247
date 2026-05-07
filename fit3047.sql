@@ -55,8 +55,8 @@ CREATE TABLE `staff`
     `last_name`   varchar(50) NOT NULL,
     `email`       varchar(62) NOT NULL,
     `phone`       varchar(15) NOT NULL,
-    `isDriver`    tinyint(1) NOT NULL
-);
+    `isDriver`    tinyint(1) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 CREATE TABLE `staff_job`
 (
@@ -64,7 +64,7 @@ CREATE TABLE `staff_job`
     `staff_id` int(11) NOT NULL,
     `job_id`  int(11) NOT NULL,
     `status` ENUM('Waiting', 'Confirmed', 'Rejected') NOT NULL DEFAULT 'Waiting'
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 CREATE TABLE `content_blocks`
 (

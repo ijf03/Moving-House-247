@@ -163,30 +163,30 @@ class UsersController extends AppController
             $data = $this->request->getData();
             $data['isDriver'] = null;
             $user = $this->Users->patchEntity($user, $data);
-            $roleQuery = $this->Users->find()
-                ->where(['user_id' => $user->user_id])
-                ->contain(['UserTypes'])
-                ->first();
             if ($this->Users->save($user)) {
+                $roleQuery = $this->Users->find()
+                    ->where(['user_id' => $user->user_id])
+                    ->contain(['UserTypes'])
+                    ->first();
                 $this->Flash->success(__('The user has been saved.'));
-                if ($roleQuery->user_type_name == 'Customer')
+                if ($roleQuery->user_type_name == 'Staff')
                 {
                     $staffTable = $this->fetchTable('Staff');
                     $staffData = $this->request->getData();
-
                     $staff = $staffTable->newEntity([
-                        'first_name' => $staffData->first_name,
-                        'last_name' => $staffData->last_name,
-                        'email' => $staffData->email,
-                        'phone' => $staffData->phone,
+                        'first_name' => $data['first_name'],
+                        'last_name' => $data['last_name'],
+                        'email' => $data['email'],
+                        'phone' => $data['phone'],
+                        'isDriver' => 0,
                     ]);
-
                     if (!$staffTable->save($staff)) {
-                        $this->Flash->error('Staff account created, Please manually configure if the staff holds a driving license.');
+                        $this->Flash->error('Staff account cannot be created, Please try again');
                         return;
                     }
+                    $this->Flash->success('Staff account created, Please manually configure if the staff holds a driving license.');
                 }
-                elseif ($roleQuery->user_type_name == 'Staff')
+                elseif ($roleQuery->user_type_name == 'Customer')
                 {
                     $customersTable = $this->fetchTable('Customers');
 
@@ -235,6 +235,13 @@ class UsersController extends AppController
             return $this->redirect(['action' => 'index']);
         }
         $user = $this->Users->get($id, contain: ['UserTypes']);
+        if ($user->user_type_name == 'Staff')
+        {
+            $staffTable = $this->fetchTable('Staff');
+            $staff = $staffTable->find()
+                ->where(['email'=>$user->email])
+                ->first();
+        }
         if ($this->request->is(['patch', 'post', 'put'])) {
             $data = $this->request->getData();
             if (!$isAdmin) {
@@ -247,6 +254,20 @@ class UsersController extends AppController
             $user = $this->Users->patchEntity($user, $data);
             if ($this->Users->save($user)) {
                 $this->Flash->success(__($user->full_name . ' has been saved.'));
+                if ($user->user_type_name == 'Staff')
+                {
+                    $staff = $staffTable->patchEntity($staff,[
+                        'first_name' => $user->first_name,
+                        'last_name' => $user->last_name,
+                        'email' => $user->email,
+                        'phone' => $user->phone,
+                    ]);
+                    if (!$staffTable->save($staff))
+                    {
+                        $this->Flash->error('Cannot edit staff details, Please try again.');
+                        return;
+                    }
+                }
 
                 return $this->redirect(['action' => 'index']);
             }
@@ -279,6 +300,24 @@ class UsersController extends AppController
         }
         $this->request->allowMethod(['post', 'delete']);
         $user = $this->Users->get($id);
+        $userType = $this->Users->get($id, contain: ['UserTypes']);
+        if ($userType->user_type_name == 'Staff')
+        {
+            $staffTable = $this->fetchTable('Staff');
+            $staffRef = $staffTable->find()
+                ->where(['email'=>$user->email])
+                ->first();
+            if(!$staffRef)
+            {
+                $this->Flash->error(__('Staff profile not found'));
+                return;
+            }
+            $staff = $staffTable->get($staffRef->staff_id);
+            if (!$staffTable->delete($staff)) {
+                $this->Flash->error('Staff account could not be deleted, please try again.');
+                return;
+            }
+        }
         if ($this->Users->delete($user)) {
             $this->Flash->success(__($user->full_name . ' has been deleted.'));
             if ($target === $userId) {
