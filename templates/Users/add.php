@@ -39,7 +39,7 @@
                 <div class="col-lg-9">
                     <div class="auth-card auth-card-wide">
                         <div class="auth-header">
-                            <h2 class="auth-title"><?= __('Add User') ?></h2>
+                            <h2 class="auth-title"><?= __('Add Staff') ?></h2>
                             <p class="auth-subtitle">
                                 <?= __('Fill in the user details below to create a new account.') ?>
                             </p>
