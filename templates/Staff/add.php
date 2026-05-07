@@ -58,7 +58,7 @@
                         <?= $this->Form->control('isDriver', [
                             'label' => 'Owns a valid driving license?',
                             'type' => 'checkbox',
-                            'value' => 0,
+                            'value' => 1,
                             'class' => 'auth-input',
                         ]) ?>
                     </div>
@@ -70,8 +70,6 @@
 
                 <?= $this->Form->end() ?>
             </fieldset>
-            <?= $this->Form->button(__('Submit')) ?>
-            <?= $this->Form->end() ?>
         </div>
     </div>
 </div>

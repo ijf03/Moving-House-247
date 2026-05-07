@@ -63,8 +63,9 @@ class StaffController extends AppController
     public function view($id = null)
     {
         $target = (int)$this->request->getParam('pass')[0];
+        $usersTable = $this->fetchTable('Users');
         $userId = $this->request->getAttribute('identity')->get('user_id');
-        $roleQuery = $this->Users->find()
+        $roleQuery = $usersTable->find()
             ->where(['user_id' => $userId])
             ->contain(['UserTypes'])
             ->first();
@@ -82,6 +83,25 @@ class StaffController extends AppController
      *
      * @return \Cake\Http\Response|null|void Redirects on successful add, renders view otherwise.
      */
+    private function randomPassword(int $bits) : string
+{
+    $charset = ['QWERYIOPASDFGHJKLZXCVBNM',
+    'qwertyuiopasdfghjklzxcvbnm',
+    '1234567890',
+    '!@#$%^&*=_+~-'];
+    $allChars = implode('',$charset);
+    $password = '';
+    foreach ($charset as $set)
+    {
+        $password .= $set[random_int(0,strlen($set)-1)];
+    }
+    while (strlen($password) < $bits)
+    {
+        $char = $allChars[random_int(0,strlen($allChars)-1)];
+        $password .= $char;
+    }
+    return str_shuffle($password);
+}
     public function add()
     {
         $staffEntity = $this->Staff->newEmptyEntity();
@@ -96,7 +116,7 @@ class StaffController extends AppController
                     ->first();
                 if(!$email_check)
                 {
-                    $randomPwd = bin2hex(random_bytes(10));
+                    $randomPwd = $this->randomPassword(10);
                     $staffType = $userTypesTable->find()
                         ->where(['name' => 'Staff'])
                         ->first();
@@ -106,9 +126,10 @@ class StaffController extends AppController
                         'last_name' => $staffEntity->last_name,
                         'phone' => $staffEntity->phone,
                         'password' => $randomPwd,
-                        'user_type_id' => $staffType->user_type_id,
+                        'user_type' => $staffType->user_type_id,
+                        'confirm_password' => $randomPwd,
                     ]);
-                    if (!$this->Staff->save($user)) {
+                    if (!$usersTable->save($user)) {
                         $this->Flash->error(__('The user could not be saved. Please, try again.'));
                         return;
                     }
@@ -138,20 +159,32 @@ class StaffController extends AppController
     public function edit($id = null)
     {
         $target = (int)$this->request->getParam('pass')[0];
+        $staffEntity = $this->Staff->get($id, contain: []);
         $userId = $this->request->getAttribute('identity')->get('user_id');
-        $roleQuery = $this->Users->find()
+        $usersTable = $this->fetchTable('Users');
+        $roleQuery = $usersTable->find()
             ->where(['user_id' => $userId])
             ->contain(['UserTypes'])
+            ->first();
+        $user = $usersTable->find()
+            ->where(['email'=>$staffEntity->email])
             ->first();
         $isAdmin = $roleQuery->user_type_name == 'Admin';
         if ($target !== $userId and !$isAdmin){
             $this->Flash->error(__('Please access your own profile'));
             return $this->redirect(['action' => 'index']);
         }
-        $staffEntity = $this->Staff->get($id, contain: []);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $staffEntity = $this->Staff->patchEntity($staffEntity, $this->request->getData());
             if ($this->Staff->save($staffEntity)) {
+                $user = $usersTable->patchEntity($user, ['email' => $staffEntity->email,
+                    'phone' => $staffEntity->phone,
+                    'first_name' => $staffEntity->first_name,
+                    'last_name' => $staffEntity->last_name,]);
+                if(!$this->Staff->save($user)){
+                    $this->Flash->error(__('User detail cannot be saved'));
+                    return;
+                }
                 $this->Flash->success(__('The staff has been saved.'));
 
                 return $this->redirect(['action' => 'index']);
@@ -172,8 +205,12 @@ class StaffController extends AppController
     {
         $targetStaffID = (int)$this->request->getParam('pass')[0];
         $target = $this->Staff->get($id, contain: []);
+        $usersTable = $this->fetchTable('Users');
+        $user = $usersTable->find()
+            ->where(['email' => $target->email])
+            ->first();
         $userId = $this->request->getAttribute('identity')->get('user_id');
-        $roleQuery = $this->Users->find()
+        $roleQuery = $usersTable->find()
             ->where(['user_id' => $userId])
             ->contain(['UserTypes'])
             ->first();
@@ -186,6 +223,9 @@ class StaffController extends AppController
         $staff = $this->Staff->get($id);
         if ($this->Staff->delete($staff)) {
             $this->Flash->success(__($staff->full_name . ' has been deleted.'));
+            if(!$usersTable->delete($user)){
+                $this->Flash->error(__('The user could not be deleted. Please, try again.'));
+            }
             if ($target === $userId) {
                 return $this->redirect(['controller' => 'Users', 'action' => 'logout']);
             }

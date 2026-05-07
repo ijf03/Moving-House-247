@@ -45,7 +45,7 @@
                             </p>
                         </div>
 
-                        <?= $this->Form->create($staff, ['class' => 'auth-form']) ?>
+                        <?= $this->Form->create($user, ['class' => 'auth-form']) ?>
 
                         <div class="row g-3">
                             <div class="col-md-6 auth-form-group">

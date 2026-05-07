@@ -72,13 +72,11 @@
                 </div>
 
                 <div class="auth-form-actions">
-                    <?= $this->Form->button(__('Register Staff'), ['class' => 'mh-btn-primary']) ?>
+                    <?= $this->Form->button(__('Save Staff'), ['class' => 'mh-btn-primary']) ?>
                 </div>
 
                 <?= $this->Form->end() ?>
             </fieldset>
-            <?= $this->Form->button(__('Submit')) ?>
-            <?= $this->Form->end() ?>
         </div>
     </div>
 </div>

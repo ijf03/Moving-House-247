@@ -443,7 +443,8 @@ INSERT INTO `content_blocks_phinxlog` (`version`, `migration_name`, `start_time`
 VALUES (20230402063959, 'ContentBlocksMigration', '2026-05-02 11:25:48', '2026-05-02 11:25:48', 0);
 
 ALTER TABLE `staff`
-    ADD PRIMARY KEY (`staff_id`);
+    ADD PRIMARY KEY (`staff_id`),
+    ADD KEY `email` (`email`);
 
 ALTER TABLE `staff_job`
     ADD PRIMARY KEY (`allocation_id`);
@@ -455,7 +456,8 @@ ALTER TABLE `content_blocks_phinxlog`
     ADD PRIMARY KEY (`version`);
 
 ALTER TABLE `customers`
-    ADD PRIMARY KEY (`customer_id`);
+    ADD PRIMARY KEY (`customer_id`),
+    ADD KEY `email` (`email`);
 
 ALTER TABLE `jobs`
     ADD PRIMARY KEY (`job_id`),

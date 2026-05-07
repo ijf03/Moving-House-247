@@ -39,7 +39,7 @@
                     <td><?= h($staffEntity->phone) ?></td>
                 </tr>
                 <tr>
-                    <th><?= __('IsDriver') ?></th>
+                    <th><?= __('Owns driver license') ?></th>
                     <td><?= $staffEntity->isDriver ? __('Yes') : __('No'); ?></td>
                 </tr>
             </table>
