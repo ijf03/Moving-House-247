@@ -179,11 +179,10 @@ class UsersController extends AppController
                         'last_name' => $staffData->last_name,
                         'email' => $staffData->email,
                         'phone' => $staffData->phone,
-                        'isDriver' => $staffData->isAdmin
                     ]);
 
-                    if (!$customersTable->save($customer)) {
-                        $this->Flash->error('User account created, but customer profile could not be created.');
+                    if (!$staffTable->save($staff)) {
+                        $this->Flash->error('Staff account created, Please manually configure if the staff holds a driving license.');
                         return;
                     }
                 }
