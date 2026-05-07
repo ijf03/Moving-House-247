@@ -173,6 +173,7 @@ class UsersController extends AppController
                 {
                     $staffTable = $this->fetchTable('Staff');
                     $staffData = $this->request->getData();
+
                     $staff = $staffTable->newEntity([
                         'first_name' => $data['first_name'],
                         'last_name' => $data['last_name'],
