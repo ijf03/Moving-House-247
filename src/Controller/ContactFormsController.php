@@ -61,7 +61,13 @@ class ContactFormsController extends AppController
     {
         $this->requireAdmin();
 
-        $contactForm = $this->ContactForms->get($id, contain: ['Customers']);
+        $contactForm = $this->ContactForms->get($id, contain: [
+            'Customers',
+            'ContactFormReplies' => [
+                'sort' => ['ContactFormReplies.created' => 'ASC']
+            ]
+        ]);
+
         $this->set(compact('contactForm'));
     }
 
@@ -175,6 +181,13 @@ class ContactFormsController extends AppController
             $contactForm = $this->ContactForms->newEntity($contactFormData);
 
             if ($this->ContactForms->save($contactForm)) {
+                $reply = $this->ContactForms->ContactFormReplies->newEntity([
+                    'contact_form_id' => $contactForm->contact_form_id,
+                    'sender_type' => 'customer',
+                    'message' => $data['message'],
+                ]);
+
+                $this->ContactForms->ContactFormReplies->save($reply);
                 $this->Flash->success(__('Your message has been sent successfully.'));
                 return $this->redirect(['controller' => 'Pages', 'action' => 'display', 'home']);
             }
@@ -189,7 +202,12 @@ class ContactFormsController extends AppController
     {
         $this->requireAdmin();
 
-        $contactForm = $this->ContactForms->get($id, contain: ['Customers']);
+        $contactForm = $this->ContactForms->get($id, contain: [
+            'Customers',
+            'ContactFormReplies' => [
+                'sort' => ['ContactFormReplies.created' => 'ASC']
+            ]
+        ]);
 
         if ($this->request->is(['patch', 'post', 'put'])) {
             $data = $this->request->getData();
@@ -275,6 +293,13 @@ class ContactFormsController extends AppController
                 $contactForm->replied_at = date('Y-m-d H:i:s');
 
                 if ($this->ContactForms->save($contactForm)) {
+                    $reply = $this->ContactForms->ContactFormReplies->newEntity([
+                        'contact_form_id' => $contactForm->contact_form_id,
+                        'sender_type' => 'admin',
+                        'message' => $replyMessage,
+                    ]);
+
+                    $this->ContactForms->ContactFormReplies->save($reply);
                     $this->Flash->success(__('Reply email sent successfully.'));
                 } else {
                     $this->Flash->warning(__('Email sent, but the reply could not be saved to the database.'));
