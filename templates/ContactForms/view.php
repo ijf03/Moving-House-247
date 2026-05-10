@@ -126,25 +126,27 @@
 
                         <div class="mt-4">
                             <div class="admin-table-header">
-                                <h2><?= __('Message') ?></h2>
+                                <h2><?= __('Conversation') ?></h2>
                             </div>
-                            <div class="mh-side-note">
-                                <p><?= $this->Text->autoParagraph(h($contactForm->message)) ?></p>
-                            </div>
-                        </div>
 
-                        <?php if (!empty($contactForm->admin_reply)): ?>
-                            <div class="mt-4">
-                                <div class="admin-table-header">
-                                    <h2><?= __('Admin Reply') ?></h2>
-                                </div>
+                            <?php if (!empty($contactForm->contact_form_replies)): ?>
+                                <?php foreach ($contactForm->contact_form_replies as $reply): ?>
+                                    <div class="<?= $reply->sender_type === 'admin' ? 'mh-info-card' : 'mh-side-note' ?> mb-3">
+                                        <div>
+                                            <strong><?= h(ucfirst($reply->sender_type)) ?></strong>
+                                            <p><?= $this->Text->autoParagraph(h($reply->message)) ?></p>
+                                            <small><?= h($reply->created) ?></small>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            <?php else: ?>
                                 <div class="mh-info-card">
                                     <div>
-                                        <p><?= $this->Text->autoParagraph(h($contactForm->admin_reply)) ?></p>
+                                        <p><?= __('No conversation messages have been saved yet.') ?></p>
                                     </div>
                                 </div>
-                            </div>
-                        <?php endif; ?>
+                            <?php endif; ?>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -32,6 +32,7 @@ DROP TABLE IF EXISTS `booking_resources`;
 DROP TABLE IF EXISTS `invoice_items`;
 DROP TABLE IF EXISTS `invoice_item_presets`;
 DROP TABLE IF EXISTS `invoices`;
+DROP TABLE IF EXISTS `contact_form_replies`;
 DROP TABLE IF EXISTS `contact_forms`;
 DROP TABLE IF EXISTS `jobs`;
 DROP TABLE IF EXISTS `trucks`;
@@ -117,6 +118,18 @@ CREATE TABLE `contact_forms`
     `status`          varchar(20)  NOT NULL DEFAULT 'new',
     `admin_reply`     text                  DEFAULT NULL,
     `replied_at`      datetime              DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+CREATE TABLE `contact_form_replies`
+(
+    `contact_form_reply_id` int(11) NOT NULL AUTO_INCREMENT,
+    `contact_form_id`       int(11) NOT NULL,
+    `sender_type`           varchar(20) NOT NULL,
+    `message`               text NOT NULL,
+    `created`               datetime NOT NULL DEFAULT current_timestamp(),
+    `modified`              datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+    PRIMARY KEY (`contact_form_reply_id`),
+    KEY `contact_form_replies_contact_form_id` (`contact_form_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 CREATE TABLE `customers`
@@ -337,6 +350,25 @@ VALUES (1, 1, 'Quote for apartment move',
        (10, 10, 'Storage before settlement', 'Can my items be stored for two weeks before delivery to my new address?',
         '2026-04-22 14:50:00', 'replied', 'Yes, we can arrange storage before final delivery.', '2026-04-22 16:20:00');
 
+INSERT INTO `contact_form_replies`
+(`contact_form_id`, `sender_type`, `message`, `created`)
+SELECT
+    `contact_form_id`,
+    'customer',
+    `message`,
+    `created`
+FROM `contact_forms`;
+
+INSERT INTO `contact_form_replies`
+(`contact_form_id`, `sender_type`, `message`, `created`)
+SELECT
+    `contact_form_id`,
+    'admin',
+    `admin_reply`,
+    `replied_at`
+FROM `contact_forms`
+WHERE `admin_reply` IS NOT NULL;
+
 INSERT INTO `customers`
     (`customer_id`, `first_name`, `last_name`, `email`, `phone`)
 VALUES (1, 'Emily', 'Carter', 'emily.carter@example.com', '0412345678'),
@@ -543,6 +575,12 @@ ALTER TABLE `invoices`
 
 ALTER TABLE `invoice_items`
     MODIFY `invoice_item_id` int (11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `contact_form_replies`
+    ADD CONSTRAINT `contact_form_replies_contact_form_id`
+        FOREIGN KEY (`contact_form_id`)
+            REFERENCES `contact_forms` (`contact_form_id`)
+            ON DELETE CASCADE;
 
 ALTER TABLE `contact_forms`
     ADD CONSTRAINT `contact_forms_customer_id`

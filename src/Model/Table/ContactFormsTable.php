@@ -51,6 +51,11 @@ class ContactFormsTable extends Table
             'foreignKey' => 'customer_id',
             'joinType' => 'INNER',
         ]);
+
+        $this->hasMany('ContactFormReplies', [
+            'foreignKey' => 'contact_form_id',
+            'dependent' => true,
+        ]);
     }
 
     /**
