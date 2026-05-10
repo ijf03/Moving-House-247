@@ -503,6 +503,7 @@ body.mh-site {
     color: #fff;
     font-weight: 700;
     letter-spacing: 0.02em;
+    align-content: center;
 }
 
 .booking-hero-content h1 {
@@ -1030,6 +1031,25 @@ body.mh-site {
 
 .mh-back-btn:hover {
     background: rgba(0, 59, 115, 0.14);
+}
+.customer-hero {
+    background:
+        radial-gradient(circle at 78% 24%, rgba(255, 214, 153, 0.22), transparent 28%),
+        linear-gradient(135deg, #c86d03 0%, #da8014 45%, #fb9a28 100%);
+    padding: 5.5rem 0 4rem;
+}
+
+.customer-hero .eyebrow {
+    background: rgba(255, 255, 255, 0.18);
+    color: #fff7ef;
+}
+
+.customer-hero .hero-content h1 {
+    color: #fffaf5;
+}
+
+.customer-hero .admin-hero-text {
+    color: rgba(255, 248, 240, 0.9);
 }
 
 /* Larger desktop screens */

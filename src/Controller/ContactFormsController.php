@@ -61,7 +61,13 @@ class ContactFormsController extends AppController
     {
         $this->requireAdmin();
 
-        $contactForm = $this->ContactForms->get($id, contain: ['Customers']);
+        $contactForm = $this->ContactForms->get($id, contain: [
+            'Customers',
+            'ContactFormReplies' => [
+                'sort' => ['ContactFormReplies.created' => 'ASC']
+            ]
+        ]);
+
         $this->set(compact('contactForm'));
     }
 
@@ -175,6 +181,13 @@ class ContactFormsController extends AppController
             $contactForm = $this->ContactForms->newEntity($contactFormData);
 
             if ($this->ContactForms->save($contactForm)) {
+                $reply = $this->ContactForms->ContactFormReplies->newEntity([
+                    'contact_form_id' => $contactForm->contact_form_id,
+                    'sender_type' => 'customer',
+                    'message' => $data['message'],
+                ]);
+
+                $this->ContactForms->ContactFormReplies->save($reply);
                 $this->Flash->success(__('Your message has been sent successfully.'));
                 return $this->redirect(['controller' => 'Pages', 'action' => 'display', 'home']);
             }
@@ -189,7 +202,12 @@ class ContactFormsController extends AppController
     {
         $this->requireAdmin();
 
-        $contactForm = $this->ContactForms->get($id, contain: ['Customers']);
+        $contactForm = $this->ContactForms->get($id, contain: [
+            'Customers',
+            'ContactFormReplies' => [
+                'sort' => ['ContactFormReplies.created' => 'ASC']
+            ]
+        ]);
 
         if ($this->request->is(['patch', 'post', 'put'])) {
             $data = $this->request->getData();
@@ -275,6 +293,13 @@ class ContactFormsController extends AppController
                 $contactForm->replied_at = date('Y-m-d H:i:s');
 
                 if ($this->ContactForms->save($contactForm)) {
+                    $reply = $this->ContactForms->ContactFormReplies->newEntity([
+                        'contact_form_id' => $contactForm->contact_form_id,
+                        'sender_type' => 'admin',
+                        'message' => $replyMessage,
+                    ]);
+
+                    $this->ContactForms->ContactFormReplies->save($reply);
                     $this->Flash->success(__('Reply email sent successfully.'));
                 } else {
                     $this->Flash->warning(__('Email sent, but the reply could not be saved to the database.'));
@@ -287,5 +312,90 @@ class ContactFormsController extends AppController
         }
 
         $this->set(compact('contactForm'));
+    }
+
+    public function customerIndex()
+    {
+        $identity = $this->request->getAttribute('identity');
+
+        if (!$identity) {
+            return $this->redirect(['controller' => 'Users', 'action' => 'login']);
+        }
+
+        $userEmail = $identity->get('email');
+
+        $contactForms = $this->ContactForms->find()
+            ->contain(['Customers'])
+            ->matching('Customers', function ($q) use ($userEmail) {
+                return $q->where(['Customers.email' => $userEmail]);
+            })
+            ->orderBy(['ContactForms.created' => 'DESC']);
+
+        $this->set('contactForms', $this->paginate($contactForms));
+    }
+
+    public function customerView($id = null)
+    {
+        $identity = $this->request->getAttribute('identity');
+
+        if (!$identity) {
+            return $this->redirect(['controller' => 'Users', 'action' => 'login']);
+        }
+
+        $contactForm = $this->ContactForms->get($id, contain: [
+            'Customers',
+            'ContactFormReplies' => [
+                'sort' => ['ContactFormReplies.created' => 'ASC']
+            ]
+        ]);
+
+        if ($contactForm->customer->email !== $identity->get('email')) {
+            $this->Flash->error(__('You are not allowed to view this inquiry.'));
+            return $this->redirect(['action' => 'customerIndex']);
+        }
+
+        $this->set(compact('contactForm'));
+    }
+
+    public function customerReply($id = null)
+    {
+        $identity = $this->request->getAttribute('identity');
+
+        if (!$identity) {
+            return $this->redirect(['controller' => 'Users', 'action' => 'login']);
+        }
+
+        $contactForm = $this->ContactForms->get($id, contain: ['Customers']);
+
+        if ($contactForm->customer->email !== $identity->get('email')) {
+            $this->Flash->error(__('You are not allowed to reply to this inquiry.'));
+            return $this->redirect(['action' => 'customerIndex']);
+        }
+
+        if ($this->request->is('post')) {
+            $message = trim((string)$this->request->getData('message'));
+
+            if ($message === '') {
+                $this->Flash->error(__('Reply message cannot be empty.'));
+                return $this->redirect(['action' => 'customerView', $id]);
+            }
+
+            $reply = $this->ContactForms->ContactFormReplies->newEntity([
+                'contact_form_id' => $contactForm->contact_form_id,
+                'sender_type' => 'customer',
+                'message' => $message,
+            ]);
+
+            if ($this->ContactForms->ContactFormReplies->save($reply)) {
+                $contactForm->status = 'new';
+                $this->ContactForms->save($contactForm);
+
+                $this->Flash->success(__('Your reply has been sent.'));
+            } else {
+                $this->Flash->error(__('Your reply could not be saved.'));
+            }
+        }
+
+        return $this->redirect(['action' => 'customerView', $id]);
     }
 }

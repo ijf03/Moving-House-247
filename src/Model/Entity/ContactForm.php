@@ -30,5 +30,6 @@ class ContactForm extends Entity
         'replied_at' => true,
         'created' => true,
         'customer' => true,
+        'contact_form_replies' => true,
     ];
 }
