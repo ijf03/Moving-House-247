@@ -87,7 +87,7 @@ $isUser = ($identity && (int)$role === 3);
                         ) ?>
 
                         <?= $this->Html->link(
-                            'Content Blocks',
+                            'Website Content',
                             ['plugin' => 'ContentBlocks', 'controller' => 'ContentBlocks', 'action' => 'index'],
                             ['class' => 'nav-link mh-nav-link'],
                         ) ?>
@@ -219,16 +219,17 @@ $isUser = ($identity && (int)$role === 3);
                     <ul class="list-unstyled mh-footer-contact mb-0">
                         <li>
                             <?= $this->Html->link(
-                                '0412 345 678',
-                                'tel:0412345678',
+                                $this->ContentBlock->text('phone-contact-footer'),
+                                'tel:' . str_replace(' ', '', $this->ContentBlock->text('phone-contact-footer'))
                             ) ?>
                         </li>
                         <li>
                             <?= $this->Html->link(
-                                'hello@movinghouse247.com.au',
-                                'mailto:hello@movinghouse247.com.au',
+                                $this->ContentBlock->text('email-contact-footer'),
+                                'mailto:'.$this->ContentBlock->text('email-contact-footer'),
                                 ['target' => '_blank'],
                             ) ?>
+
                         </li>
                         <li>Victoria, Australia</li>
                     </ul>
