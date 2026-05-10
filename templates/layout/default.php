@@ -107,7 +107,7 @@ $isUser = ($identity && (int)$role === 3);
 
                         <?= $this->Html->link(
                             'Contact Us',
-                            ['controller' => 'ContactForms', 'action' => 'add'],
+                            ['controller' => 'ContactForms', 'action' => 'customer_index'],
                             ['class' => 'nav-link mh-nav-link'],
                         ) ?>
 
