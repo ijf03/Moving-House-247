@@ -87,6 +87,19 @@ $isUser = ($identity && (int)$role === 3);
                         ) ?>
 
                         <?= $this->Html->link(
+                            'Content Blocks',
+                            ['plugin' => 'ContentBlocks', 'controller' => 'ContentBlocks', 'action' => 'index'],
+                            ['class' => 'nav-link mh-nav-link'],
+                        ) ?>
+
+                        <?= $this->Html->link(
+                            'Resource Management',
+                            ['plugin' => false, 'controller' => 'Resources', 'action' => 'index'],
+                            ['plugin' => false, 'controller' => 'Invoices', 'action' => 'index'],
+                            ['class' => 'nav-link mh-nav-link'],
+                        ) ?>
+
+                        <?= $this->Html->link(
                             'Website Content',
                             ['plugin' => 'ContentBlocks', 'controller' => 'ContentBlocks', 'action' => 'index'],
                             ['class' => 'nav-link mh-nav-link'],
@@ -96,13 +109,13 @@ $isUser = ($identity && (int)$role === 3);
                     <?php elseif ($isUser) : ?>
                         <?= $this->Html->link(
                             'Book a Service',
-                            ['controller' => 'Bookings', 'action' => 'add'],
+                            ['controller' => 'Bookings', 'action' => 'chooseType'],
                             ['class' => 'nav-link mh-nav-link'],
                         ) ?>
 
                         <?= $this->Html->link(
                             'Contact Us',
-                            ['controller' => 'ContactForms', 'action' => 'add'],
+                            ['controller' => 'ContactForms', 'action' => 'customer_index'],
                             ['class' => 'nav-link mh-nav-link'],
                         ) ?>
 
@@ -127,7 +140,7 @@ $isUser = ($identity && (int)$role === 3);
 
                         <?= $this->Html->link(
                             'Book a Service',
-                            ['controller' => 'Bookings', 'action' => 'add'],
+                            ['controller' => 'Bookings', 'action' => 'chooseType'],
                             ['class' => 'nav-link mh-nav-link'],
                         ) ?>
 

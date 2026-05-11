@@ -2,6 +2,8 @@
 $this->assign('title', 'Login');
 ?>
 
+<script src="https://www.google.com/recaptcha/api.js?hl=en" async defer></script>
+
 <main class="mh-page-soft">
     <section class="auth-section">
         <div class="container">
@@ -38,7 +40,13 @@ $this->assign('title', 'Login');
                             ]) ?>
                         </div>
 
-                        <div class="auth-form-actions d-flex justify-content-center">
+                        <div class="col-12">
+                            <div class="auth-recaptcha">
+                                <div class="g-recaptcha" data-sitekey="<?= h($siteKey ?? '') ?>"></div>
+                            </div>
+                        </div>
+
+                        <div class="auth-form-actions">
                             <?= $this->Form->button('Log In', [
                                 'class' => 'auth-btn w-75',
                             ]) ?>
