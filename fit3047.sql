@@ -311,6 +311,14 @@ CREATE TABLE `booking_resources`
     KEY                   `booking_resources_booking_id` (`booking_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
+CREATE TABLE job_trucks (
+                            job_truck_id INT AUTO_INCREMENT PRIMARY KEY,
+                            job_id INT NOT NULL,
+                            truck_id INT NOT NULL,
+                            created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                            FOREIGN KEY (job_id) REFERENCES jobs(job_id),
+                            FOREIGN KEY (truck_id) REFERENCES trucks(truck_id)
+);
 
 INSERT INTO `contact_forms`
 (`contact_form_id`, `customer_id`, `subject`, `message`, `created`, `status`, `admin_reply`, `replied_at`)
@@ -608,5 +616,14 @@ ALTER TABLE `staff_job`
         FOREIGN KEY (`staff_id`) REFERENCES `staff` (`staff_id`),
     ADD CONSTRAINT `staff_job_job_id`
         FOREIGN KEY (`job_id`) REFERENCES `jobs` (`job_id`);
+
+ALTER TABLE jobs
+    ADD allocated_at DATETIME NULL,
+ADD cancelled_at DATETIME NULL;
+
+ALTER TABLE jobs
+    ADD status VARCHAR(20) NOT NULL DEFAULT 'Pending',
+ADD staff_required INT NOT NULL DEFAULT 1,
+ADD truck_required INT NOT NULL DEFAULT 1;
 
 COMMIT;

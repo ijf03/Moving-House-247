@@ -47,6 +47,46 @@
                     <td><?= $this->Number->format($job->job_id) ?></td>
                 </tr>
             </table>
+            <h4>Allocation Information</h4>
+
+            <table>
+                <tr>
+                    <th>Status</th>
+                    <td><?= h($job->status) ?></td>
+                </tr>
+                <tr>
+                    <th>Staff Required</th>
+                    <td><?= h($job->staff_required) ?></td>
+                </tr>
+                <tr>
+                    <th>Trucks Required</th>
+                    <td><?= h($job->truck_required) ?></td>
+                </tr>
+                <tr>
+                    <th>Allocated Trucks</th>
+                    <td>
+                        <?php if (!empty($job->job_trucks)): ?>
+                            <ul>
+                                <?php foreach ($job->job_trucks as $jobTruck): ?>
+                                    <li><?= h($jobTruck->truck->rego ?? 'Unknown Truck') ?></li>
+                                <?php endforeach; ?>
+                            </ul>
+                        <?php else: ?>
+                            No trucks allocated.
+                        <?php endif; ?>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Confirmed Staff</th>
+                    <td>
+                        <?php if (!empty($job->staff_job)): ?>
+                            <?= count($job->staff_job) ?> / <?= h($job->staff_required) ?>
+                        <?php else: ?>
+                            0 / <?= h($job->staff_required) ?>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+            </table>
             <div class="text">
                 <strong><?= __('Description') ?></strong>
                 <blockquote>
