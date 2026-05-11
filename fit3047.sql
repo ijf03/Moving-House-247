@@ -47,6 +47,7 @@ DROP TABLE IF EXISTS `user_types`;
 DROP TABLE IF EXISTS `phinxlog`;
 DROP TABLE IF EXISTS `staff`;
 DROP TABLE IF EXISTS `staff_job`;
+DROP TABLE IF EXISTS `job_trucks`;
 SET FOREIGN_KEY_CHECKS = 1;
 
 CREATE TABLE `staff`
@@ -139,7 +140,7 @@ CREATE TABLE `jobs`
     `job_type_id`     int(1) NOT NULL,
     `description`     text        NOT NULL,
     `pickup_address`  varchar(95) NOT NULL,
-    `dropoff_address` varchar(95) NOT NULL,
+    `dropoff_address` varchar(95) NULL,
     `job_date`        date        NOT NULL,
     `job_time`        time        NOT NULL,
     `customer_id`     int(11) NOT NULL
@@ -311,14 +312,17 @@ CREATE TABLE `booking_resources`
     KEY                   `booking_resources_booking_id` (`booking_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
-CREATE TABLE job_trucks (
-                            job_truck_id INT AUTO_INCREMENT PRIMARY KEY,
-                            job_id INT NOT NULL,
-                            truck_id INT NOT NULL,
-                            created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                            FOREIGN KEY (job_id) REFERENCES jobs(job_id),
-                            FOREIGN KEY (truck_id) REFERENCES trucks(truck_id)
-);
+CREATE TABLE `job_trucks` (
+                              `job_truck_id` INT(11) NOT NULL AUTO_INCREMENT,
+                              `job_id` INT(11) NOT NULL,
+                              `truck_id` INT(11) NOT NULL,
+                              `created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+                              PRIMARY KEY (`job_truck_id`),
+
+                              KEY `job_trucks_job_id` (`job_id`),
+                              KEY `job_trucks_truck_id` (`truck_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 INSERT INTO `contact_forms`
 (`contact_form_id`, `customer_id`, `subject`, `message`, `created`, `status`, `admin_reply`, `replied_at`)
@@ -625,5 +629,12 @@ ALTER TABLE jobs
     ADD status VARCHAR(20) NOT NULL DEFAULT 'Pending',
 ADD staff_required INT NOT NULL DEFAULT 1,
 ADD truck_required INT NOT NULL DEFAULT 1;
+
+ALTER TABLE job_trucks
+    ADD CONSTRAINT `job_trucks_job_id_fk`
+        FOREIGN KEY (`job_id`) REFERENCES `jobs` (`job_id`),
+
+    ADD CONSTRAINT `job_trucks_truck_id_fk`
+        FOREIGN KEY (`truck_id`) REFERENCES `trucks` (`truck_id`);
 
 COMMIT;
