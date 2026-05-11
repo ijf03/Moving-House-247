@@ -68,15 +68,7 @@ class ContentBlocksSeed extends BaseSeed
                 'slug' => 'home-content',
                 'type' => 'html',
                 'value' => '<p>Example app showcasing the <code>ugie-cake/cakephp-content-blocks</code> plugin.</p>',
-            ],
-            [
-                'parent' => 'home',
-                'label' => 'Copyright Message',
-                'description' => 'Copyright information shown at the bottom of the home page.',
-                'slug' => 'copyright-message',
-                'type' => 'text',
-                'value' => '(c) Copyright 2026, enter copyright owner here.',
-            ],
+            ]
         ];
 
         $table = $this->table('content_blocks');

@@ -40,7 +40,13 @@ $isUser = ($identity && (int)$role === 3);
     <nav class="navbar navbar-expand-lg mh-navbar">
         <div class="container-fluid px-3 px-lg-5">
             <a class="navbar-brand mh-brand" href="<?= $this->Url->build('/') ?>">
-                <span class="mh-brand-icon">🚚</span>
+                <span class="mh-brand-logo">
+                 <?php if ($this->ContentBlock -> image('logo')):?>
+                    <?= $this ->ContentBlock->image('logo')?>
+                    <?php else:?>
+                    🚚
+                    <?php endif;?>
+                </span>
                 <span class="mh-brand-text">
                     Moving House <span class="mh-accent">24/7</span>
                 </span>
@@ -87,15 +93,8 @@ $isUser = ($identity && (int)$role === 3);
                         ) ?>
 
                         <?= $this->Html->link(
-                            'Content Blocks',
-                            ['plugin' => 'ContentBlocks', 'controller' => 'ContentBlocks', 'action' => 'index'],
-                            ['class' => 'nav-link mh-nav-link'],
-                        ) ?>
-
-                        <?= $this->Html->link(
                             'Resource Management',
                             ['plugin' => false, 'controller' => 'Resources', 'action' => 'index'],
-                            ['plugin' => false, 'controller' => 'Invoices', 'action' => 'index'],
                             ['class' => 'nav-link mh-nav-link'],
                         ) ?>
 

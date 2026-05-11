@@ -457,20 +457,24 @@ VALUES (1,'Jordan','Lee', 'staff@myapp.local', '0422222222', 0),
 INSERT INTO `content_blocks` (`id`, `parent`, `slug`, `label`, `description`, `type`, `value`, `previous_value`,
                               `modified`)
 VALUES (1, 'global', 'website-title-main', 'Website Title (Main)',
-        'Shown on the home page, as well as any tabs in the users browser.', 'text', 'Move done right,', NULL,
+        'Shown on the home page, as well  as any tabs in the users browser.', 'text', 'Move done right,', NULL,
         '2026-05-03 06:54:39'),
        (2, 'global', 'website-title-accent', 'Website Title (Accent)',
         'Shown on the home page, as well as any tabs in the users browser.', 'text', 'any time of day.', NULL,
         '2026-05-03 06:54:55'),
        (3, 'global', 'logo', 'Logo',
-        'Shown in the centre of the home page, and also in the top corner of all administration pages.', 'image', NULL,
+        'Shown in the centre of the home page, and also in the top corner of all administration pages.', 'image', 'company-logo.png',
         NULL, '2026-05-03 06:53:07'),
-       (4, 'home', 'home-content', 'Home Page Content', 'The main content shown in the centre of the home page.',
-        'html', '<p>Example app showcasing the <code>ugie-cake/cakephp-content-blocks</code> plugin.</p>', NULL,
+       (4, 'global', 'phone-contact-footer', 'Phone Number (footer)',
+        'Shown in the footer of every pages.', 'text',
+        '0412 345 678', NULL, '2026-05-03 06:53:07'),
+       (5, 'global', 'email-contact-footer', 'Email (Footer)', 'Shown in the footer of every pages.',
+        'text', 'hello@movinghouse247.com.au', NULL,
         '2026-05-03 06:53:07'),
-       (5, 'home', 'copyright-message', 'Copyright Message',
+        (6, 'home', 'home-content', 'Home Page Content',
         'Copyright information shown at the bottom of the home page.', 'text',
-        '(c) Copyright 2026, enter copyright owner here.', NULL, '2026-05-03 06:53:07');
+        'The main content shown in the centre of the home page.', '<p>Example app showcasing the <code>ugie-cake/cakephp-content-blocks</code> plugin.</p>' ,
+        '2026-05-03 06:53:07');
 
 INSERT INTO `content_blocks_phinxlog` (`version`, `migration_name`, `start_time`, `end_time`, `breakpoint`)
 VALUES (20230402063959, 'ContentBlocksMigration', '2026-05-02 11:25:48', '2026-05-02 11:25:48', 0);
