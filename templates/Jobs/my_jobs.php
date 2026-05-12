@@ -5,7 +5,16 @@
  */
 ?>
 
-
+<style>
+    .small-job-button {
+        font-size: 12px;
+        padding: 4px 8px;
+        line-height: 1.2;
+        height: auto;
+        min-height: unset;
+        margin: 2px;
+    }
+</style>
 
 <h2>My Jobs</h2>
 
@@ -23,6 +32,7 @@
             <th>Time</th>
             <th>Staff</th>
             <th>Status</th>
+            <th>Report</th>
         </tr>
         </thead>
         <tbody>
@@ -39,10 +49,23 @@
                 </td>
                 <td><?= h($staffJob->job->status ?? '') ?></td>
                 <td>
+                    <?php if (!empty($staffJob->report_outcome)): ?>
+                        Submitted
+                    <?php elseif (($staffJob->job->status ?? '') === 'Ready'): ?>
+                        <?= $this->Html->link(
+                            __('Submit Report'),
+                            ['controller' => 'Jobs', 'action' => 'report', $staffJob->job->job_id],
+                            ['class' => 'button small-job-button']
+                        ) ?>
+                    <?php else: ?>
+                        Not available yet
+                    <?php endif; ?>
+                </td>
+                <td>
                     <?= $this->Html->link(
                         __('View'),
                         ['controller' => 'Jobs', 'action' => 'view', $staffJob->job->job_id],
-                        ['class' => 'button']
+                        ['class' => 'button small-job-button']
                     ) ?>
                 </td>
             </tr>

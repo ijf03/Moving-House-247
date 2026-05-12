@@ -26,7 +26,7 @@ class JobsController extends AppController
                 WHEN Jobs.status = 'Processing' THEN 2
                 WHEN Jobs.status = 'Ready' THEN 3
                 WHEN Jobs.status = 'Cancelled' THEN 4
-                WHEN Jobs.status = 'Done' THEN 5
+                WHEN Jobs.status = 'Completed' THEN 5
                 ELSE 6
             END
         ")
@@ -56,6 +56,15 @@ class JobsController extends AppController
      */
     public function view($id = null)
     {
+        $identity = $this->request->getAttribute('identity');
+
+        if (!$identity) {
+            $this->Flash->error(__('You must be logged in to view jobs.'));
+            return $this->redirect(['controller' => 'Users', 'action' => 'login']);
+        }
+
+        $role = (int)$identity->get('user_type');
+
         $job = $this->Jobs->get($id, contain: [
             'JobTypes',
             'Customers',
@@ -63,7 +72,34 @@ class JobsController extends AppController
             'StaffJob',
         ]);
 
-        $this->set(compact('job'));
+        $staffJobsTable = $this->fetchTable('StaffJob');
+
+        $staffJob = null;
+
+        if ($role === 2) {
+            $staffJob = $staffJobsTable->find()
+                ->where([
+                    'job_id' => $id,
+                    'staff_id' => $identity->get('user_id'),
+                    'status' => 'Confirmed',
+                ])
+                ->first();
+
+            if (!$staffJob) {
+                $this->Flash->error(__('You are not authorized to view this job.'));
+                return $this->redirect(['action' => 'myJobs']);
+            }
+        }
+
+        $jobReports = $staffJobsTable->find()
+            ->where([
+                'job_id' => $id,
+                'status' => 'Confirmed',
+                'report_outcome IS NOT' => null,
+            ])
+            ->all();
+
+        $this->set(compact('job', 'staffJob', 'jobReports'));
     }
 
     /**
@@ -341,5 +377,117 @@ class JobsController extends AppController
         }
 
         $this->set(compact('job', 'truckList'));
+    }
+
+    public function report($jobId = null)
+    {
+        $identity = $this->request->getAttribute('identity');
+
+        if (!$identity || (int)$identity->get('user_type') !== 2) {
+            $this->Flash->error(__('Only staff can submit job reports.'));
+            return $this->redirect(['controller' => 'Pages', 'action' => 'display', 'home']);
+        }
+
+        if (!$jobId) {
+            $this->Flash->error(__('Missing job ID.'));
+            return $this->redirect(['action' => 'myJobs']);
+        }
+
+        $job = $this->Jobs->get($jobId, contain: ['JobTypes', 'Customers']);
+
+        if ($job->status !== 'Ready') {
+            $this->Flash->error(__('You can only report on jobs that are ready.'));
+            return $this->redirect(['action' => 'view', $jobId]);
+        }
+
+        $staffJobsTable = $this->fetchTable('StaffJob');
+
+        $staffJob = $staffJobsTable->find()
+            ->where([
+                'job_id' => $jobId,
+                'staff_id' => $identity->get('user_id'),
+                'status' => 'Confirmed',
+            ])
+            ->first();
+
+        if (!$staffJob) {
+            $this->Flash->error(__('You are not authorized to report on this job.'));
+            return $this->redirect(['action' => 'myJobs']);
+        }
+
+        if ($this->request->is(['post', 'put', 'patch'])) {
+            $data = $this->request->getData();
+
+            $reportOutcome = $data['report_outcome'] ?? null;
+            $reportNotes = trim((string)($data['report_notes'] ?? ''));
+
+            if (!in_array($reportOutcome, ['Completed', 'Incomplete'], true)) {
+                $this->Flash->error(__('Please select whether the job was completed or incomplete.'));
+                $this->set(compact('job', 'staffJob'));
+                return;
+            }
+
+            $staffJob->report_outcome = $reportOutcome;
+            $staffJob->report_notes = $reportNotes;
+            $staffJob->report_submitted_at = date('Y-m-d H:i:s');
+
+            if ($staffJobsTable->save($staffJob)) {
+                $this->Flash->success(__('Your job report has been submitted.'));
+                return $this->redirect(['action' => 'view', $jobId]);
+            }
+
+            $this->Flash->error(__('The report could not be saved. Please try again.'));
+        }
+
+        $this->set(compact('job', 'staffJob'));
+    }
+
+    public function markCompleted($jobId = null)
+    {
+        $identity = $this->request->getAttribute('identity');
+
+        if (!$identity || (int)$identity->get('user_type') !== 1) {
+            $this->Flash->error(__('Only admins can complete jobs.'));
+            return $this->redirect(['controller' => 'Pages', 'action' => 'display', 'home']);
+        }
+
+        $this->request->allowMethod(['post']);
+
+        if (!$jobId) {
+            $this->Flash->error(__('Missing job ID.'));
+            return $this->redirect(['action' => 'index']);
+        }
+
+        $job = $this->Jobs->get($jobId);
+
+        if ($job->status !== 'Ready') {
+            $this->Flash->error(__('Only ready jobs can be marked as completed.'));
+            return $this->redirect(['action' => 'view', $jobId]);
+        }
+
+        $staffJobsTable = $this->fetchTable('StaffJob');
+
+        $hasReport = $staffJobsTable->find()
+            ->where([
+                'job_id' => $jobId,
+                'status' => 'Confirmed',
+                'report_outcome IS NOT' => null,
+            ])
+            ->count();
+
+        if ($hasReport === 0) {
+            $this->Flash->error(__('A staff report must be submitted before the job can be completed.'));
+            return $this->redirect(['action' => 'view', $jobId]);
+        }
+
+        $job->status = 'Completed';
+
+        if ($this->Jobs->save($job)) {
+            $this->Flash->success(__('The job has been marked as completed.'));
+        } else {
+            $this->Flash->error(__('The job could not be marked as completed.'));
+        }
+
+        return $this->redirect(['action' => 'view', $jobId]);
     }
 }

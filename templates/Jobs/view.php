@@ -4,14 +4,55 @@
  * @var \App\Model\Entity\Job $job
  */
 ?>
+
+<?php
+$identity = $this->request->getAttribute('identity');
+$role = $identity ? (int)$identity->get('user_type') : null;
+$isAdmin = $role === 1;
+$isStaff = $role === 2;
+?>
 <div class="row">
     <aside class="column">
         <div class="side-nav">
             <h4 class="heading"><?= __('Actions') ?></h4>
-            <?= $this->Html->link(__('Edit Job'), ['action' => 'edit', $job->job_id], ['class' => 'side-nav-item']) ?>
-            <?= $this->Form->postLink(__('Delete Job'), ['action' => 'delete', $job->job_id], ['confirm' => __('Are you sure you want to delete # {0}?', $job->job_id), 'class' => 'side-nav-item']) ?>
-            <?= $this->Html->link(__('List Jobs'), ['action' => 'index'], ['class' => 'side-nav-item']) ?>
-            <?= $this->Html->link(__('New Job'), ['action' => 'add'], ['class' => 'side-nav-item']) ?>
+
+            <?php if ($isAdmin): ?>
+                <?= $this->Html->link(__('Edit Job'), ['action' => 'edit', $job->job_id], ['class' => 'side-nav-item']) ?>
+
+                <?= $this->Form->postLink(
+                    __('Delete Job'),
+                    ['action' => 'delete', $job->job_id],
+                    [
+                        'confirm' => __('Are you sure you want to delete # {0}?', $job->job_id),
+                        'class' => 'side-nav-item',
+                    ]
+                ) ?>
+
+                <?= $this->Html->link(__('List Jobs'), ['action' => 'index'], ['class' => 'side-nav-item']) ?>
+
+                <?php if ($job->status === 'Ready' && !$jobReports->isEmpty()): ?>
+                    <?= $this->Form->postLink(
+                        __('Mark Completed'),
+                        ['action' => 'markCompleted', $job->job_id],
+                        [
+                            'confirm' => __('Are you sure you want to mark this job as completed?'),
+                            'class' => 'side-nav-item',
+                        ]
+                    ) ?>
+                <?php endif; ?>
+            <?php endif; ?>
+
+            <?php if ($isStaff): ?>
+                <?= $this->Html->link(__('Back to My Jobs'), ['action' => 'myJobs'], ['class' => 'side-nav-item']) ?>
+
+                <?php if ($job->status === 'Ready'): ?>
+                    <?= $this->Html->link(
+                        __('Report'),
+                        ['action' => 'report', $job->job_id],
+                        ['class' => 'side-nav-item']
+                    ) ?>
+                <?php endif; ?>
+            <?php endif; ?>
         </div>
     </aside>
     <div class="column column-80">
@@ -87,6 +128,36 @@
                     </td>
                 </tr>
             </table>
+
+            <?php if ($isAdmin): ?>
+                <h4>Staff Job Reports</h4>
+
+                <?php if ($jobReports->isEmpty()): ?>
+                    <p>No staff reports have been submitted yet.</p>
+                <?php else: ?>
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Staff ID</th>
+                            <th>Outcome</th>
+                            <th>Notes</th>
+                            <th>Submitted At</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <?php foreach ($jobReports as $report): ?>
+                            <tr>
+                                <td><?= h($report->staff_id) ?></td>
+                                <td><?= h($report->report_outcome) ?></td>
+                                <td><?= h($report->report_notes) ?></td>
+                                <td><?= h($report->report_submitted_at) ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                <?php endif; ?>
+            <?php endif; ?>
+
             <div class="text">
                 <strong><?= __('Description') ?></strong>
                 <blockquote>
