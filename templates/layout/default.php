@@ -16,6 +16,7 @@
 $identity = $this->request->getAttribute('identity');
 $role = $identity ? $identity->get('user_type') : null;
 $isAdmin = ($identity && (int)$role === 1);
+$isStaff = ($identity && (int)$role === 2);
 $isUser = ($identity && (int)$role === 3);
 ?>
 <!DOCTYPE html>
@@ -99,11 +100,23 @@ $isUser = ($identity && (int)$role === 3);
                         ) ?>
 
                         <?= $this->Html->link(
-                            'Website Content',
-                            ['plugin' => 'ContentBlocks', 'controller' => 'ContentBlocks', 'action' => 'index'],
+                            'Job Allocation',
+                            ['plugin' => false, 'controller' => 'Jobs', 'action' => 'index'],
                             ['class' => 'nav-link mh-nav-link'],
                         ) ?>
 
+                    <?php elseif ($isStaff) : ?>
+                        <?= $this->Html->link(
+                            'Available Jobs',
+                            ['plugin' => false, 'controller' => 'Jobs', 'action' => 'available'],
+                            ['class' => 'nav-link mh-nav-link'],
+                        ) ?>
+
+                        <?= $this->Html->link(
+                            'My Jobs',
+                            ['plugin' => false, 'controller' => 'Jobs', 'action' => 'myJobs'],
+                            ['class' => 'nav-link mh-nav-link'],
+                        ) ?>
 
                     <?php elseif ($isUser) : ?>
                         <?= $this->Html->link(

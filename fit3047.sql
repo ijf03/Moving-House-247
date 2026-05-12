@@ -47,6 +47,7 @@ DROP TABLE IF EXISTS `user_types`;
 DROP TABLE IF EXISTS `phinxlog`;
 DROP TABLE IF EXISTS `staff`;
 DROP TABLE IF EXISTS `staff_job`;
+DROP TABLE IF EXISTS `job_trucks`;
 SET FOREIGN_KEY_CHECKS = 1;
 
 CREATE TABLE `staff`
@@ -139,7 +140,7 @@ CREATE TABLE `jobs`
     `job_type_id`     int(1) NOT NULL,
     `description`     text        NOT NULL,
     `pickup_address`  varchar(95) NOT NULL,
-    `dropoff_address` varchar(95) NOT NULL,
+    `dropoff_address` varchar(95) NULL,
     `job_date`        date        NOT NULL,
     `job_time`        time        NOT NULL,
     `customer_id`     int(11) NOT NULL
@@ -311,6 +312,17 @@ CREATE TABLE `booking_resources`
     KEY                   `booking_resources_booking_id` (`booking_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
+CREATE TABLE `job_trucks` (
+                              `job_truck_id` INT(11) NOT NULL AUTO_INCREMENT,
+                              `job_id` INT(11) NOT NULL,
+                              `truck_id` INT(11) NOT NULL,
+                              `created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+                              PRIMARY KEY (`job_truck_id`),
+
+                              KEY `job_trucks_job_id` (`job_id`),
+                              KEY `job_trucks_truck_id` (`truck_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 INSERT INTO `contact_forms`
 (`contact_form_id`, `customer_id`, `subject`, `message`, `created`, `status`, `admin_reply`, `replied_at`)
@@ -361,7 +373,7 @@ FROM `contact_forms`
 WHERE `admin_reply` IS NOT NULL;
 
 INSERT INTO `customers`
-    (`customer_id`, `first_name`, `last_name`, `email`, `phone`)
+(`customer_id`, `first_name`, `last_name`, `email`, `phone`)
 VALUES (1, 'Emily', 'Carter', 'emily.carter@example.com', '0412345678'),
        (2, 'Liam', 'Nguyen', 'liam.nguyen@example.com', '0423456789'),
        (3, 'Sophie', 'Patel', 'sophie.patel@example.com', '0434567890'),
@@ -374,7 +386,7 @@ VALUES (1, 'Emily', 'Carter', 'emily.carter@example.com', '0412345678'),
        (10, 'Marcus', 'Smith', 'marcus.smith@example.com', '0401234567');
 
 INSERT INTO `job_types`
-    (`job_type_id`, `job_type_name`, `job_type_description`)
+(`job_type_id`, `job_type_name`, `job_type_description`)
 VALUES (1, 'Removal', 'Removal of items from customer'),
        (2, 'Storage', 'Storage of items from customer'),
        (3, 'Transfer', 'Transfer of items for customer');
@@ -415,13 +427,13 @@ VALUES (1, '0411111111', 'customer@myapp.local', '$2y$12$O2mUGRcOpX4i.RgsD0Dofe9
         'Driver', 2);
 
 INSERT INTO `user_types`
-    (`user_type_id`, `name`, `description`)
+(`user_type_id`, `name`, `description`)
 VALUES (1, 'Admin', 'Full system access'),
        (2, 'Staff', 'Operational staff member'),
        (3, 'Customer', 'Handles customer communication and enquiries');
 
 INSERT INTO `invoice_item_presets`
-    (`code`, `name`, `description`, `unit_price_cents`, `sort_order`)
+(`code`, `name`, `description`, `unit_price_cents`, `sort_order`)
 VALUES ('labour_hour', 'Labour', 'Labour - per hour', 8500, 1),
        ('truck_small', 'Small truck', 'Truck rental - small truck', 18000, 2),
        ('truck_large', 'Large truck', 'Truck rental - large truck', 28000, 3),
@@ -612,5 +624,26 @@ ALTER TABLE `staff_job`
         FOREIGN KEY (`staff_id`) REFERENCES `staff` (`staff_id`),
     ADD CONSTRAINT `staff_job_job_id`
         FOREIGN KEY (`job_id`) REFERENCES `jobs` (`job_id`);
+
+ALTER TABLE jobs
+    ADD allocated_at DATETIME NULL,
+ADD cancelled_at DATETIME NULL;
+
+ALTER TABLE jobs
+    ADD status VARCHAR(20) NOT NULL DEFAULT 'Pending',
+ADD staff_required INT NOT NULL DEFAULT 1,
+ADD truck_required INT NOT NULL DEFAULT 1;
+
+ALTER TABLE job_trucks
+    ADD CONSTRAINT `job_trucks_job_id_fk`
+        FOREIGN KEY (`job_id`) REFERENCES `jobs` (`job_id`),
+
+    ADD CONSTRAINT `job_trucks_truck_id_fk`
+        FOREIGN KEY (`truck_id`) REFERENCES `trucks` (`truck_id`);
+
+ALTER TABLE staff_job
+    ADD report_outcome ENUM('Completed', 'Incomplete') NULL AFTER status,
+ADD report_notes TEXT NULL AFTER report_outcome,
+ADD report_submitted_at DATETIME NULL AFTER report_notes;
 
 COMMIT;
