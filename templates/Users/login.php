@@ -48,7 +48,7 @@ $this->assign('title', 'Login');
 
                         <div class="auth-form-actions">
                             <?= $this->Form->button('Log In', [
-                                'class' => 'auth-btn w-75',
+                                'class' => 'mh-btn-primary w-75',
                             ]) ?>
                         </div>
 
