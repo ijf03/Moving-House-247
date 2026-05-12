@@ -76,8 +76,12 @@
                                 </td>
 
                                 <td>
-                                    <span class="admin-role-badge">
-                                        <?= h($job->confirmed_count ?? 0) ?> / <?= h($job->staff_required ?? 0) ?>
+                                    <span class="admin-role-badge d-block">
+                                        <strong><?= __('Drivers:') ?></strong>
+                                        <?= h($job->driver_count ?? 0) ?> / <?= h($job->driver_required ?? 0) ?>
+                                        <br>
+                                        <strong><?= __('Porters:') ?></strong>
+                                        <?= h($job->porter_count ?? 0) ?> / <?= h($job->porter_required ?? 0) ?>
                                     </span>
                                 </td>
 

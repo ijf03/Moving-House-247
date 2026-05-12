@@ -631,8 +631,8 @@ ADD cancelled_at DATETIME NULL;
 
 ALTER TABLE jobs
     ADD status VARCHAR(20) NOT NULL DEFAULT 'Pending',
-ADD staff_required INT NOT NULL DEFAULT 1,
-ADD truck_required INT NOT NULL DEFAULT 1;
+    ADD driver_required INT NOT NULL DEFAULT 0,
+    ADD porter_required INT NOT NULL DEFAULT 0;
 
 ALTER TABLE job_trucks
     ADD CONSTRAINT `job_trucks_job_id_fk`
@@ -643,7 +643,9 @@ ALTER TABLE job_trucks
 
 ALTER TABLE staff_job
     ADD report_outcome ENUM('Completed', 'Incomplete') NULL AFTER status,
-ADD report_notes TEXT NULL AFTER report_outcome,
-ADD report_submitted_at DATETIME NULL AFTER report_notes;
+    ADD report_notes TEXT NULL AFTER report_outcome,
+    ADD report_submitted_at DATETIME NULL AFTER report_notes;
 
+ALTER TABLE staff_job
+    ADD role VARCHAR(10) NULL AFTER status;
 COMMIT;
