@@ -78,9 +78,12 @@
                                             <div>
                                                 <h3><?= __('Staff') ?></h3>
                                                 <p>
-                                                    <span class="admin-role-badge">
-                                                        <?= h($staffJob->confirmed_count ?? 0) ?> / <?= h($job->staff_required ?? 0) ?>
-                                                    </span>
+                                                    <strong><?= __('Drivers:') ?></strong>
+                                                    <?= h($staffJob->driver_count ?? 0) ?> / <?= h($staffJob->job->driver_required ?? 0) ?>
+                                                </p>
+                                                <p>
+                                                    <strong><?= __('Porters:') ?></strong>
+                                                    <?= h($staffJob->porter_count ?? 0) ?> / <?= h($staffJob->job->porter_required ?? 0) ?>
                                                 </p>
                                             </div>
                                         </div>

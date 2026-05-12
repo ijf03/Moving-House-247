@@ -17,5 +17,9 @@ class StaffJobTable extends Table
         $this->belongsTo('Jobs', [
             'foreignKey' => 'job_id',
         ]);
+
+        $this->belongsTo('Staff', [
+            'foreignKey' => 'staff_id',
+        ]);
     }
 }

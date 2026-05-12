@@ -83,29 +83,47 @@
                             <p><?= __('Use the controls below to set required staff and trucks.') ?></p>
                         </div>
 
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <div class="mh-info-card">
-                                    <div>
-                                        <h3><?= __('Number of Staff Required') ?></h3>
-                                        <div class="d-flex align-items-center gap-3 mt-2">
-                                            <button type="button" class="btn btn-outline-secondary" onclick="changeValue('staff_required', -1)">−</button>
+                        <div class="mh-info-card">
+                            <div>
+                                <h3><?= __('Number of Drivers Required') ?></h3>
+                                <div class="d-flex align-items-center gap-3 mt-2">
+                                    <button type="button" class="btn btn-outline-secondary" onclick="changeValue('driver_required', -1)">−</button>
 
-                                            <input type="number"
-                                                   name="staff_required"
-                                                   id="staff_required"
-                                                   value="1"
-                                                   min="1"
-                                                   max="10"
-                                                   required
-                                                   class="form-control text-center"
-                                                   style="max-width: 100px;">
+                                    <input type="number"
+                                           name="driver_required"
+                                           id="driver_required"
+                                           value="1"
+                                           min="0"
+                                           max="10"
+                                           required
+                                           class="form-control text-center"
+                                           style="max-width: 100px;">
 
-                                            <button type="button" class="btn btn-outline-secondary" onclick="changeValue('staff_required', 1)">+</button>
-                                        </div>
-                                    </div>
+                                    <button type="button" class="btn btn-outline-secondary" onclick="changeValue('driver_required', 1)">+</button>
                                 </div>
                             </div>
+                        </div>
+
+                        <div class="mh-info-card">
+                            <div>
+                                <h3><?= __('Number of Porters Required') ?></h3>
+                                <div class="d-flex align-items-center gap-3 mt-2">
+                                    <button type="button" class="btn btn-outline-secondary" onclick="changeValue('porter_required', -1)">−</button>
+
+                                    <input type="number"
+                                           name="porter_required"
+                                           id="porter_required"
+                                           value="1"
+                                           min="0"
+                                           max="10"
+                                           required
+                                           class="form-control text-center"
+                                           style="max-width: 100px;">
+
+                                    <button type="button" class="btn btn-outline-secondary" onclick="changeValue('porter_required', 1)">+</button>
+                                </div>
+                            </div>
+                        </div>
 
                             <div class="col-md-6">
                                 <div class="mh-info-card">
