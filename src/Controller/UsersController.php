@@ -72,28 +72,51 @@ class UsersController extends AppController
     public function login()
     {
         $this->request->allowMethod(['get', 'post']);
-        $redirect = $this->Authentication->getLoginRedirect();
-
-        if ($this->request->getAttribute('identity')) {
-            return $this->redirect($redirect ? $redirect : '/');
+        if ($this->request->is('get')) {
+            if($this->Authentication->getIdentity())
+            {
+                return $this->redirect('/');
+            }
         }
 
+        $siteKey = Configure::read('Recaptcha.siteKey');
+        $this->set(compact('siteKey'));
+
         if ($this->request->is('post')) {
+            $captchaResponse = $this->request->getData('g-recaptcha-response');
+
+            $secretKey = Configure::read('Recaptcha.secretKey');
+
+            $verifyResponse = file_get_contents(
+                'https://www.google.com/recaptcha/api/siteverify?secret=' .
+                urlencode($secretKey) .
+                '&response=' .
+                urlencode($captchaResponse)
+            );
+
+            $responseData = json_decode($verifyResponse, true);
+
+            if (!isset($responseData['success']) || $responseData['success'] !== true) {
+                $this->Authentication->logout();
+                $this->Flash->error('CAPTCHA verification failed. Please try again.');
+                return;
+            }
+
             $result = $this->Authentication->getResult();
 
             if ($result->isValid()) {
                 $user = $result->getData();
+                $redirect = $this->Authentication->getLoginRedirect();
 
+                // Admin
                 if ((int)$user->user_type === 1) {
-                    return $this->redirect($redirect ? $redirect : ['controller' => 'Users', 'action' => 'index']);
+                    return $this->redirect($redirect ?: ['controller' => 'Users', 'action' => 'index']);
                 }
 
-                return $this->redirect($redirect ? $redirect : '/');
+                return $this->redirect($redirect ?: '/');
             }
 
-            if (!$result->isValid()) {
-                $this->Flash->error('Invalid email or password');
-            }
+            $this->Flash->error('Invalid email or password');
         }
     }
 
@@ -137,9 +160,49 @@ class UsersController extends AppController
             'valueField' => 'name'
         ])->all();
         if ($this->request->is('post')) {
-            $user = $this->Users->patchEntity($user, $this->request->getData());
+            $data = $this->request->getData();
+            $data['isDriver'] = null;
+            $user = $this->Users->patchEntity($user, $data);
             if ($this->Users->save($user)) {
+                $roleQuery = $this->Users->find()
+                    ->where(['user_id' => $user->user_id])
+                    ->contain(['UserTypes'])
+                    ->first();
                 $this->Flash->success(__('The user has been saved.'));
+                if ($roleQuery->user_type_name == 'Staff')
+                {
+                    $staffTable = $this->fetchTable('Staff');
+                    $staffData = $this->request->getData();
+
+                    $staff = $staffTable->newEntity([
+                        'first_name' => $data['first_name'],
+                        'last_name' => $data['last_name'],
+                        'email' => $data['email'],
+                        'phone' => $data['phone'],
+                        'isDriver' => 0,
+                    ]);
+                    if (!$staffTable->save($staff)) {
+                        $this->Flash->error('Staff account cannot be created, Please try again');
+                        return;
+                    }
+                    $this->Flash->success('Staff account created, Please manually configure if the staff holds a driving license.');
+                }
+                elseif ($roleQuery->user_type_name == 'Customer')
+                {
+                    $customersTable = $this->fetchTable('Customers');
+
+                    $customer = $customersTable->newEntity([
+                        'first_name' => $user->first_name,
+                        'last_name' => $user->last_name,
+                        'email' => $user->email,
+                        'phone' => $user->phone,
+                    ]);
+
+                    if (!$customersTable->save($customer)) {
+                        $this->Flash->error('User account created, but customer profile could not be created.');
+                        return;
+                    }
+                }
 
                 return $this->redirect(['action' => 'index']);
             }
@@ -173,6 +236,13 @@ class UsersController extends AppController
             return $this->redirect(['action' => 'index']);
         }
         $user = $this->Users->get($id, contain: ['UserTypes']);
+        if ($user->user_type_name == 'Staff')
+        {
+            $staffTable = $this->fetchTable('Staff');
+            $staff = $staffTable->find()
+                ->where(['email'=>$user->email])
+                ->first();
+        }
         if ($this->request->is(['patch', 'post', 'put'])) {
             $data = $this->request->getData();
             if (!$isAdmin) {
@@ -185,6 +255,20 @@ class UsersController extends AppController
             $user = $this->Users->patchEntity($user, $data);
             if ($this->Users->save($user)) {
                 $this->Flash->success(__($user->full_name . ' has been saved.'));
+                if ($user->user_type_name == 'Staff')
+                {
+                    $staff = $staffTable->patchEntity($staff,[
+                        'first_name' => $user->first_name,
+                        'last_name' => $user->last_name,
+                        'email' => $user->email,
+                        'phone' => $user->phone,
+                    ]);
+                    if (!$staffTable->save($staff))
+                    {
+                        $this->Flash->error('Cannot edit staff details, Please try again.');
+                        return;
+                    }
+                }
 
                 return $this->redirect(['action' => 'index']);
             }
@@ -217,6 +301,24 @@ class UsersController extends AppController
         }
         $this->request->allowMethod(['post', 'delete']);
         $user = $this->Users->get($id);
+        $userType = $this->Users->get($id, contain: ['UserTypes']);
+        if ($userType->user_type_name == 'Staff')
+        {
+            $staffTable = $this->fetchTable('Staff');
+            $staffRef = $staffTable->find()
+                ->where(['email'=>$user->email])
+                ->first();
+            if(!$staffRef)
+            {
+                $this->Flash->error(__('Staff profile not found'));
+                return;
+            }
+            $staff = $staffTable->get($staffRef->staff_id);
+            if (!$staffTable->delete($staff)) {
+                $this->Flash->error('Staff account could not be deleted, please try again.');
+                return;
+            }
+        }
         if ($this->Users->delete($user)) {
             $this->Flash->success(__($user->full_name . ' has been deleted.'));
             if ($target === $userId) {

@@ -40,7 +40,13 @@ $isUser = ($identity && (int)$role === 3);
     <nav class="navbar navbar-expand-lg mh-navbar">
         <div class="container-fluid px-3 px-lg-5">
             <a class="navbar-brand mh-brand" href="<?= $this->Url->build('/') ?>">
-                <span class="mh-brand-icon">🚚</span>
+                <span class="mh-brand-logo">
+                 <?php if ($this->ContentBlock -> image('logo')):?>
+                    <?= $this ->ContentBlock->image('logo')?>
+                    <?php else:?>
+                    🚚
+                    <?php endif;?>
+                </span>
                 <span class="mh-brand-text">
                     Moving House <span class="mh-accent">24/7</span>
                 </span>
@@ -57,45 +63,58 @@ $isUser = ($identity && (int)$role === 3);
 
                     <?= $this->Html->link(
                         'Home',
-                        ['controller' => 'Pages', 'action' => 'display', 'home'],
+                        ['plugin' => false, 'controller' => 'Pages', 'action' => 'display', 'home'],
                         ['class' => 'nav-link mh-nav-link'],
                     ) ?>
 
                     <?php if ($isAdmin) : ?>
                         <?= $this->Html->link(
                             'Users',
-                            ['controller' => 'Users', 'action' => 'index'],
+                            ['plugin' => false, 'controller' => 'Users', 'action' => 'index'],
                             ['class' => 'nav-link mh-nav-link'],
                         ) ?>
 
                         <?= $this->Html->link(
                             'Contact Forms',
-                            ['controller' => 'ContactForms', 'action' => 'index'],
+                            ['plugin' => false, 'controller' => 'ContactForms', 'action' => 'index'],
                             ['class' => 'nav-link mh-nav-link'],
                         ) ?>
 
                         <?= $this->Html->link(
                             'Manage Bookings',
-                            ['controller' => 'Bookings', 'action' => 'index'],
+                            ['plugin' => false, 'controller' => 'Bookings', 'action' => 'index'],
                             ['class' => 'nav-link mh-nav-link'],
                         ) ?>
 
                         <?= $this->Html->link(
                             'Manage Invoices',
-                            ['controller' => 'Invoices', 'action' => 'index'],
+                            ['plugin' => false, 'controller' => 'Invoices', 'action' => 'index'],
                             ['class' => 'nav-link mh-nav-link'],
                         ) ?>
+
+                        <?= $this->Html->link(
+                            'Resource Management',
+                            ['plugin' => false, 'controller' => 'Resources', 'action' => 'index'],
+                            ['class' => 'nav-link mh-nav-link'],
+                        ) ?>
+
+                        <?= $this->Html->link(
+                            'Website Content',
+                            ['plugin' => 'ContentBlocks', 'controller' => 'ContentBlocks', 'action' => 'index'],
+                            ['class' => 'nav-link mh-nav-link'],
+                        ) ?>
+
 
                     <?php elseif ($isUser) : ?>
                         <?= $this->Html->link(
                             'Book a Service',
-                            ['controller' => 'Bookings', 'action' => 'add'],
+                            ['controller' => 'Bookings', 'action' => 'chooseType'],
                             ['class' => 'nav-link mh-nav-link'],
                         ) ?>
 
                         <?= $this->Html->link(
                             'Contact Us',
-                            ['controller' => 'ContactForms', 'action' => 'add'],
+                            ['controller' => 'ContactForms', 'action' => 'customer_index'],
                             ['class' => 'nav-link mh-nav-link'],
                         ) ?>
 
@@ -120,7 +139,7 @@ $isUser = ($identity && (int)$role === 3);
 
                         <?= $this->Html->link(
                             'Book a Service',
-                            ['controller' => 'Bookings', 'action' => 'add'],
+                            ['controller' => 'Bookings', 'action' => 'chooseType'],
                             ['class' => 'nav-link mh-nav-link'],
                         ) ?>
 
@@ -212,16 +231,17 @@ $isUser = ($identity && (int)$role === 3);
                     <ul class="list-unstyled mh-footer-contact mb-0">
                         <li>
                             <?= $this->Html->link(
-                                '0412 345 678',
-                                'tel:0412345678',
+                                $this->ContentBlock->text('phone-contact-footer'),
+                                'tel:' . str_replace(' ', '', $this->ContentBlock->text('phone-contact-footer'))
                             ) ?>
                         </li>
                         <li>
                             <?= $this->Html->link(
-                                'hello@movinghouse247.com.au',
-                                'mailto:hello@movinghouse247.com.au',
+                                $this->ContentBlock->text('email-contact-footer'),
+                                'mailto:'.$this->ContentBlock->text('email-contact-footer'),
                                 ['target' => '_blank'],
                             ) ?>
+
                         </li>
                         <li>Victoria, Australia</li>
                     </ul>
