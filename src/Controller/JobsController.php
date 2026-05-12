@@ -81,25 +81,21 @@ class JobsController extends AppController
                 ->where([
                     'job_id' => $id,
                     'staff_id' => $identity->get('user_id'),
-                    'status' => 'Confirmed',
                 ])
                 ->first();
 
-            if (!$staffJob) {
+            if ($staffJob && $staffJob->status === 'Rejected') {
                 $this->Flash->error(__('You are not authorized to view this job.'));
-                return $this->redirect(['action' => 'myJobs']);
+                return $this->redirect(['action' => 'available']);
+            }
+
+            if (!$staffJob && $job->status !== 'Processing') {
+                $this->Flash->error(__('You are not authorized to view this job.'));
+                return $this->redirect(['action' => 'available']);
             }
         }
 
-        $jobReports = $staffJobsTable->find()
-            ->where([
-                'job_id' => $id,
-                'status' => 'Confirmed',
-                'report_outcome IS NOT' => null,
-            ])
-            ->all();
-
-        $this->set(compact('job', 'staffJob', 'jobReports'));
+        $this->set(compact('job', 'staffJob'));
     }
 
     /**
@@ -363,12 +359,38 @@ class JobsController extends AppController
         if ($this->request->is(['post', 'put', 'patch'])) {
             $data = $this->request->getData();
 
+            $truckIds = $data['truck_ids'] ?? [];
+            if (count($truckIds) !== count(array_unique($truckIds))) {
+                $this->Flash->error(__('Please select different trucks.'));
+                $this->set(compact('job', 'truckList'));
+                return;
+            }
+
+            if (empty($truckIds)) {
+                $this->Flash->error(__('Please select at least one truck.'));
+                $this->set(compact('job', 'truckList'));
+                return;
+            }
+
             $job->staff_required = $data['staff_required'];
             $job->truck_required = $data['truck_required'];
             $job->status = 'Processing';
             $job->allocated_at = date('Y-m-d H:i:s');
 
             if ($this->Jobs->save($job)) {
+                $jobTrucksTable = $this->fetchTable('JobTrucks');
+
+                $jobTrucksTable->deleteAll(['job_id' => $job->job_id]);
+
+                foreach ($truckIds as $truckId) {
+                    $jobTruck = $jobTrucksTable->newEntity([
+                        'job_id' => $job->job_id,
+                        'truck_id' => $truckId,
+                    ]);
+
+                    $jobTrucksTable->save($jobTruck);
+                }
+
                 $this->Flash->success(__('Job allocated successfully.'));
                 return $this->redirect(['action' => 'index']);
             }

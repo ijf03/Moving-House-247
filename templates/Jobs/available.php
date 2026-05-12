@@ -5,57 +5,97 @@
  */
 ?>
 
-<h2>Available Jobs</h2>
+<div class="mh-page-soft">
+    <section class="admin-hero">
+        <div class="container">
+            <div class="admin-hero-shell">
+                <div class="admin-hero-content">
+                    <span class="admin-eyebrow"><?= __('Staff') ?></span>
+                    <h1><?= __('Available Jobs') ?></h1>
+                    <p class="admin-hero-text">
+                        <?= __('Review available jobs and choose the work you are interested in taking.') ?>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<?php if ($jobs->isEmpty()): ?>
-    <p>No available jobs found.</p>
-<?php else: ?>
-    <table>
-        <thead>
-        <tr>
-            <th>Job ID</th>
-            <th>Description</th>
-            <th>Pickup</th>
-            <th>Dropoff</th>
-            <th>Date</th>
-            <th>Time</th>
-            <th>Staff</th>
-            <th>Action</th>
-        </tr>
-        </thead>
-        <tbody>
-        <?php foreach ($jobs as $job): ?>
-            <tr>
-                <td><?= h($job->job_id) ?></td>
-                <td><?= h($job->description) ?></td>
-                <td><?= h($job->pickup_address) ?></td>
-                <td><?= h($job->dropoff_address) ?></td>
-                <td><?= h($job->job_date) ?></td>
-                <td><?= h($job->job_time) ?></td>
-                <td>
-                    <?= h($job->confirmed_count ?? 0) ?> / <?= h($job->staff_required) ?>
-                </td>
-                <td>
-                    <?= $this->Html->link(
-                        __('View'),
-                        ['action' => 'view', $job->job_id],
-                        ['class' => 'button']
-                    ) ?>
+    <section class="admin-section">
+        <div class="container">
+            <?php if ($jobs->isEmpty()): ?>
+                <div class="admin-table-card">
+                    <div class="admin-table-header">
+                        <h2><?= __('No available jobs found.') ?></h2>
+                        <p><?= __('There are currently no jobs ready for staff selection.') ?></p>
+                    </div>
+                </div>
+            <?php else: ?>
+                <div class="row g-4">
+                    <?php foreach ($jobs as $job): ?>
+                        <div class="col-lg-6">
+                            <div class="admin-table-card h-100">
+                                <div class="admin-table-header">
+                                    <h2><?= __('Job #') . h($job->job_id) ?></h2>
+                                    <p><?= h($job->description) ?></p>
+                                </div>
 
-                    <?= $this->Form->postLink(
-                        __('Take Job'),
-                        ['action' => 'takeJob', $job->job_id],
-                        ['confirm' => __('Are you sure you want to take this job?')]
-                    ) ?>
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <div class="mh-info-card">
+                                            <div>
+                                                <h3><?= __('Pickup') ?></h3>
+                                                <p><?= h($job->pickup_address) ?></p>
+                                            </div>
+                                        </div>
+                                    </div>
 
-                    <?= $this->Form->postLink(
-                        __('Not Interested'),
-                        ['action' => 'notInterested', $job->job_id],
-                        ['confirm' => __('Hide this job from your list?')]
-                    ) ?>
-                </td>
-            </tr>
-        <?php endforeach; ?>
-        </tbody>
-    </table>
-<?php endif; ?>
+                                    <div class="col-md-6">
+                                        <div class="mh-info-card">
+                                            <div>
+                                                <h3><?= __('Dropoff') ?></h3>
+                                                <p><?= h($job->dropoff_address) ?></p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="mh-info-card">
+                                            <div>
+                                                <h3><?= __('Date / Time') ?></h3>
+                                                <p><?= h($job->job_date) ?> <?= h($job->job_time) ?></p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="mh-info-card">
+                                            <div>
+                                                <h3><?= __('Staff') ?></h3>
+                                                <p>
+                                                    <span class="admin-role-badge">
+                                                        <?= h($job->confirmed_count ?? 0) ?> / <?= h($job->staff_required) ?>
+                                                    </span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="admin-action-stack mt-3">
+                                    <?= $this->Html->link(
+                                        __('View'),
+                                        ['action' => 'view', $job->job_id],
+                                        [
+                                            'class' => 'admin-action-link mx-auto text-center',
+                                            'style' => 'display: block; width: 160px;'
+                                        ]
+                                    ) ?>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
+        </div>
+    </section>
+</div>
