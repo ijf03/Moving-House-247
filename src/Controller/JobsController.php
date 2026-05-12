@@ -17,6 +17,7 @@ class JobsController extends AppController
      */
     public function index()
     {
+        $this->checkExpiredJobs();
         $query = $this->Jobs->find()
             ->contain(['JobTypes', 'Customers'])
             ->orderByAsc(
@@ -665,5 +666,92 @@ class JobsController extends AppController
         }
 
         return $this->redirect(['action' => 'view', $jobId]);
+    }
+
+    private function checkExpiredJobs(): void
+    {
+        $staffJobsTable = $this->fetchTable('StaffJob');
+
+        $expiredJobs = $this->Jobs->find()
+            ->contain(['Customers'])
+            ->where([
+                'status' => 'Processing',
+                'allocated_at <=' => date('Y-m-d H:i:s', strtotime('-7 days')),
+            ])
+            ->all();
+
+        foreach ($expiredJobs as $job) {
+
+            $driverCount = $staffJobsTable->find()
+                ->where([
+                    'job_id' => $job->job_id,
+                    'status' => 'Confirmed',
+                    'role' => 'Driver',
+                ])
+                ->count();
+
+            $porterCount = $staffJobsTable->find()
+                ->where([
+                    'job_id' => $job->job_id,
+                    'status' => 'Confirmed',
+                    'role' => 'Porter',
+                ])
+                ->count();
+
+            if (
+                $driverCount < (int)$job->driver_required ||
+                $porterCount < (int)$job->porter_required
+            ) {
+                $job->status = 'Cancelled';
+                $job->cancelled_at = date('Y-m-d H:i:s');
+
+                if ($this->Jobs->save($job)) {
+
+                    $customer = $job->customer ?? null;
+
+                    $customerName = trim(
+                        ($customer->first_name ?? '') . ' ' .
+                        ($customer->last_name ?? '')
+                    );
+
+                    if ($customerName === '') {
+                        $customerName = 'N/A';
+                    }
+
+                    $customerEmail = $customer->email ?? 'N/A';
+                    $customerPhone = $customer->phone ?? 'N/A';
+
+                    $emailBody =
+                        "Job #{$job->job_id} cancelled.\n\n" .
+                        "Reason:\n" .
+                        "Not enough staff accepted within 7 days.\n\n" .
+
+                        "Customer Information:\n" .
+                        "Name: {$customerName}\n" .
+                        "Email: {$customerEmail}\n" .
+                        "Phone: {$customerPhone}\n\n" .
+
+                        "Job Details:\n" .
+                        "Pickup: {$job->pickup_address}\n" .
+                        "Dropoff: {$job->dropoff_address}\n" .
+                        "Date: {$job->job_date}\n" .
+                        "Time: {$job->job_time}\n\n" .
+
+                        "Staff Requirement:\n" .
+                        "Drivers: {$driverCount} / {$job->driver_required}\n" .
+                        "Porters: {$porterCount} / {$job->porter_required}\n\n" .
+
+                        "Please contact the customer.";
+
+                    $mailer = new \Cake\Mailer\Mailer('default');
+
+                    $result = $mailer
+                        ->setTo('admin@test.com')
+                        ->setSubject('Job Auto Cancelled')
+                        ->deliver($emailBody);
+
+                }
+            }
+        }
     }
 }
