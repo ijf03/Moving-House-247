@@ -24,7 +24,7 @@
                     <h2><?= __('All Invoices') ?></h2>
                     <p><?= __('Review invoice totals, statuses, and linked customer bookings.') ?></p>
                 </div>
-                <?= $this->Html->link(__('New Invoice'), ['action' => 'add'], ['class' => 'button float-right']) ?>
+                <?= $this->Html->link(__('New Invoice'), ['action' => 'add'], ['class' => 'btn']) ?>
             </div>
 
 
@@ -73,7 +73,7 @@
                                     <?= $this->Html->link(
                                         __('View'),
                                         $invoice->invoice_url,
-                                        ['target' => '_blank', 'class' => 'button small']
+                                        ['target' => '_blank', 'class' => 'mh-btn-primary']
                                     ) ?>
                                 <?php else: ?>
                                     <?= __('N/A') ?>
