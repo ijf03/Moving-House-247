@@ -137,7 +137,7 @@ class JobsController extends AppController
             ->where([
                 'StaffJob.job_id' => $id,
                 'StaffJob.status' => 'Confirmed',
-                'StaffJob.report_outcome IS NOT' => null,
+                'StaffJob.report_submitted_at IS NOT' => null,
             ])
             ->all();
         $assignedStaff = $staffJobsTable->find()
@@ -656,8 +656,7 @@ class JobsController extends AppController
             return $this->redirect(['action' => 'myJobs']);
         }
 
-        // Prevent the same staff member from submitting twice.
-        if (!empty($staffJob->report_outcome)) {
+        if (!empty($staffJob->report_submitted_at)) {
             $this->Flash->error(__('You have already submitted a report for this job.'));
             return $this->redirect(['action' => 'view', $jobId]);
         }
@@ -665,17 +664,46 @@ class JobsController extends AppController
         if ($this->request->is(['post', 'put', 'patch'])) {
             $data = $this->request->getData();
 
-            $reportOutcome = $data['report_outcome'] ?? null;
             $reportNotes = trim((string)($data['report_notes'] ?? ''));
+            $photo = $data['report_photo'] ?? null;
 
-            if (!in_array($reportOutcome, ['Completed', 'Incomplete'], true)) {
-                $this->Flash->error(__('Please select whether the job was completed or incomplete.'));
+            if (!$photo || $photo->getError() !== UPLOAD_ERR_OK) {
+                $this->Flash->error(__('Please upload a report photo.'));
                 $this->set(compact('job', 'staffJob'));
                 return;
             }
 
-            $staffJob->report_outcome = $reportOutcome;
+            $allowedExtensions = ['jpg', 'jpeg', 'png', 'webp'];
+            $allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp'];
+
+            $originalName = $photo->getClientFilename();
+            $extension = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
+            $mimeType = $photo->getClientMediaType();
+
+            if (!in_array($extension, $allowedExtensions, true) || !in_array($mimeType, $allowedMimeTypes, true)) {
+                $this->Flash->error(__('Please upload a valid image file: JPG, PNG, or WEBP.'));
+                $this->set(compact('job', 'staffJob'));
+                return;
+            }
+
+            if ($photo->getSize() > 5 * 1024 * 1024) {
+                $this->Flash->error(__('The image must be smaller than 5MB.'));
+                $this->set(compact('job', 'staffJob'));
+                return;
+            }
+
+            $uploadDir = WWW_ROOT . 'uploads' . DS . 'job_reports' . DS;
+
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0775, true);
+            }
+
+            $newFilename = 'job_' . $jobId . '_staff_' . $currentStaff->staff_id . '_' . bin2hex(random_bytes(8)) . '.' . $extension;
+
+            $photo->moveTo($uploadDir . $newFilename);
+
             $staffJob->report_notes = $reportNotes;
+            $staffJob->report_photo = $newFilename;
             $staffJob->report_submitted_at = date('Y-m-d H:i:s');
 
             if ($staffJobsTable->save($staffJob)) {
@@ -718,7 +746,7 @@ class JobsController extends AppController
             ->where([
                 'StaffJob.job_id' => $jobId,
                 'StaffJob.status' => 'Confirmed',
-                'StaffJob.report_outcome IS NOT' => null,
+                'StaffJob.report_submitted_at IS NOT' => null,
             ])
             ->count();
 

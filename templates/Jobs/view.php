@@ -181,10 +181,17 @@ $assignedStaff = $assignedStaff ?? new \Cake\Collection\Collection([]);
                                                 <?php endif; ?>
                                             </p>
 
-                                            <p>
-                                                <strong><?= __('Outcome:') ?></strong>
-                                                <?= h($report->report_outcome) ?>
-                                            </p>
+                                            <?php if (!empty($report->report_photo)): ?>
+                                                <p>
+                                                    <strong><?= __('Photo:') ?></strong>
+                                                </p>
+
+                                                <img
+                                                    src="<?= $this->Url->build('/uploads/job_reports/' . $report->report_photo) ?>"
+                                                    alt="Job report photo"
+                                                    style="max-width: 320px; width: 100%; border-radius: 12px; margin-bottom: 1rem;"
+                                                >
+                                            <?php endif; ?>
 
                                             <p>
                                                 <strong><?= __('Notes:') ?></strong>
@@ -254,7 +261,7 @@ $assignedStaff = $assignedStaff ?? new \Cake\Collection\Collection([]);
 
                                                     <p>
                                                         <strong><?= __('Report Status:') ?></strong>
-                                                        <?= !empty($allocation->report_outcome)
+                                                        <?= !empty($allocation->report_submitted_at)
                                                             ? __('Submitted')
                                                             : __('Not Submitted') ?>
                                                     </p>
@@ -333,7 +340,7 @@ $assignedStaff = $assignedStaff ?? new \Cake\Collection\Collection([]);
                             !empty($staffJob) &&
                             $staffJob->status === 'Confirmed' &&
                             $job->status === 'Ready' &&
-                            empty($staffJob->report_outcome)
+                            empty($staffJob->report_submitted_at)
                         ): ?>
                             <div class="admin-table-header" style="margin-top: 2rem;">
                                 <h2><?= __('Report') ?></h2>
@@ -355,7 +362,7 @@ $assignedStaff = $assignedStaff ?? new \Cake\Collection\Collection([]);
                         <?php if (
                             $isStaff &&
                             !empty($staffJob) &&
-                            !empty($staffJob->report_outcome)
+                            !empty($staffJob->report_submitted_at)
                         ): ?>
                             <div class="admin-table-header" style="margin-top: 2rem;">
                                 <h2><?= __('Report') ?></h2>
