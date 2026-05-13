@@ -104,14 +104,6 @@
                             </div>
 
                             <div class="col-md-6 auth-form-group">
-                                <?= $this->Form->control('status', [
-                                    'label' => 'Status',
-                                    'placeholder' => 'Enter truck status',
-                                    'class' => 'auth-input',
-                                ]) ?>
-                            </div>
-
-                            <div class="col-md-6 auth-form-group">
                                 <?= $this->Form->control('current_location', [
                                     'label' => 'Current Location',
                                     'placeholder' => 'Enter current location',

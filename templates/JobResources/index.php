@@ -3,57 +3,210 @@
  * @var \App\View\AppView $this
  * @var iterable<\App\Model\Entity\JobResource> $jobResources
  */
+
+$groupedJobResources = [];
+
+foreach ($jobResources as $jobResource) {
+    $jobId = $jobResource->job_id ?? 'Unassigned';
+
+    if (!isset($groupedJobResources[$jobId])) {
+        $groupedJobResources[$jobId] = [
+            'job' => $jobResource->job ?? null,
+            'resources' => [],
+            'truck_count' => 0,
+            'equipment_count' => 0,
+            'storage_unit_count' => 0,
+            'inventory_count' => 0,
+            'total_resources' => 0,
+        ];
+    }
+
+    $groupedJobResources[$jobId]['resources'][] = $jobResource;
+    $groupedJobResources[$jobId]['total_resources']++;
+
+    if (!empty($jobResource->truck_id)) {
+        $groupedJobResources[$jobId]['truck_count']++;
+    }
+
+    if (!empty($jobResource->equipment_id)) {
+        $groupedJobResources[$jobId]['equipment_count']++;
+    }
+
+    if (!empty($jobResource->storage_unit_id)) {
+        $groupedJobResources[$jobId]['storage_unit_count']++;
+    }
+
+    if (!empty($jobResource->inventory_id)) {
+        $groupedJobResources[$jobId]['inventory_count']++;
+    }
+}
 ?>
-<div class="jobResources index content">
-    <?= $this->Html->link(__('New Booking Resource'), ['action' => 'add'], ['class' => 'button float-right']) ?>
-    <h3><?= __('Booking Resources') ?></h3>
-    <div class="table-responsive">
-        <table>
-            <thead>
-                <tr>
-                    <th><?= $this->Paginator->sort('booking_resource_id') ?></th>
-                    <th><?= $this->Paginator->sort('booking_id') ?></th>
-                    <th><?= $this->Paginator->sort('resource_type') ?></th>
-                    <th><?= $this->Paginator->sort('resource_id') ?></th>
-                    <th><?= $this->Paginator->sort('quantity') ?></th>
-                    <th><?= $this->Paginator->sort('created') ?></th>
-                    <th><?= $this->Paginator->sort('modified') ?></th>
-                    <th class="actions"><?= __('Actions') ?></th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($jobResources as $jobResource): ?>
-                <tr>
-                    <td><?= $this->Number->format($jobResource->job_resource_id) ?></td>
-                    <td><?= $jobResource->hasValue('booking') ? $this->Html->link($jobResource->job->booking_id, ['controller' => 'Jobs', 'action' => 'view', $jobResource->job->booking_id]) : '' ?></td>
-                    <td><?= h($jobResource->resource_type) ?></td>
-                    <td><?= $this->Number->format($jobResource->job_resource_id) ?></td>
-                    <td><?= $this->Number->format($jobResource->quantity) ?></td>
-                    <td class="actions">
-                        <?= $this->Html->link(__('View'), ['action' => 'view', $jobResource->job_resource_id]) ?>
-                        <?= $this->Html->link(__('Edit'), ['action' => 'edit', $jobResource->job_resource_id]) ?>
-                        <?= $this->Form->postLink(
-                            __('Delete'),
-                            ['action' => 'delete', $jobResource->job_resource_id],
-                            [
-                                'method' => 'delete',
-                                'confirm' => __('Are you sure you want to delete # {0}?', $jobResource->job_resource_id),
-                            ]
+
+<div class="mh-page-soft">
+    <section class="admin-hero">
+        <div class="container">
+            <div class="admin-hero-shell">
+                <div class="admin-hero-content">
+                    <p class="admin-eyebrow"><?= __('Resources') ?></p>
+                    <h1><?= __('Job Resources') ?></h1>
+                    <p class="admin-hero-text">
+                        <?= __('Review resource allocations grouped by job, including trucks, equipment, storage units, and inventory items.') ?>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="admin-section">
+        <div class="container">
+            <div class="admin-table-card">
+                <div class="admin-table-header">
+                    <div>
+                        <h2><?= __('Resource Allocation Summary') ?></h2>
+                        <p><?= __('Each row shows the resources currently assigned to a job.') ?></p>
+                    </div>
+
+                    <?= $this->Html->link(
+                        __('New Job Resource'),
+                        ['action' => 'add'],
+                        ['class' => 'admin-primary-link']
+                    ) ?>
+                </div>
+
+                <div class="admin-table-wrap">
+                    <table class="admin-table">
+                        <thead>
+                        <tr>
+                            <th><?= __('Job') ?></th>
+                            <th><?= __('Customer') ?></th>
+                            <th><?= __('Service Type') ?></th>
+                            <th><?= __('Job Date') ?></th>
+                            <th><?= __('Trucks') ?></th>
+                            <th><?= __('Equipment') ?></th>
+                            <th><?= __('Storage Units') ?></th>
+                            <th><?= __('Inventory Items') ?></th>
+                            <th class="actions"><?= __('Actions') ?></th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <?php if (empty($groupedJobResources)): ?>
+                            <tr>
+                                <td colspan="10" style="text-align: center; color: gray;">
+                                    <?= __('No job resources found.') ?>
+                                </td>
+                            </tr>
+                        <?php endif; ?>
+
+                        <?php foreach ($groupedJobResources as $jobId => $group): ?>
+                            <?php
+                            $job = $group['job'];
+
+                            $jobLabel = __('Job #{0}', $jobId);
+                            $customerName = '-';
+                            $serviceType = '-';
+                            $jobDate = '-';
+
+                            if ($job) {
+                                $jobLabel = __('Job #{0}', $job->job_id);
+
+                                if ($job->hasValue('customer')) {
+                                    $customerName = trim(
+                                        ($job->customer->first_name ?? '') . ' ' .
+                                        ($job->customer->last_name ?? '')
+                                    );
+
+                                    if ($customerName === '') {
+                                        $customerName = '-';
+                                    }
+                                }
+
+                                if ($job->hasValue('job_type')) {
+                                    $serviceType = $job->job_type->job_type_name ?? '-';
+                                }
+
+                                $jobDate = $job->job_date ?? '-';
+                            }
+                            ?>
+
+                            <tr>
+                                <td>
+                                    <?php if ($job): ?>
+                                        <?= $this->Html->link(
+                                            $jobLabel,
+                                            ['controller' => 'Jobs', 'action' => 'view', $job->job_id],
+                                            ['class' => 'admin-action-link']
+                                        ) ?>
+                                    <?php else: ?>
+                                        <?= h($jobLabel) ?>
+                                    <?php endif; ?>
+                                </td>
+
+                                <td><?= h($customerName) ?></td>
+                                <td><?= h($serviceType) ?></td>
+                                <td><?= h($jobDate) ?></td>
+
+                                <td>
+                                        <span class="admin-status-badge">
+                                            <?= h($group['truck_count']) ?>
+                                        </span>
+                                </td>
+
+                                <td>
+                                        <span class="admin-status-badge">
+                                            <?= h($group['equipment_count']) ?>
+                                        </span>
+                                </td>
+
+                                <td>
+                                        <span class="admin-status-badge">
+                                            <?= h($group['storage_unit_count']) ?>
+                                        </span>
+                                </td>
+
+                                <td>
+                                        <span class="admin-status-badge">
+                                            <?= h($group['inventory_count']) ?>
+                                        </span>
+                                </td>
+
+                                <td class="actions">
+                                    <div class="admin-action-stack">
+                                        <?= $this->Html->link(
+                                            __('View Resources'),
+                                            ['action' => 'view', $jobId],
+                                            ['class' => 'admin-action-link']
+                                        ) ?>
+
+                                        <?= $this->Html->link(
+                                            __('Add Resource'),
+                                            ['action' => 'add', $jobId],
+                                            ['class' => 'admin-action-link']
+                                        ) ?>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="admin-paginator">
+                    <ul class="pagination">
+                        <?= $this->Paginator->first('<< ' . __('first')) ?>
+                        <?= $this->Paginator->prev('< ' . __('previous')) ?>
+                        <?= $this->Paginator->numbers() ?>
+                        <?= $this->Paginator->next(__('next') . ' >') ?>
+                        <?= $this->Paginator->last(__('last') . ' >>') ?>
+                    </ul>
+
+                    <p>
+                        <?= $this->Paginator->counter(
+                            __('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')
                         ) ?>
-                    </td>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-    </div>
-    <div class="paginator">
-        <ul class="pagination">
-            <?= $this->Paginator->first('<< ' . __('first')) ?>
-            <?= $this->Paginator->prev('< ' . __('previous')) ?>
-            <?= $this->Paginator->numbers() ?>
-            <?= $this->Paginator->next(__('next') . ' >') ?>
-            <?= $this->Paginator->last(__('last') . ' >>') ?>
-        </ul>
-        <p><?= $this->Paginator->counter(__('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')) ?></p>
-    </div>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
 </div>

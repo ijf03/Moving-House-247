@@ -68,10 +68,6 @@
                                     <td><?= h($storageUnit->facility_name) ?></td>
                                 </tr>
                                 <tr>
-                                    <th><?= __('Status') ?></th>
-                                    <td><?= h($storageUnit->status) ?></td>
-                                </tr>
-                                <tr>
                                     <th><?= __('Security Level') ?></th>
                                     <td><?= h($storageUnit->security_level) ?></td>
                                 </tr>
