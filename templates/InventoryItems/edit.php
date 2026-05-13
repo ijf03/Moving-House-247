@@ -4,35 +4,135 @@
  * @var \App\Model\Entity\InventoryItem $inventoryItem
  */
 ?>
-<div class="row">
-    <aside class="column">
-        <div class="side-nav">
-            <h4 class="heading"><?= __('Actions') ?></h4>
-            <?= $this->Form->postLink(
-                __('Delete'),
-                ['action' => 'delete', $inventoryItem->inventory_item_id],
-                ['confirm' => __('Are you sure you want to delete # {0}?', $inventoryItem->inventory_item_id), 'class' => 'side-nav-item']
-            ) ?>
-            <?= $this->Html->link(__('List Inventory Items'), ['action' => 'index'], ['class' => 'side-nav-item']) ?>
+
+<div class="mh-page-soft">
+    <section class="admin-hero">
+        <div class="container">
+            <div class="admin-hero-shell">
+                <div class="admin-hero-content">
+                    <span class="admin-eyebrow"><?= __('Resources') ?></span>
+                    <h1><?= __('Edit Inventory Item') ?></h1>
+                    <p class="admin-hero-text">
+                        <?= __('Update this inventory item’s stock level, category, unit, and storage location.') ?>
+                    </p>
+                </div>
+            </div>
         </div>
-    </aside>
-    <div class="column column-80">
-        <div class="inventoryItems form content">
-            <?= $this->Form->create($inventoryItem) ?>
-            <fieldset>
-                <legend><?= __('Edit Inventory Item') ?></legend>
-                <?php
-                    echo $this->Form->control('name');
-                    echo $this->Form->control('category');
-                    echo $this->Form->control('quantity_on_hand');
-                    echo $this->Form->control('reorder_threshold');
-                    echo $this->Form->control('unit');
-                    echo $this->Form->control('storage_location');
-                    echo $this->Form->control('is_active');
-                ?>
-            </fieldset>
-            <?= $this->Form->button(__('Submit')) ?>
-            <?= $this->Form->end() ?>
+    </section>
+
+    <section class="admin-section">
+        <div class="container">
+            <div class="row g-4 justify-content-center">
+                <div class="col-lg-3">
+                    <div class="admin-table-card">
+                        <div class="admin-table-header">
+                            <h2><?= __('Actions') ?></h2>
+                            <p><?= __('Manage this inventory item record.') ?></p>
+                        </div>
+
+                        <div class="admin-action-stack">
+                            <?= $this->Html->link(__('List Inventory Items'), ['action' => 'index'], ['class' => 'admin-action-link']) ?>
+
+                            <?= $this->Form->postLink(
+                                __('Delete Inventory Item'),
+                                ['action' => 'delete', $inventoryItem->inventory_item_id],
+                                [
+                                    'confirm' => __('Are you sure you want to delete # {0}?', $inventoryItem->inventory_item_id),
+                                    'class' => 'admin-action-link admin-action-link-danger',
+                                ]
+                            ) ?>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-9">
+                    <div class="auth-card auth-card-wide">
+                        <div class="auth-header">
+                            <h2 class="auth-title"><?= __('Inventory Item Details') ?></h2>
+                            <p class="auth-subtitle">
+                                <?= __('Edit the details below and save changes to update this inventory item.') ?>
+                            </p>
+                        </div>
+
+                        <?= $this->Form->create($inventoryItem, ['class' => 'auth-form']) ?>
+
+                        <div class="row g-3">
+                            <div class="col-md-6 auth-form-group">
+                                <?= $this->Form->control('name', [
+                                    'label' => 'Item Name',
+                                    'placeholder' => 'Enter item name',
+                                    'class' => 'auth-input',
+                                ]) ?>
+                            </div>
+
+                            <div class="col-md-6 auth-form-group">
+                                <?= $this->Form->control('category', [
+                                    'label' => 'Category',
+                                    'placeholder' => 'Enter category',
+                                    'class' => 'auth-input',
+                                ]) ?>
+                            </div>
+
+                            <div class="col-md-6 auth-form-group">
+                                <?= $this->Form->control('quantity_on_hand', [
+                                    'type' => 'number',
+                                    'label' => 'Quantity On Hand',
+                                    'placeholder' => 'Enter current quantity',
+                                    'class' => 'auth-input',
+                                    'min' => '0',
+                                    'step' => '1',
+                                ]) ?>
+                            </div>
+
+                            <div class="col-md-6 auth-form-group">
+                                <?= $this->Form->control('reorder_threshold', [
+                                    'type' => 'number',
+                                    'label' => 'Reorder Threshold',
+                                    'placeholder' => 'Enter reorder threshold',
+                                    'class' => 'auth-input',
+                                    'min' => '0',
+                                    'step' => '1',
+                                ]) ?>
+                            </div>
+
+                            <div class="col-md-6 auth-form-group">
+                                <?= $this->Form->control('unit', [
+                                    'label' => 'Unit',
+                                    'placeholder' => 'Enter unit type',
+                                    'class' => 'auth-input',
+                                ]) ?>
+                            </div>
+
+                            <div class="col-md-6 auth-form-group">
+                                <?= $this->Form->control('storage_location', [
+                                    'label' => 'Storage Location',
+                                    'placeholder' => 'Enter storage location',
+                                    'class' => 'auth-input',
+                                ]) ?>
+                            </div>
+
+                            <div class="col-md-6 auth-form-group">
+                                <?= $this->Form->control('is_active', [
+                                    'type' => 'select',
+                                    'label' => 'Active',
+                                    'options' => [
+                                        1 => 'Yes',
+                                        0 => 'No',
+                                    ],
+                                    'empty' => false,
+                                    'class' => 'auth-input',
+                                ]) ?>
+                            </div>
+                        </div>
+
+                        <div class="auth-form-actions">
+                            <?= $this->Form->button(__('Save Changes'), ['class' => 'mh-btn-primary']) ?>
+                        </div>
+
+                        <?= $this->Form->end() ?>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
+    </section>
 </div>

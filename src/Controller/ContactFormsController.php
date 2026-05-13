@@ -77,13 +77,24 @@ class ContactFormsController extends AppController
         $siteKey = Configure::read('Recaptcha.siteKey');
         $stripe = new \Stripe\StripeClient(Configure::read('Stripe.secretKey'));
 
+        $identity = $this->request->getAttribute('identity');
+        $customersTable = $this->fetchTable('Customers');
+
+        $loggedInCustomer = null;
+
+        if ($identity) {
+            $loggedInCustomer = $customersTable->find()
+                ->where(['email' => $identity->get('email')])
+                ->first();
+        }
+
         if ($this->request->is('post')) {
             $data = $this->request->getData();
             $captchaResponse = $data['g-recaptcha-response'] ?? '';
 
             if (empty($captchaResponse)) {
                 $this->Flash->error(__('Please complete the reCAPTCHA.'));
-                $this->set(compact('contactForm', 'siteKey'));
+                $this->set(compact('contactForm', 'siteKey', 'loggedInCustomer'));
                 return;
             }
 
@@ -100,43 +111,46 @@ class ContactFormsController extends AppController
 
             if (empty($captchaSuccess['success'])) {
                 $this->Flash->error(__('reCAPTCHA verification failed. Please try again.'));
-                $this->set(compact('contactForm', 'siteKey'));
+                $this->set(compact('contactForm', 'siteKey', 'loggedInCustomer'));
                 return;
             }
 
-            $customersTable = $this->fetchTable('Customers');
+            if ($loggedInCustomer) {
+                $customer = $loggedInCustomer;
+            } else {
+                $customer = $customersTable->find()
+                    ->where([
+                        'first_name' => $data['first_name'],
+                        'last_name' => $data['last_name'],
+                        'email' => $data['email'],
+                        'phone' => $data['phone'],
+                    ])
+                    ->first();
 
-            $customer = $customersTable->find()
-                ->where([
-                    'first_name' => $data['first_name'],
-                    'last_name' => $data['last_name'],
-                    'email' => $data['email'],
-                    'phone' => $data['phone'],
-                ])
-                ->first();
+                if (!$customer) {
+                    $customer = $customersTable->newEntity([
+                        'first_name' => $data['first_name'],
+                        'last_name' => $data['last_name'],
+                        'email' => $data['email'],
+                        'phone' => $data['phone'],
+                    ]);
 
-            if (!$customer) {
-                $customer = $customersTable->newEntity([
-                    'first_name' => $data['first_name'],
-                    'last_name' => $data['last_name'],
-                    'email' => $data['email'],
-                    'phone' => $data['phone'],
-                ]);
-
-                if ($customer->getErrors()) {
-                    foreach ($customer->getErrors() as $field => $errors) {
-                        foreach ($errors as $message) {
-                            $this->Flash->error($message);
+                    if ($customer->getErrors()) {
+                        foreach ($customer->getErrors() as $field => $errors) {
+                            foreach ($errors as $message) {
+                                $this->Flash->error($message);
+                            }
                         }
-                    }
-                    $this->set(compact('contactForm', 'siteKey'));
-                    return;
-                }
 
-                if (!$customersTable->save($customer)) {
-                    $this->Flash->error(__('The customer could not be created. Please try again.'));
-                    $this->set(compact('contactForm', 'siteKey'));
-                    return;
+                        $this->set(compact('contactForm', 'siteKey', 'loggedInCustomer'));
+                        return;
+                    }
+
+                    if (!$customersTable->save($customer)) {
+                        $this->Flash->error(__('The customer could not be created. Please try again.'));
+                        $this->set(compact('contactForm', 'siteKey', 'loggedInCustomer'));
+                        return;
+                    }
                 }
             }
 
@@ -159,12 +173,12 @@ class ContactFormsController extends AppController
 
                     if (!$customersTable->save($customer)) {
                         $this->Flash->error(__('Customer was created, but Stripe ID could not be saved locally.'));
-                        $this->set(compact('contactForm', 'siteKey'));
+                        $this->set(compact('contactForm', 'siteKey', 'loggedInCustomer'));
                         return;
                     }
                 } catch (\Throwable $e) {
                     $this->Flash->error(__('Stripe customer creation failed: {0}', $e->getMessage()));
-                    $this->set(compact('contactForm', 'siteKey'));
+                    $this->set(compact('contactForm', 'siteKey', 'loggedInCustomer'));
                     return;
                 }
             }
@@ -188,14 +202,20 @@ class ContactFormsController extends AppController
                 ]);
 
                 $this->ContactForms->ContactFormReplies->save($reply);
+
                 $this->Flash->success(__('Your message has been sent successfully.'));
+
+                if ($identity) {
+                    return $this->redirect(['action' => 'customerIndex']);
+                }
+
                 return $this->redirect(['controller' => 'Pages', 'action' => 'display', 'home']);
             }
 
             $this->Flash->error(__('The contact form could not be saved. Please try again.'));
         }
 
-        $this->set(compact('contactForm', 'siteKey'));
+        $this->set(compact('contactForm', 'siteKey', 'loggedInCustomer'));
     }
 
     public function edit($id = null)
