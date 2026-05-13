@@ -47,6 +47,7 @@ DROP TABLE IF EXISTS `user_types`;
 DROP TABLE IF EXISTS `phinxlog`;
 DROP TABLE IF EXISTS `staff`;
 DROP TABLE IF EXISTS `staff_job`;
+DROP TABLE IF EXISTS `availability`;
 DROP TABLE IF EXISTS `job_trucks`;
 SET FOREIGN_KEY_CHECKS = 1;
 
@@ -58,6 +59,14 @@ CREATE TABLE `staff`
     `email`       varchar(62) NOT NULL,
     `phone`       varchar(15) NOT NULL,
     `isDriver`    tinyint(1) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+CREATE TABLE `availability`
+(
+    `availability_id` int(11) NOT NULL,
+    `staff_id` int(11) NOT NULL,
+    `start_datetime` datetime NOT NULL,
+    `end_datetime` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 CREATE TABLE `staff_job`
@@ -495,6 +504,9 @@ ALTER TABLE `staff`
     ADD PRIMARY KEY (`staff_id`),
     ADD KEY `email` (`email`);
 
+ALTER TABLE `availability`
+    ADD PRIMARY KEY (`availability_id`);
+
 ALTER TABLE `staff_job`
     ADD PRIMARY KEY (`allocation_id`);
 
@@ -541,6 +553,9 @@ ALTER TABLE `invoice_items`
 ALTER TABLE `staff`
     MODIFY `staff_id` int(11) NOT NULL AUTO_INCREMENT;
 
+ALTER TABLE `availability`
+    MODIFY `availability_id` int(11) NOT NULL AUTO_INCREMENT;
+
 ALTER TABLE `staff_job`
     MODIFY `allocation_id` int(11) NOT NULL AUTO_INCREMENT;
 
@@ -586,6 +601,10 @@ ALTER TABLE `contact_form_replies`
 ALTER TABLE `contact_forms`
     ADD CONSTRAINT `contact_forms_customer_id`
         FOREIGN KEY (`customer_id`) REFERENCES `customers` (`customer_id`);
+
+ALTER TABLE `availability`
+    ADD CONSTRAINT `staff_availability_id`
+        FOREIGN KEY (`staff_id`) REFERENCES `staff` (`staff_id`);
 
 ALTER TABLE `jobs`
     ADD CONSTRAINT `jobs_customer_id`

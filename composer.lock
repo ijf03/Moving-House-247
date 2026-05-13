@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a2a54518a2655b44659c09961fad99ce",
+    "content-hash": "4183a292d40e7795aca6823829521eab",
     "packages": [
         {
             "name": "cakephp/authentication",
@@ -437,6 +437,63 @@
                 }
             ],
             "time": "2026-03-30T09:16:10+00:00"
+        },
+        {
+            "name": "dereuromark/cakephp-calendar",
+            "version": "2.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dereuromark/cakephp-calendar.git",
+                "reference": "54aa1dca57d0db873a69315b39d8c553a34f79cd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dereuromark/cakephp-calendar/zipball/54aa1dca57d0db873a69315b39d8c553a34f79cd",
+                "reference": "54aa1dca57d0db873a69315b39d8c553a34f79cd",
+                "shasum": ""
+            },
+            "require": {
+                "cakephp/cakephp": "^5.1.1",
+                "php": ">=8.2"
+            },
+            "require-dev": {
+                "fig-r/psr2r-sniffer": "dev-master",
+                "phpunit/phpunit": "^11.5 || ^12.1 || ^13.0"
+            },
+            "type": "cakephp-plugin",
+            "autoload": {
+                "psr-4": {
+                    "Calendar\\": "src/",
+                    "Calendar\\Test\\Fixture\\": "tests/Fixture/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mark Scherer",
+                    "homepage": "https://www.dereuromark.de",
+                    "role": "Maintainer"
+                }
+            ],
+            "description": "A CakePHP plugin to easily create calendars.",
+            "homepage": "https://github.com/dereuromark/cakephp-calendar",
+            "keywords": [
+                "cakephp",
+                "calendar",
+                "dates",
+                "events",
+                "helper",
+                "plugin",
+                "scheduling"
+            ],
+            "support": {
+                "issues": "https://github.com/dereuromark/cakephp-calendar/issues",
+                "source": "https://github.com/dereuromark/cakephp-calendar"
+            },
+            "time": "2026-05-04T00:48:23+00:00"
         },
         {
             "name": "ezyang/htmlpurifier",
