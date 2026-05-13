@@ -25,10 +25,41 @@ $assignedStaff = $assignedStaff ?? new \Cake\Collection\Collection([]);
                 <div class="col-lg-3">
                     <div class="mh-back-btn m-1">
                         <?= $this->Html->link(
-                            __('← Back'),
+                            __('← Back to List'),
                             ['action' => $isStaff ? 'available' : 'index']
                         ) ?>
                     </div>
+
+                    <?php if ($isAdmin): ?>
+                        <div class="admin-table-card mt-3">
+                            <div class="admin-table-header">
+                                <h2><?= __('Actions') ?></h2>
+                                <p><?= __('Manage this job.') ?></p>
+                            </div>
+
+                            <div class="admin-action-stack">
+                                <?= $this->Html->link(
+                                    __('Allocate'),
+                                    ['action' => 'allocate', $job->job_id],
+                                    ['class' => 'admin-action-link']
+                                ) ?>
+                                <?= $this->Html->link(
+                                    __('Edit Job'),
+                                    ['action' => 'edit', $job->job_id],
+                                    ['class' => 'admin-action-link']
+                                ) ?>
+
+                                <?= $this->Form->postLink(
+                                    __('Delete Job'),
+                                    ['action' => 'delete', $job->job_id],
+                                    [
+                                        'confirm' => __('Are you sure you want to delete job # {0}?', $job->job_id),
+                                        'class' => 'admin-action-link admin-action-link-danger',
+                                    ]
+                                ) ?>
+                            </div>
+                        </div>
+                    <?php endif; ?>
                 </div>
 
                 <div class="col-lg-9">
@@ -280,52 +311,52 @@ $assignedStaff = $assignedStaff ?? new \Cake\Collection\Collection([]);
                         <?php endif; ?>
 
                         <?php if ($isStaff && $job->status === 'Processing' && empty($staffJob)): ?>
-                        <div class="admin-table-header" style="margin-top: 2rem;">
-                            <h2><?= __('Action') ?></h2>
-                        </div>
+                            <div class="admin-table-header" style="margin-top: 2rem;">
+                                <h2><?= __('Action') ?></h2>
+                            </div>
 
-                        <div class="d-flex justify-content-center gap-4 mt-4">
+                            <div class="d-flex justify-content-center gap-4 mt-4">
 
-                            <?php if ($isDriver): ?>
+                                <?php if ($isDriver): ?>
+                                    <?= $this->Form->postLink(
+                                        __('Accept as Driver'),
+                                        ['action' => 'takeJob', $job->job_id, 'Driver'],
+                                        [
+                                            'class' => 'admin-action-link admin-action-link-success px-5 py-3 fs-4',
+                                            'confirm' => __('Accept as driver?')
+                                        ]
+                                    ) ?>
+
+                                    <?= $this->Form->postLink(
+                                        __('Accept as Porter'),
+                                        ['action' => 'takeJob', $job->job_id, 'Porter'],
+                                        [
+                                            'class' => 'admin-action-link admin-action-link-warning px-5 py-3 fs-4',
+                                            'confirm' => __('Accept as porter?')
+                                        ]
+                                    ) ?>
+                                <?php else: ?>
+                                    <?= $this->Form->postLink(
+                                        __('Accept'),
+                                        ['action' => 'takeJob', $job->job_id, 'Porter'],
+                                        [
+                                            'class' => 'admin-action-link admin-action-link-warning px-5 py-3 fs-4',
+                                            'confirm' => __('Accept?')
+                                        ]
+                                    ) ?>
+                                <?php endif; ?>
+                            </div>
+
+                            <div class="d-flex justify-content-center mt-4">
                                 <?= $this->Form->postLink(
-                                    __('Accept as Driver'),
-                                    ['action' => 'takeJob', $job->job_id, 'Driver'],
+                                    __('Reject'),
+                                    ['action' => 'notInterested', $job->job_id],
                                     [
-                                        'class' => 'admin-action-link admin-action-link-success px-5 py-3 fs-4',
-                                        'confirm' => __('Accept as driver?')
+                                        'class' => 'admin-action-link admin-action-link-danger px-5 py-3 fs-4',
+                                        'confirm' => __('Reject this job?')
                                     ]
                                 ) ?>
-
-                                <?= $this->Form->postLink(
-                                    __('Accept as Porter'),
-                                    ['action' => 'takeJob', $job->job_id, 'Porter'],
-                                    [
-                                        'class' => 'admin-action-link admin-action-link-warning px-5 py-3 fs-4',
-                                        'confirm' => __('Accept as porter?')
-                                    ]
-                                ) ?>
-                            <?php else: ?>
-                                <?= $this->Form->postLink(
-                                    __('Accept'),
-                                    ['action' => 'takeJob', $job->job_id, 'Porter'],
-                                    [
-                                        'class' => 'admin-action-link admin-action-link-warning px-5 py-3 fs-4',
-                                        'confirm' => __('Accept?')
-                                    ]
-                                ) ?>
-                            <?php endif; ?>
-                        </div>
-
-                        <div class="d-flex justify-content-center mt-4">
-                            <?= $this->Form->postLink(
-                                __('Reject'),
-                                ['action' => 'notInterested', $job->job_id],
-                                [
-                                    'class' => 'admin-action-link admin-action-link-danger px-5 py-3 fs-4',
-                                    'confirm' => __('Reject this job?')
-                                ]
-                            ) ?>
-                        </div>
+                            </div>
                         <?php endif; ?>
 
                         <?php if (

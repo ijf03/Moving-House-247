@@ -36,11 +36,10 @@
                         <tr>
                             <th><?= $this->Paginator->sort('job_id') ?></th>
                             <th><?= $this->Paginator->sort('job_type_id') ?></th>
-                            <th><?= $this->Paginator->sort('pickup_address') ?></th>
-                            <th><?= $this->Paginator->sort('dropoff_address') ?></th>
-                            <th><?= $this->Paginator->sort('job_date') ?></th>
-                            <th><?= $this->Paginator->sort('job_time') ?></th>
-                            <th><?= $this->Paginator->sort('customer_id') ?></th>
+                            <th><?= $this->Paginator->sort('pickup') ?></th>
+                            <th><?= $this->Paginator->sort('dropoff') ?></th>
+                            <th><?= $this->Paginator->sort('Details') ?></th>
+                            <th><?= $this->Paginator->sort('customer') ?></th>
                             <th><?= $this->Paginator->sort('status') ?></th>
                             <th><?= __('Staff') ?></th>
                             <th class="actions"><?= __('Actions') ?></th>
@@ -60,12 +59,12 @@
 
                                 <td><?= h($job->pickup_address) ?></td>
                                 <td><?= h($job->dropoff_address) ?></td>
-                                <td><?= h($job->job_date) ?></td>
-                                <td><?= h($job->job_time) ?></td>
+                                <td><?= h($job->job_date) ?> <br> <?= h($job->job_time) ?></td>
+
 
                                 <td>
                                     <?= $job->hasValue('customer')
-                                        ? h($job->customer->first_name)
+                                        ? h($job->customer->first_name. ' ' . $job->customer->last_name)
                                         : '' ?>
                                 </td>
 

@@ -151,7 +151,7 @@ $identity = $this->request->getAttribute('identity');
 
                             <div class="col-12">
                                 <?= $this->Form->button(__('Send Message'), [
-                                    'class' => 'contact-submit-btn',
+                                    'class' => 'mh-btn-primary',
                                 ]) ?>
                             </div>
                         </div>
