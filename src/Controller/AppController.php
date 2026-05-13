@@ -69,6 +69,11 @@ class AppController extends Controller
             'Resources',
             'ContentBlocks',
             'Jobs',
+            'JobResources',
+            'Equipment',
+            'StorageUnits',
+            'Trucks',
+            'InventoryItems',
         ];
 
         if (
