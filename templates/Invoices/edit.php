@@ -27,7 +27,6 @@
         <div class="container">
             <div class="row g-4 justify-content-center">
 
-                <!-- Actions -->
                 <div class="col-lg-3">
                     <div class="admin-table-card">
                         <div class="admin-table-header">
@@ -48,17 +47,14 @@
                                 ['action' => 'delete', $invoice->invoice_id],
                                 [
                                     'confirm' => __('Are you sure you want to delete invoice # {0}?', $invoice->invoice_id),
-                                    'class' => 'admin-action-link'
+                                    'class' => 'admin-action-link admin-action-link-danger'
                                 ]
                             ) ?>
                         </div>
                     </div>
                 </div>
 
-                <!-- Main Content -->
                 <div class="col-lg-9">
-
-                    <!-- Invoice Summary -->
                     <div class="auth-card auth-card-wide mb-4">
                         <div class="auth-header">
                             <h2 class="auth-title">
@@ -130,14 +126,13 @@
                             <?= $this->Form->button(__('Save Invoice Details'), [
                                 'name' => 'action',
                                 'value' => 'save_invoice',
-                                'class' => 'mh-btn-secondary'
+                                'class' => 'mh-btn-primary'
                             ]) ?>
                         </div>
 
                         <?= $this->Form->end() ?>
                     </div>
 
-                    <!-- Add Invoice Item -->
                     <div class="auth-card auth-card-wide mb-4">
                         <div class="auth-header">
                             <h2 class="auth-title"><?= __('Add Invoice Item') ?></h2>
