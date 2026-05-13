@@ -29,7 +29,7 @@ class ResourcesController extends AppController
         $storageUnitsTable = $this->fetchTable('StorageUnits');
         $equipmentTable = $this->fetchTable('Equipment');
         $inventoryItemsTable = $this->fetchTable('InventoryItems');
-        $bookingResourcesTable = $this->fetchTable('BookingResources');
+        $jobResourcesTable = $this->fetchTable('JobResources');
 
         $truckCount = $trucksTable->find()->count();
         $availableTruckCount = $trucksTable->find()
@@ -56,7 +56,7 @@ class ResourcesController extends AppController
             }
         }
 
-        $activeAssignmentCount = $bookingResourcesTable->find()->count();
+        $activeAssignmentCount = $jobResourcesTable->find()->count();
 
         $trucks = $trucksTable->find()
             ->where(['is_active' => 1])
@@ -82,11 +82,10 @@ class ResourcesController extends AppController
             ->limit(5)
             ->all();
 
-        $recentAssignments = $bookingResourcesTable->find()
+        $recentAssignments = $jobResourcesTable->find()
             ->contain([
-                'Bookings' => ['Customers', 'JobTypes']
+                'Jobs' => ['Customers', 'JobTypes']
             ])
-            ->orderBy(['BookingResources.created' => 'DESC'])
             ->limit(10)
             ->all()
             ->toList();

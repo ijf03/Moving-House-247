@@ -3,14 +3,14 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Controller;
 
-use App\Controller\BookingResourcesController;
+use App\Controller\JobResourcesController;
 use Cake\TestSuite\IntegrationTestTrait;
 use Cake\TestSuite\TestCase;
 
 /**
- * App\Controller\BookingResourcesController Test Case
+ * App\Controller\JobResourcesController Test Case
  *
- * @link \App\Controller\BookingResourcesController
+ * @link \App\Controller\JobResourcesController
  */
 class BookingResourcesControllerTest extends TestCase
 {
@@ -22,7 +22,7 @@ class BookingResourcesControllerTest extends TestCase
      * @var array<string>
      */
     protected array $fixtures = [
-        'app.BookingResources',
+        'app.JobResources',
         'app.Bookings',
     ];
 
@@ -30,7 +30,7 @@ class BookingResourcesControllerTest extends TestCase
      * Test index method
      *
      * @return void
-     * @link \App\Controller\BookingResourcesController::index()
+     * @link \App\Controller\JobResourcesController::index()
      */
     public function testIndex(): void
     {
@@ -41,7 +41,7 @@ class BookingResourcesControllerTest extends TestCase
      * Test view method
      *
      * @return void
-     * @link \App\Controller\BookingResourcesController::view()
+     * @link \App\Controller\JobResourcesController::view()
      */
     public function testView(): void
     {
@@ -52,7 +52,7 @@ class BookingResourcesControllerTest extends TestCase
      * Test add method
      *
      * @return void
-     * @link \App\Controller\BookingResourcesController::add()
+     * @link \App\Controller\JobResourcesController::add()
      */
     public function testAdd(): void
     {
@@ -63,7 +63,7 @@ class BookingResourcesControllerTest extends TestCase
      * Test edit method
      *
      * @return void
-     * @link \App\Controller\BookingResourcesController::edit()
+     * @link \App\Controller\JobResourcesController::edit()
      */
     public function testEdit(): void
     {
@@ -74,7 +74,7 @@ class BookingResourcesControllerTest extends TestCase
      * Test delete method
      *
      * @return void
-     * @link \App\Controller\BookingResourcesController::delete()
+     * @link \App\Controller\JobResourcesController::delete()
      */
     public function testDelete(): void
     {

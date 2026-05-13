@@ -1,7 +1,7 @@
 <?php
 /**
  * @var \App\View\AppView $this
- * @var \App\Model\Entity\Staff $staffEntity
+ * @var \App\Model\Entity\Staff $staff
  */
 ?>
 <div class="row">
@@ -10,18 +10,18 @@
             <h4 class="heading"><?= __('Actions') ?></h4>
             <?= $this->Form->postLink(
                 __('Delete'),
-                ['action' => 'delete', $staffEntity->staff_id],
-                ['confirm' => __('Are you sure you want to delete {0}?', $staffEntity->full_name), 'class' => 'side-nav-item']
+                ['action' => 'delete', $staff->staff_id],
+                ['confirm' => __('Are you sure you want to delete {0}?', $staff->full_name), 'class' => 'side-nav-item']
             ) ?>
             <?= $this->Html->link(__('List Staff'), ['action' => 'index'], ['class' => 'side-nav-item']) ?>
         </div>
     </aside>
     <div class="column column-80">
         <div class="staff form content">
-            <?= $this->Form->create($staffEntity) ?>
+            <?= $this->Form->create($staff) ?>
             <fieldset>
                 <legend><?= __('Edit Staff') ?></legend>
-                <?= $this->Form->create($staffEntity, ['class' => 'auth-form']) ?>
+                <?= $this->Form->create($staff, ['class' => 'auth-form']) ?>
 
                 <div class="row g-3">
                     <div class="col-md-6 auth-form-group">
