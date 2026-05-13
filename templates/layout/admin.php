@@ -48,7 +48,7 @@ $isUser = ($identity && (int)$role === 3);
                 </a>
 
                 <button type="button" class="admin-sidebar-toggle" id="adminSidebarToggle">
-                    ☰
+
                 </button>
             </div>
         </div>
@@ -69,7 +69,7 @@ $isUser = ($identity && (int)$role === 3);
         </nav>
 
         <div class="admin-sidebar-footer">
-            <?= $this->Html->link('Logout', ['controller' => 'Users', 'action' => 'logout'], ['class' => 'admin-sidebar-link admin-sidebar-logout']) ?>
+            <?= $this->Html->link('Logout', ['plugin' => false,'controller' => 'Users', 'action' => 'logout'], ['class' => 'admin-sidebar-link admin-sidebar-logout']) ?>
             <div class="container-fluid text-center">
                 <small class="tiny-text">&copy; <?= date('Y') ?> Moving House 24/7. <br> All rights reserved.</small>
             </div>
