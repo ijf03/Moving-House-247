@@ -60,7 +60,7 @@ body.mh-site {
     color: var(--mh-navy);
 }
 
-.mh-brand-icon {
+.mh-brand-logo-navbar {
     width: 58px;
     height: 58px;
     border-radius: 14px;
@@ -71,6 +71,21 @@ body.mh-site {
     justify-content: center;
     font-size: 1.7rem;
     flex-shrink: 0;
+}
+
+
+.mh-brand-logo-footer {
+    width: 58px;
+    height: 58px;
+    border-radius: 14px;
+    background: var(--mh-orange);
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.7rem;
+    flex-shrink: 0;
+    overflow: hidden;
 }
 
 .mh-brand-text {
