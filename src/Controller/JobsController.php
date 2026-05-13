@@ -554,7 +554,7 @@ class JobsController extends AppController
             'keyField' => 'truck_id',
             'valueField' => 'rego',
         ])
-            ->where(['status' => 'available'])
+            ->where(['is_active' => 1])
             ->toArray();
 
         if ($this->request->is(['post', 'put', 'patch'])) {
