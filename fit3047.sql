@@ -477,8 +477,8 @@ INSERT INTO `staff` (`staff_id`,`first_name`,`last_name`,`email`,`phone`,`isDriv
 VALUES (1,'Jordan','Lee', 'staff@myapp.local', '0422222222', 0),
        (2,'Uba', 'Driver', 'driver@staff.com', '0444444444', 1);
 
-INSERT INTO `content_blocks` (`id`, `parent`, `slug`, `label`, `description`, `type`, `value`, `previous_value`,
-                              `modified`)
+INSERT INTO content_blocks (id, parent, slug, label, description, type, value, previous_value,
+                            modified)
 VALUES (1, 'global', 'website-title-main', 'Website Title (Main)',
         'Shown on the home page, as well  as any tabs in the users browser.', 'text', 'Move done right,', NULL,
         '2026-05-03 06:54:39'),
@@ -494,9 +494,13 @@ VALUES (1, 'global', 'website-title-main', 'Website Title (Main)',
        (5, 'global', 'email-contact-footer', 'Email (Footer)', 'Shown in the footer of every pages.',
         'text', 'hello@movinghouse247.com.au', NULL,
         '2026-05-03 06:53:07'),
-       (6, 'home', 'home-content', 'Home Page Content',
-        'Copyright information shown at the bottom of the home page.', 'text',
-        'The main content shown in the centre of the home page.', '<p>Example app showcasing the <code>ugie-cake/cakephp-content-blocks</code> plugin.</p>' ,
+       (6, 'global', 'logo-footer', 'Logo (Footer)',
+        'Shown in the footer of every pages.', 'image',
+        'company-logo.png', NULL,
+        '2026-05-03 06:53:07'),
+       (7, 'global', 'title-footer', 'Main Title (Footer)',
+        'Shown in the footer of every pages.', 'text',
+        'Get your free quote today', NULL,
         '2026-05-03 06:53:07');
 
 INSERT INTO `content_blocks_phinxlog` (`version`, `migration_name`, `start_time`, `end_time`, `breakpoint`)
