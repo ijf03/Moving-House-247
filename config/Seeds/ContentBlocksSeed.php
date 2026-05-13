@@ -74,15 +74,7 @@ class ContentBlocksSeed extends BaseSeed
                 'description' => 'Shown in the footer of every pages.',
                 'slug' => 'logo-footer',
                 'type'=> 'image',
-            ],
-
-            [
-                'parent' => 'home',
-                'label' => 'Home Page Content',
-                'description' => 'The main content shown in the centre of the home page.',
-                'slug' => 'home-content',
-                'type' => 'html',
-            ],
+            ]
         ];
 
         $table = $this->table('content_blocks');
