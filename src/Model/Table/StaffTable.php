@@ -40,6 +40,10 @@ class StaffTable extends Table
         $this->setTable('staff');
         $this->setDisplayField('first_name');
         $this->setPrimaryKey('staff_id');
+        $this->hasMany('Availability',[
+            'foreignKey' => 'staff_id',
+            'dependent' => true,
+        ]);
     }
 
     /**
