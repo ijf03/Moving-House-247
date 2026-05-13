@@ -6,7 +6,7 @@ namespace App\Model\Entity;
 use Cake\ORM\Entity;
 
 /**
- * BookingResource Entity
+ * JobResource Entity
  *
  * @property int $booking_resource_id
  * @property int|null $booking_id
@@ -19,7 +19,7 @@ use Cake\ORM\Entity;
  *
  * @property \App\Model\Entity\Booking $booking
  */
-class BookingResource extends Entity
+class JobResource extends Entity
 {
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
@@ -31,13 +31,19 @@ class BookingResource extends Entity
      * @var array<string, bool>
      */
     protected array $_accessible = [
-        'booking_id' => true,
-        'resource_type' => true,
-        'resource_id' => true,
+        'job_id' => true,
+        'truck_id' => true,
+        'equipment_id' => true,
+        'storage_unit_id' => true,
+        'inventory_id' => true,
         'quantity' => true,
-        'notes' => true,
         'created' => true,
         'modified' => true,
-        'booking' => true,
+
+        'job' => true,
+        'truck' => true,
+        'equipment' => true,
+        'storage_unit' => true,
+        'inventory_item' => true,
     ];
 }

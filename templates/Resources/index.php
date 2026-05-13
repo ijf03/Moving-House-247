@@ -25,7 +25,7 @@
                     <span class="admin-eyebrow"><?= __('Admin') ?></span>
                     <h1><?= __('Resource Management') ?></h1>
                     <p class="admin-hero-text">
-                        <?= __('Manage trucks, storage units, equipment, inventory, and current booking resource assignments.') ?>
+                        <?= __('Manage trucks, storage units, equipment, inventory, and current job resource assignments.') ?>
                     </p>
                 </div>
             </div>
@@ -106,7 +106,7 @@
                             <h2><?= __('Quick Overview') ?></h2>
                             <?= $this->Html->link(
                                 __('View Assignments'),
-                                ['controller' => 'BookingResources', 'action' => 'index'],
+                                ['controller' => 'JobResources', 'action' => 'index'],
                                 ['class' => 'btn btn-outline-primary btn-sm']
                             ) ?>
                         </div>
@@ -291,13 +291,13 @@
                     <div class="admin-table-card">
                         <div class="admin-table-header d-flex justify-content-between align-items-center">
                             <h2><?= __('Recent Resource Assignments') ?></h2>
-                            <?= $this->Html->link(__('Manage Assignments'), ['controller' => 'BookingResources', 'action' => 'index'], ['class' => 'btn btn-outline-primary btn-sm']) ?>
+                            <?= $this->Html->link(__('Manage Assignments'), ['controller' => 'JobResources', 'action' => 'index'], ['class' => 'btn btn-outline-primary btn-sm']) ?>
                         </div>
                         <div class="table-responsive">
                             <table class="table admin-table mb-0">
                                 <thead>
                                 <tr>
-                                    <th><?= __('Booking') ?></th>
+                                    <th><?= __('Job') ?></th>
                                     <th><?= __('Customer') ?></th>
                                     <th><?= __('Resource Type') ?></th>
                                     <th><?= __('Resource') ?></th>
@@ -314,18 +314,18 @@
                                     <?php foreach ($recentAssignments as $assignment): ?>
                                         <?php
                                         $customerName = __('Unknown customer');
-                                        if (!empty($assignment->booking->customer)) {
+                                        if (!empty($assignment->job->customer)) {
                                             $customerName = trim(
-                                                (string)($assignment->booking->customer->first_name ?? '') . ' ' .
-                                                (string)($assignment->booking->customer->last_name ?? '')
+                                                (string)($assignment->job->customer->first_name ?? '') . ' ' .
+                                                (string)($assignment->job->customer->last_name ?? '')
                                             );
                                         }
                                         ?>
                                         <tr>
                                             <td>
                                                 <?= $this->Html->link(
-                                                    'Booking #' . h($assignment->booking_id),
-                                                    ['controller' => 'Bookings', 'action' => 'view', $assignment->booking_id]
+                                                    'Job #' . h($assignment->job_id),
+                                                    ['controller' => 'Jobs', 'action' => 'view', $assignment->job_id]
                                                 ) ?>
                                             </td>
                                             <td><?= h($customerName) ?></td>

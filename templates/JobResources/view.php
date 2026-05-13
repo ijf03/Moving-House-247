@@ -1,7 +1,7 @@
 <?php
 /**
  * @var \App\View\AppView $this
- * @var \App\Model\Entity\BookingResource $bookingResource
+ * @var \App\Model\Entity\JobResource $bookingResource
  */
 ?>
 <div class="row">
