@@ -26,6 +26,14 @@ class JobsTable extends Table
             'foreignKey' => 'customer_id',
             'joinType' => 'INNER',
         ]);
+
+        $this->hasMany('JobTrucks', [
+            'foreignKey' => 'job_id',
+        ]);
+
+        $this->hasMany('StaffJob', [
+            'foreignKey' => 'job_id',
+        ]);
     }
 
     public function validationDefault(Validator $validator): Validator
