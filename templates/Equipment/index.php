@@ -44,7 +44,6 @@
                             <th><?= $this->Paginator->sort('name', 'Name') ?></th>
                             <th><?= $this->Paginator->sort('category', 'Category') ?></th>
                             <th><?= $this->Paginator->sort('quantity_available', 'Quantity') ?></th>
-                            <th><?= $this->Paginator->sort('status', 'Status') ?></th>
                             <th><?= $this->Paginator->sort('storage_location', 'Location') ?></th>
                             <th><?= $this->Paginator->sort('is_active', 'Active') ?></th>
                             <th><?= $this->Paginator->sort('created', 'Created') ?></th>
@@ -60,11 +59,6 @@
                                 <td><?= h($equipmentEntity->name) ?></td>
                                 <td><?= h($equipmentEntity->category) ?></td>
                                 <td><?= $this->Number->format($equipmentEntity->quantity_available) ?></td>
-                                <td>
-                                        <span class="admin-status-badge">
-                                            <?= h($equipmentEntity->status) ?>
-                                        </span>
-                                </td>
                                 <td><?= h($equipmentEntity->storage_location) ?></td>
                                 <td>
                                         <span class="admin-status-badge">
@@ -104,7 +98,7 @@
                     </table>
                 </div>
 
-                <div class="admin-pagination">
+                <div class="admin-paginator">
                     <ul class="pagination">
                         <?= $this->Paginator->first('<< ' . __('first')) ?>
                         <?= $this->Paginator->prev('< ' . __('previous')) ?>
