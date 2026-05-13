@@ -46,7 +46,6 @@
                             <th><?= $this->Paginator->sort('truck_size', 'Size') ?></th>
                             <th><?= $this->Paginator->sort('capacity_m3', 'Capacity m³') ?></th>
                             <th><?= $this->Paginator->sort('max_payload_kg', 'Payload kg') ?></th>
-                            <th><?= $this->Paginator->sort('status', 'Status') ?></th>
                             <th><?= $this->Paginator->sort('current_location', 'Location') ?></th>
                             <th><?= $this->Paginator->sort('next_service_date', 'Next Service') ?></th>
                             <th><?= $this->Paginator->sort('is_active', 'Active') ?></th>
@@ -68,11 +67,6 @@
                                 </td>
                                 <td>
                                     <?= $truck->max_payload_kg === null ? '' : $this->Number->format($truck->max_payload_kg) ?>
-                                </td>
-                                <td>
-                                        <span class="admin-status-badge">
-                                            <?= h($truck->status) ?>
-                                        </span>
                                 </td>
                                 <td><?= h($truck->current_location) ?></td>
                                 <td><?= h($truck->next_service_date) ?></td>
@@ -114,7 +108,7 @@
                     </table>
                 </div>
 
-                <div class="admin-pagination">
+                <div class="admin-paginator">
                     <ul class="pagination">
                         <?= $this->Paginator->first('<< ' . __('first')) ?>
                         <?= $this->Paginator->prev('< ' . __('previous')) ?>
