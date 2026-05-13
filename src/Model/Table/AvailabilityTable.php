@@ -62,12 +62,20 @@ class AvailabilityTable extends Table
         $validator
             ->dateTime('start_datetime')
             ->requirePresence('start_datetime', 'create')
-            ->notEmptyDateTime('start_datetime');
+            ->notEmptyDateTime('start_datetime')
+            ->add('start', 'checkStart', [
+                'rule' => ['start_datetime >' => new \DateTime('now')],
+                'message' => 'Start time must be in the future',
+            ]);
 
         $validator
             ->dateTime('end_datetime')
             ->requirePresence('end_datetime', 'create')
-            ->notEmptyDateTime('end_datetime');
+            ->notEmptyDateTime('end_datetime')
+            ->add('end', 'checkEnd', [
+                'rule' => ['end_datetime >' => 'start_datetime'],
+                'message' => 'End Time must be later than Start Time.',
+            ]);
 
         return $validator;
     }
