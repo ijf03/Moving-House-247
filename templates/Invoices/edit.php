@@ -27,7 +27,6 @@
         <div class="container">
             <div class="row g-4 justify-content-center">
 
-                <!-- Actions -->
                 <div class="col-lg-3">
                     <div class="mh-back-btn m-1">
                         <?= $this->Html->link(__('← Back to List'), ['action' => 'index']) ?>
@@ -54,10 +53,7 @@
                     </div>
                 </div>
 
-                <!-- Main Content -->
                 <div class="col-lg-9">
-
-                    <!-- Invoice Summary -->
                     <div class="auth-card auth-card-wide mb-4">
                         <div class="auth-header">
                             <h2 class="auth-title">
@@ -136,7 +132,6 @@
                         <?= $this->Form->end() ?>
                     </div>
 
-                    <!-- Add Invoice Item -->
                     <div class="auth-card auth-card-wide mb-4">
                         <div class="auth-header">
                             <h2 class="auth-title"><?= __('Add Invoice Item') ?></h2>

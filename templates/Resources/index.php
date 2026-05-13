@@ -290,49 +290,123 @@
                 <div class="col-12">
                     <div class="admin-table-card">
                         <div class="admin-table-header d-flex justify-content-between align-items-center">
-                            <h2><?= __('Recent Resource Assignments') ?></h2>
-                            <?= $this->Html->link(__('Manage Assignments'), ['controller' => 'JobResources', 'action' => 'index'], ['class' => 'btn btn-outline-primary btn-sm']) ?>
+                            <div>
+                                <h2><?= __('Recent Resource Assignments') ?></h2>
+                                <p><?= __('Latest jobs with assigned trucks, equipment, storage units, and inventory items.') ?></p>
+                            </div>
+
+                            <?= $this->Html->link(
+                                __('Manage Assignments'),
+                                ['controller' => 'JobResources', 'action' => 'index'],
+                                ['class' => 'btn btn-outline-primary btn-sm']
+                            ) ?>
                         </div>
+
                         <div class="table-responsive">
                             <table class="table admin-table mb-0">
                                 <thead>
                                 <tr>
                                     <th><?= __('Job') ?></th>
                                     <th><?= __('Customer') ?></th>
-                                    <th><?= __('Resource Type') ?></th>
-                                    <th><?= __('Resource') ?></th>
-                                    <th><?= __('Quantity') ?></th>
-                                    <th><?= __('Notes') ?></th>
+                                    <th><?= __('Service Type') ?></th>
+                                    <th><?= __('Job Date') ?></th>
+                                    <th><?= __('Trucks') ?></th>
+                                    <th><?= __('Equipment') ?></th>
+                                    <th><?= __('Storage Units') ?></th>
+                                    <th><?= __('Inventory Items') ?></th>
+                                    <th class="actions"><?= __('Actions') ?></th>
                                 </tr>
                                 </thead>
+
                                 <tbody>
                                 <?php if (empty($recentAssignments)): ?>
                                     <tr>
-                                        <td colspan="6"><?= __('No recent resource assignments found.') ?></td>
+                                        <td colspan="9"><?= __('No recent resource assignments found.') ?></td>
                                     </tr>
                                 <?php else: ?>
-                                    <?php foreach ($recentAssignments as $assignment): ?>
+                                    <?php foreach (array_slice($recentAssignments, 0, 3) as $assignment): ?>
                                         <?php
-                                        $customerName = __('Unknown customer');
-                                        if (!empty($assignment->job->customer)) {
-                                            $customerName = trim(
-                                                (string)($assignment->job->customer->first_name ?? '') . ' ' .
-                                                (string)($assignment->job->customer->last_name ?? '')
-                                            );
+                                        $job = $assignment['job'] ?? null;
+
+                                        $jobId = $assignment['job_id'] ?? null;
+                                        $jobLabel = $jobId ? __('Job #{0}', $jobId) : __('Unknown Job');
+
+                                        $customerName = '-';
+                                        $serviceType = '-';
+                                        $jobDate = '-';
+
+                                        if ($job) {
+                                            if ($job->hasValue('customer')) {
+                                                $customerName = trim(
+                                                    ($job->customer->first_name ?? '') . ' ' .
+                                                    ($job->customer->last_name ?? '')
+                                                );
+
+                                                if ($customerName === '') {
+                                                    $customerName = '-';
+                                                }
+                                            }
+
+                                            if ($job->hasValue('job_type')) {
+                                                $serviceType = $job->job_type->job_type_name ?? '-';
+                                            }
+
+                                            $jobDate = $job->job_date ?? '-';
                                         }
                                         ?>
+
                                         <tr>
                                             <td>
-                                                <?= $this->Html->link(
-                                                    'Job #' . h($assignment->job_id),
-                                                    ['controller' => 'Jobs', 'action' => 'view', $assignment->job_id]
-                                                ) ?>
+                                                <?php if ($jobId): ?>
+                                                    <?= $this->Html->link(
+                                                        $jobLabel,
+                                                        ['controller' => 'Jobs', 'action' => 'view', $jobId],
+                                                        ['class' => 'admin-action-link']
+                                                    ) ?>
+                                                <?php else: ?>
+                                                    <?= h($jobLabel) ?>
+                                                <?php endif; ?>
                                             </td>
+
                                             <td><?= h($customerName) ?></td>
-                                            <td><?= h(ucwords(str_replace('_', ' ', (string)$assignment->resource_type))) ?></td>
-                                            <td><?= h($assignment->resource_label ?? 'Unknown resource') ?></td>
-                                            <td><?= h($assignment->quantity) ?></td>
-                                            <td><?= h($assignment->notes) ?></td>
+                                            <td><?= h($serviceType) ?></td>
+                                            <td><?= h($jobDate) ?></td>
+
+                                            <td>
+                                <span class="admin-status-badge">
+                                    <?= h($assignment['truck_count'] ?? 0) ?>
+                                </span>
+                                            </td>
+
+                                            <td>
+                                <span class="admin-status-badge">
+                                    <?= h($assignment['equipment_count'] ?? 0) ?>
+                                </span>
+                                            </td>
+
+                                            <td>
+                                <span class="admin-status-badge">
+                                    <?= h($assignment['storage_unit_count'] ?? 0) ?>
+                                </span>
+                                            </td>
+
+                                            <td>
+                                <span class="admin-status-badge">
+                                    <?= h($assignment['inventory_count'] ?? 0) ?>
+                                </span>
+                                            </td>
+
+                                            <td class="actions">
+                                                <div class="admin-action-stack">
+                                                    <?php if ($jobId): ?>
+                                                        <?= $this->Html->link(
+                                                            __('View Resources'),
+                                                            ['controller' => 'JobResources', 'action' => 'view', $jobId],
+                                                            ['class' => 'admin-action-link']
+                                                        ) ?>
+                                                    <?php endif; ?>
+                                                </div>
+                                            </td>
                                         </tr>
                                     <?php endforeach; ?>
                                 <?php endif; ?>

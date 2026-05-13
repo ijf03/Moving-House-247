@@ -28,7 +28,6 @@
                     <div class="mh-back-btn m-1">
                         <?= $this->Html->link(__('← Back to List'), ['action' => 'index']) ?>
                     </div>
-
                 </div>
 
                 <div class="col-lg-9">
@@ -107,27 +106,59 @@
                         </div>
 
                         <div class="row g-3">
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="mh-info-card">
                                     <div>
-                                        <h3><?= __('Drivers Required') ?></h3>
+                                        <h3><?= __('Number of Drivers Required') ?></h3>
+
+                                        <div class="d-flex align-items-center gap-3 mt-2">
+                                            <button type="button"
+                                                    class="btn btn-outline-secondary"
+                                                    onclick="changeValue('driver_required', -1); syncTruckWithDriver();">
+                                                −
+                                            </button>
+                                            <div class="d-flex align-items-center gap-3 mt-3">
+                                                <button type="button" class="admin-action-link" onclick="changeValue('driver_required', -1)">−</button>
+
+                                                <input type="number"
+                                                   name="driver_required"
+                                                   id="driver_required"
+                                                   value="1"
+                                                   min="1"
+                                                   max="10"
+                                                   required
+                                                   class="form-control text-center"
+                                                   style="max-width: 100px;">
+
+                                            <button type="button" class="admin-action-link" onclick="changeValue('driver_required', 1); syncTruckWithDriver();">+</button>
+                                        </div>
+                                            <p class="text-muted mt-2">
+                                                <?= __('Each driver requires one truck.') ?>
+                                            </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                      <div class="col-md-4">
+                            <div class="col-md-6">
+                                <div class="mh-info-card">
+                                    <div>
+                                        <h3><?= __('Number of Trucks Required') ?></h3>
 
                                         <div class="d-flex align-items-center gap-3 mt-3">
-                                            <button type="button" class="admin-action-link" onclick="changeValue('driver_required', -1)">−</button>
-
-                                            <input
-                                                type="number"
-                                                name="driver_required"
-                                                id="driver_required"
-                                                value="1"
-                                                min="0"
-                                                max="10"
-                                                required
-                                                class="form-control text-center"
-                                            >
-
-                                            <button type="button" class="admin-action-link" onclick="changeValue('driver_required', 1)">+</button>
+                                            <input type="number"
+                                                   name="truck_required"
+                                                   id="truck-required"
+                                                   value="1"
+                                                   readonly
+                                                   required
+                                                   class="form-control text-center"
+                                                   style="max-width: 100px;">
                                         </div>
+
+                                        <p class="text-muted mt-2">
+                                            <?= __('This is automatically matched to the number of drivers.') ?>
+                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -135,48 +166,30 @@
                             <div class="col-md-4">
                                 <div class="mh-info-card">
                                     <div>
-                                        <h3><?= __('Porters Required') ?></h3>
+                                        <h3><?= __('Number of Porters Required') ?></h3>
 
-                                        <div class="d-flex align-items-center gap-3 mt-3">
-                                            <button type="button" class="admin-action-link" onclick="changeValue('porter_required', -1)">−</button>
+                                        <div class="d-flex align-items-center gap-3 mt-2">
+                                            <button type="button"
+                                                    class="btn btn-outline-secondary"
+                                                    onclick="changeValue('porter_required', -1)">
+                                                −
+                                            </button>
 
-                                            <input
-                                                type="number"
-                                                name="porter_required"
-                                                id="porter_required"
-                                                value="1"
-                                                min="0"
-                                                max="10"
-                                                required
-                                                class="form-control text-center"
-                                            >
+                                            <input type="number"
+                                                   name="porter_required"
+                                                   id="porter_required"
+                                                   value="1"
+                                                   min="0"
+                                                   max="10"
+                                                   required
+                                                   class="form-control text-center"
+                                                   style="max-width: 100px;">
 
-                                            <button type="button" class="admin-action-link" onclick="changeValue('porter_required', 1)">+</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-4">
-                                <div class="mh-info-card">
-                                    <div>
-                                        <h3><?= __('Trucks Required') ?></h3>
-
-                                        <div class="d-flex align-items-center gap-3 mt-3">
-                                            <button type="button" class="admin-action-link" onclick="changeTruck(-1)">−</button>
-
-                                            <input
-                                                type="number"
-                                                name="truck_required"
-                                                id="truck-required"
-                                                value="1"
-                                                min="1"
-                                                max="5"
-                                                required
-                                                class="form-control text-center"
-                                            >
-
-                                            <button type="button" class="admin-action-link" onclick="changeTruck(1)">+</button>
+                                            <button type="button"
+                                                    class="btn btn-outline-secondary"
+                                                    onclick="changeValue('porter_required', 1)">
+                                                +
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -205,31 +218,33 @@
 </div>
 
 <script>
+    const truckOptions = <?= json_encode($truckList) ?>;
+
     function changeValue(id, delta) {
         const input = document.getElementById(id);
         let value = parseInt(input.value) || 1;
 
         value += delta;
 
-        if (value < parseInt(input.min)) value = parseInt(input.min);
-        if (value > parseInt(input.max)) value = parseInt(input.max);
+        if (value < parseInt(input.min)) {
+            value = parseInt(input.min);
+        }
+
+        if (value > parseInt(input.max)) {
+            value = parseInt(input.max);
+        }
 
         input.value = value;
     }
 
-    const truckOptions = <?= json_encode($truckList) ?>;
+    function syncTruckWithDriver() {
+        const driverInput = document.getElementById('driver_required');
+        const truckInput = document.getElementById('truck-required');
 
-    function changeTruck(delta) {
-        const input = document.getElementById('truck-required');
-        let value = parseInt(input.value) || 1;
+        const count = parseInt(driverInput.value) || 1;
 
-        value += delta;
-
-        if (value < 1) value = 1;
-        if (value > 5) value = 5;
-
-        input.value = value;
-        renderTruckSelects(value);
+        truckInput.value = count;
+        renderTruckSelects(count);
     }
 
     function updateTruckOptions() {
@@ -249,7 +264,9 @@
             select.appendChild(empty);
 
             Object.keys(truckOptions).forEach(function (id) {
-                if (selectedValues.includes(id) && id !== currentValue) return;
+                if (selectedValues.includes(id) && id !== currentValue) {
+                    return;
+                }
 
                 const option = document.createElement('option');
                 option.value = id;
@@ -309,6 +326,6 @@
     }
 
     document.addEventListener('DOMContentLoaded', function () {
-        renderTruckSelects(1);
+        syncTruckWithDriver();
     });
 </script>

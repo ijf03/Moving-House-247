@@ -33,6 +33,7 @@
                     <td class="actions">
                         <?= $this->Html->link(__('View'), ['action' => 'view', $staffEntity->staff_id]) ?>
                         <?= $this->Html->link(__('Edit'), ['action' => 'edit', $staffEntity->staff_id]) ?>
+                        <?= $this->Html->link(__('Availability'), ['action' => 'availability', $staffEntity->staff_id]) ?>
                         <?= $this->Form->postLink(
                             __('Delete'),
                             ['action' => 'delete', $staffEntity->staff_id],

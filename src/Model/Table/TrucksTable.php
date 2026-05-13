@@ -74,10 +74,12 @@ class TrucksTable extends Table
 
         $validator
             ->decimal('capacity_m3')
+            ->greaterThan('capacity_m3', 0, 'Capacity must be greater than 0.')
             ->allowEmptyString('capacity_m3');
 
         $validator
             ->decimal('max_payload_kg')
+            ->greaterThan('max_payload_kg', 0, 'Max payload must be greater than 0.')
             ->allowEmptyString('max_payload_kg');
 
         $validator

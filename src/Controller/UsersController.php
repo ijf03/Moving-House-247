@@ -183,6 +183,7 @@ class UsersController extends AppController
                     ]);
                     if (!$staffTable->save($staff)) {
                         $this->Flash->error('Staff account cannot be created, Please try again');
+                        $this->set(compact('user','userTypes'));
                         return;
                     }
                     $this->Flash->success('Staff account created, Please manually configure if the staff holds a driving license.');
@@ -200,9 +201,11 @@ class UsersController extends AppController
 
                     if (!$customersTable->save($customer)) {
                         $this->Flash->error('User account created, but customer profile could not be created.');
+                        $this->set(compact('user','userTypes'));
                         return;
                     }
                 }
+                $this->set(compact('user','userTypes'));
 
                 return $this->redirect(['action' => 'index']);
             }

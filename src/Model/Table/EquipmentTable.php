@@ -68,6 +68,7 @@ class EquipmentTable extends Table
 
         $validator
             ->integer('quantity_available')
+            ->greaterThanOrEqual('quantity_available', 0, 'Quantity cannot be negative.')
             ->notEmptyString('quantity_available');
 
         $validator

@@ -166,9 +166,9 @@ $assignedStaff = $assignedStaff ?? new \Cake\Collection\Collection([]);
                                     <div>
                                         <h3><?= __('Allocated Trucks') ?></h3>
 
-                                        <?php if (!empty($job->job_trucks)): ?>
+                                        <?php if (!empty($job->job_resources)): ?>
                                             <ul>
-                                                <?php foreach ($job->job_trucks as $jobTruck): ?>
+                                                <?php foreach ($job->job_resources as $jobTruck): ?>
                                                     <li><?= h($jobTruck->truck->rego ?? 'Unknown Truck') ?></li>
                                                 <?php endforeach; ?>
                                             </ul>

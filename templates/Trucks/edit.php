@@ -83,25 +83,23 @@
 
                             <div class="col-md-6 auth-form-group">
                                 <?= $this->Form->control('capacity_m3', [
+                                    'type' => 'number',
                                     'label' => 'Capacity (m³)',
                                     'placeholder' => 'Enter capacity',
                                     'class' => 'auth-input',
+                                    'min' => '0.01',
+                                    'step' => '0.01',
                                 ]) ?>
                             </div>
 
                             <div class="col-md-6 auth-form-group">
                                 <?= $this->Form->control('max_payload_kg', [
+                                    'type' => 'number',
                                     'label' => 'Max Payload (kg)',
                                     'placeholder' => 'Enter max payload',
                                     'class' => 'auth-input',
-                                ]) ?>
-                            </div>
-
-                            <div class="col-md-6 auth-form-group">
-                                <?= $this->Form->control('status', [
-                                    'label' => 'Status',
-                                    'placeholder' => 'Enter truck status',
-                                    'class' => 'auth-input',
+                                    'min' => '0.01',
+                                    'step' => '0.01',
                                 ]) ?>
                             </div>
 
