@@ -68,10 +68,12 @@ class InventoryItemsTable extends Table
 
         $validator
             ->integer('quantity_on_hand')
+            ->greaterThanOrEqual('quantity_on_hand', 0, 'Quantity on hand cannot be negative.')
             ->notEmptyString('quantity_on_hand');
 
         $validator
             ->integer('reorder_threshold')
+            ->greaterThanOrEqual('reorder_threshold', 0, 'Reorder threshold cannot be negative.')
             ->notEmptyString('reorder_threshold');
 
         $validator

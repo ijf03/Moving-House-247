@@ -66,9 +66,12 @@
 
                             <div class="col-md-6 auth-form-group">
                                 <?= $this->Form->control('unit_size_m3', [
+                                    'type' => 'number',
                                     'label' => 'Unit Size (m³)',
                                     'placeholder' => 'Enter unit size',
                                     'class' => 'auth-input',
+                                    'min' => '0.01',
+                                    'step' => '0.01',
                                 ]) ?>
                             </div>
 

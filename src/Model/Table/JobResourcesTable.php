@@ -102,6 +102,7 @@ class JobResourcesTable extends Table
 
         $validator
             ->decimal('quantity')
+            ->greaterThan('quantity', 0, 'Quantity must be greater than 0.')
             ->notEmptyString('quantity');
 
         return $validator;
