@@ -44,7 +44,6 @@
                             <th><?= $this->Paginator->sort('unit_code', 'Unit Code') ?></th>
                             <th><?= $this->Paginator->sort('facility_name', 'Facility') ?></th>
                             <th><?= $this->Paginator->sort('unit_size_m3', 'Size m³') ?></th>
-                            <th><?= $this->Paginator->sort('status', 'Status') ?></th>
                             <th><?= $this->Paginator->sort('security_level', 'Security') ?></th>
                             <th><?= $this->Paginator->sort('is_climate_controlled', 'Climate Controlled') ?></th>
                             <th><?= $this->Paginator->sort('is_active', 'Active') ?></th>
@@ -62,11 +61,6 @@
                                 <td><?= h($storageUnit->facility_name) ?></td>
                                 <td>
                                     <?= $storageUnit->unit_size_m3 === null ? '' : $this->Number->format($storageUnit->unit_size_m3) ?>
-                                </td>
-                                <td>
-                                        <span class="admin-status-badge">
-                                            <?= h($storageUnit->status) ?>
-                                        </span>
                                 </td>
                                 <td><?= h($storageUnit->security_level) ?></td>
                                 <td><?= $storageUnit->is_climate_controlled ? __('Yes') : __('No') ?></td>
@@ -108,7 +102,7 @@
                     </table>
                 </div>
 
-                <div class="admin-pagination">
+                <div class="admin-paginator">
                     <ul class="pagination">
                         <?= $this->Paginator->first('<< ' . __('first')) ?>
                         <?= $this->Paginator->prev('< ' . __('previous')) ?>

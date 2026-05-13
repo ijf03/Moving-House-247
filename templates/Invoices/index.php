@@ -116,7 +116,7 @@
                 </table>
             </div>
 
-            <div class="paginator">
+            <div class="admin-paginator">
                 <ul class="pagination">
                     <?= $this->Paginator->first('<< ' . __('first')) ?>
                     <?= $this->Paginator->prev('< ' . __('previous')) ?>
