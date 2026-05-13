@@ -48,6 +48,7 @@ DROP TABLE IF EXISTS `phinxlog`;
 DROP TABLE IF EXISTS `staff`;
 DROP TABLE IF EXISTS `staff_job`;
 DROP TABLE IF EXISTS `job_trucks`;
+DROP TABLE IF EXISTS `job_resources`;
 SET FOREIGN_KEY_CHECKS = 1;
 
 CREATE TABLE `staff`
@@ -310,6 +311,16 @@ CREATE TABLE `booking_resources`
     `modified`            datetime       NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
     PRIMARY KEY (`booking_resource_id`),
     KEY                   `booking_resources_booking_id` (`booking_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+CREATE TABLE `job_resources` (
+                                 `job_resources_id` int(11) NOT NULL,
+                                 `job_id` int(11) NOT NULL,
+                                 `truck_id` int(11) DEFAULT NULL,
+                                 `equipment_id` int(11) DEFAULT NULL,
+                                 `storage_unit_id` int(11) DEFAULT NULL,
+                                 `inventory_id` int(11) DEFAULT NULL,
+                                 `quantity` decimal(10,2) NOT NULL DEFAULT 0.00
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 CREATE TABLE `job_trucks` (
@@ -633,6 +644,14 @@ ALTER TABLE jobs
     ADD status VARCHAR(20) NOT NULL DEFAULT 'Pending',
     ADD driver_required INT NOT NULL DEFAULT 0,
     ADD porter_required INT NOT NULL DEFAULT 0;
+
+ALTER TABLE `job_resources`
+    ADD PRIMARY KEY (`job_resources_id`),
+  ADD KEY `job_resources_job_id` (`job_id`),
+  ADD KEY `job_resources_truck_id` (`truck_id`),
+  ADD KEY `job_resources_storage_unit_id` (`storage_unit_id`),
+  ADD KEY `job_resources_inventory_id` (`inventory_id`),
+  ADD KEY `job_resources_equipment_id` (`equipment_id`);
 
 ALTER TABLE job_trucks
     ADD CONSTRAINT `job_trucks_job_id_fk`
