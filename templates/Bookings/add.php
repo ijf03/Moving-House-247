@@ -174,7 +174,7 @@
                             </div>
 
                             <div class="booking-form-actions">
-                                <?= $this->Form->button(__('Submit Booking'), ['class' => 'booking-submit-btn']) ?>
+                                <?= $this->Form->button(__('Submit Booking'), ['class' => 'mh-btn-primary']) ?>
                             </div>
 
                             <?= $this->Form->end() ?>
