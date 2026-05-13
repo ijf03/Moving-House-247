@@ -477,8 +477,16 @@ VALUES (1, 'global', 'website-title-main', 'Website Title (Main)',
         'text', 'hello@movinghouse247.com.au', NULL,
         '2026-05-03 06:53:07'),
         (6, 'home', 'home-content', 'Home Page Content',
-        'Copyright information shown at the bottom of the home page.', 'text',
-        'The main content shown in the centre of the home page.', '<p>Example app showcasing the <code>ugie-cake/cakephp-content-blocks</code> plugin.</p>' ,
+        'The main content shown in the centre of the home page.', 'text',
+        'The main content shown in the centre of the home page.', NULL ,
+        '2026-05-03 06:53:07'),
+       (7, 'global', 'logo-footer', 'Logo (Footer)',
+        'Shown in the footer of every pages.', 'image',
+        'company-logo.png', NULL,
+        '2026-05-03 06:53:07'),
+       (8, 'global', 'title-footer', 'Main Title (Footer)',
+        'Shown in the footer of every pages.', 'text',
+        'Get your free quote today', NULL,
         '2026-05-03 06:53:07');
 
 INSERT INTO `content_blocks_phinxlog` (`version`, `migration_name`, `start_time`, `end_time`, `breakpoint`)
