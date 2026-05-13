@@ -110,7 +110,7 @@ class UsersController extends AppController
 
                 // Admin
                 if ((int)$user->user_type === 1) {
-                    return $this->redirect($redirect ?: ['controller' => 'Users', 'action' => 'index']);
+                    return $this->redirect($redirect ?: ['controller' => 'Admin', 'action' => 'index']);
                 }
 
                 return $this->redirect($redirect ?: '/');

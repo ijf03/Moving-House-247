@@ -53,10 +53,12 @@ $isUser = ($identity && (int)$role === 3);
         </div>
 
         <nav class="admin-sidebar-nav">
+            <?= $this->Html->link('Dashboard', ['controller' => 'Admin', 'action' => 'index'], ['class' => 'admin-sidebar-link']) ?>
             <?= $this->Html->link('Manage Bookings', ['controller' => 'Bookings', 'action' => 'index'], ['class' => 'admin-sidebar-link']) ?>
             <?= $this->Html->link('Manage Inquiries', ['controller' => 'ContactForms', 'action' => 'index'], ['class' => 'admin-sidebar-link']) ?>
             <?= $this->Html->link('Manage Invoices', ['controller' => 'Invoices', 'action' => 'index'], ['class' => 'admin-sidebar-link']) ?>
             <?= $this->Html->link('Resource Management', ['controller' => 'Resources', 'action' => 'index'], ['class' => 'admin-sidebar-link']) ?>
+            <?= $this->Html->link('Job Allocation', ['controller' => 'Jobs', 'action' => 'index'], ['class' => 'admin-sidebar-link'],) ?>
             <?= $this->Html->link('Manage Users', ['controller' => 'Users', 'action' => 'index'], ['class' => 'admin-sidebar-link']) ?>
             <?= $this->Html->link('Website Content', ['controller' => 'ContentBlocks', 'action' => 'index'], ['class' => 'admin-sidebar-link']) ?>
         </nav>

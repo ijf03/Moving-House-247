@@ -68,6 +68,7 @@ class AppController extends Controller
             'Customers',
             'Resources',
             'ContentBlocks',
+            'Jobs',
         ];
 
         if (

@@ -51,7 +51,7 @@ body.mh-site {
     width: 280px;
     background: linear-gradient(180deg, var(--mh-navy) 0%, var(--mh-navy-dark) 100%);
     color: white;
-    padding: 1.4rem 1rem;
+    padding: 1rem 1rem;
     display: flex;
     flex-direction: column;
     position: sticky;
@@ -73,7 +73,7 @@ body.mh-site {
     flex-direction: column;
     align-items: flex-start;
     gap: 1rem;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
 }
 
 .admin-sidebar-brand {
@@ -132,6 +132,7 @@ body.mh-site {
     display: flex;
     flex-direction: column;
     gap: 0.45rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.14);
 }
 
 .admin-sidebar-link {
@@ -1284,6 +1285,63 @@ body.mh-site {
 
 .customer-hero .admin-hero-text {
     color: rgba(255, 248, 240, 0.9);
+}
+
+/*Admin Dashboard*/
+.admin-dashboard-card {
+    display: block;
+    height: 100%;
+    text-decoration: none;
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.admin-dashboard-card .mh-info-card {
+    height: 100%;
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+    cursor: pointer;
+}
+
+.admin-dashboard-card:hover {
+    transform: translateY(-4px);
+    text-decoration: none;
+}
+
+.admin-dashboard-card:hover .mh-info-card,
+.admin-dashboard-card:focus .mh-info-card {
+    background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 1) 0%,
+        rgba(247, 250, 255, 1) 100%
+    );
+
+    border-color: rgba(255, 138, 0, 0.35);
+
+    box-shadow:
+        0 14px 28px rgba(7, 27, 52, 0.12),
+        0 0 0 3px rgba(255, 138, 0, 0.08);
+}
+
+.admin-dashboard-card h3 {
+    transition: color 0.2s ease;
+}
+
+.admin-dashboard-card:hover h3,
+.admin-dashboard-card:focus h3 {
+    color: var(--mh-orange);
+}
+
+.admin-dashboard-card p {
+    transition: color 0.2s ease;
+}
+
+.admin-dashboard-card:hover p,
+.admin-dashboard-card:focus p {
+    color: #314760;
 }
 
 /* Larger desktop screens */
