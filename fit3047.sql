@@ -72,7 +72,7 @@ CREATE TABLE `bookings` (
                             `customer_id` int(11) NOT NULL,
                             `job_type_id` int(1) NOT NULL,
                             `pickup_address` varchar(95) NOT NULL,
-                            `dropoff_address` varchar(95) NOT NULL,
+                            `dropoff_address` varchar(95) NULL,
                             `job_date` date NOT NULL,
                             `job_time` time NOT NULL,
                             `status` varchar(20) NOT NULL DEFAULT 'Pending',
@@ -972,6 +972,9 @@ ALTER TABLE `staff_job`
 --
 ALTER TABLE `users`
     ADD CONSTRAINT `users_user_type_id` FOREIGN KEY (`user_type`) REFERENCES `user_types` (`user_type_id`);
+
+ALTER TABLE bookings
+    ADD rejected_notified TINYINT(1) NOT NULL DEFAULT 0;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
