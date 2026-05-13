@@ -10,6 +10,11 @@
         const minutes = String(absOffset % 60).padStart(2, "0");
         window.timezoneOffset = (isPlus?"+":"-")+hours+":"+minutes;
 
+        function addOffset(datetime){
+            var head = datetime.toString().split(datetime.toString().includes("+")?"+":"-")[0];
+            return head;
+        }
+
         window.addEventListener('load', ()=>{
             var current = new Date().toISOString().split(".")[0];
             var start_datetime = document.getElementById('start_datetime');
@@ -42,14 +47,16 @@
                     start: events[id]['start'],
                     end: events[id]['end'],
                     id: events[id]['id'],
-                    backgroundColor: '#FF0000'
+                    backgroundColor: '#FF0000',
+                    deleted: false
                 };
             });
             window.calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'timeGridWeek',
-                height: '1600px',
+                height: 'auto',
                 editable: true,
                 events: formatted_events,
+                allDaySlot: false,
                 eventResizableFromStart: true,
                 eventClick: function(info) {
                     const event = info.event;
@@ -73,8 +80,9 @@
         function submitForm() {
             const events = calendar.getEvents().map(event => ({
                 id: event.id,
-                start_datetime: event.start,
-                end_datetime: event.end
+                start_datetime: addOffset(event.start),
+                end_datetime: addOffset(event.end),
+                deleted: event.extendedProps.deleted
             }));
 
             document.getElementById('availability-json').value = JSON.stringify(events);
@@ -98,15 +106,16 @@
             calendar.addEvent(
                 {
                     id: null,
-                    start: document.getElementById('new_start').value+timezoneOffset,
-                    end: document.getElementById('new_end').value+timezoneOffset,
-                    backgroundColor: '#FF0000'
+                    start: document.getElementById('new_start').value,
+                    end: document.getElementById('new_end').value,
+                    backgroundColor: '#FF0000',
+                    deleted: false
                 });
             submitForm();
         }
 
         function deleteEvent() {
-            calendar.getEventById(activeEventID).remove();
+            calendar.getEventById(activeEventID).setExtendedProp('deleted', true);
             submitForm();
         }
 
@@ -118,7 +127,7 @@
 <?= $this->Form->button(__('Add Event'), [
     'type' => 'button',
     'onclick' => 'newEvent()',
-    'class' => 'mh-btn-primary'
+    'class' => 'btn'
 ]) ?>
 
 <?= $this->Form->control('availability_json', ['type' => 'hidden', 'id' => 'availability-json']) ?>
@@ -128,7 +137,7 @@
 <?= $this->Form->button(__('Save'), [
     'type' => 'button',
     'onclick' => 'submitForm()',
-    'class' => 'mh-btn-primary'
+    'class' => 'btn'
 ]) ?>
 
 <?= $this->Form->end() ?>
@@ -145,9 +154,9 @@
                 <input type="datetime-local" id="end_datetime" required>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger me-auto" id="btn-delete" onclick="deleteEvent()">Delete</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" onclick="save()">Apply Changes</button>
+                <button type="button" class="btn btn-danger" id="btn-delete" onclick="deleteEvent()">Delete</button>
+                <button type="button" class="btn" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn" onclick="save()">Apply Changes</button>
             </div>
         </div>
     </div>
@@ -165,8 +174,8 @@
                 <input type="datetime-local" id="new_end" required>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" onclick="add()">Save</button>
+                <button type="button" class="btn" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn" onclick="add()">Save</button>
             </div>
         </div>
     </div>
