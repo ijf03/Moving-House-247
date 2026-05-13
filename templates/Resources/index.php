@@ -247,14 +247,13 @@
                                     <th><?= __('Name') ?></th>
                                     <th><?= __('Rego') ?></th>
                                     <th><?= __('Size') ?></th>
-                                    <th><?= __('Status') ?></th>
                                     <th><?= __('Location') ?></th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <?php if ($trucks->isEmpty()): ?>
                                     <tr>
-                                        <td colspan="5"><?= __('No trucks found.') ?></td>
+                                        <td colspan="4"><?= __('No trucks found.') ?></td>
                                     </tr>
                                 <?php else: ?>
                                     <?php foreach ($trucks as $truck): ?>
@@ -262,7 +261,6 @@
                                             <td><?= h($truck->name) ?></td>
                                             <td><?= h($truck->rego) ?></td>
                                             <td><?= h($truck->truck_size) ?></td>
-                                            <td><?= h(ucfirst((string)$truck->status)) ?></td>
                                             <td><?= h($truck->current_location) ?></td>
                                         </tr>
                                     <?php endforeach; ?>
@@ -286,14 +284,13 @@
                                     <th><?= __('Unit Code') ?></th>
                                     <th><?= __('Facility') ?></th>
                                     <th><?= __('Size (m³)') ?></th>
-                                    <th><?= __('Status') ?></th>
                                     <th><?= __('Security') ?></th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <?php if ($storageUnits->isEmpty()): ?>
                                     <tr>
-                                        <td colspan="5"><?= __('No storage units found.') ?></td>
+                                        <td colspan="4"><?= __('No storage units found.') ?></td>
                                     </tr>
                                 <?php else: ?>
                                     <?php foreach ($storageUnits as $unit): ?>
@@ -301,7 +298,6 @@
                                             <td><?= h($unit->unit_code) ?></td>
                                             <td><?= h($unit->facility_name) ?></td>
                                             <td><?= h($unit->unit_size_m3) ?></td>
-                                            <td><?= h(ucfirst((string)$unit->status)) ?></td>
                                             <td><?= h($unit->security_level) ?></td>
                                         </tr>
                                     <?php endforeach; ?>
@@ -325,7 +321,6 @@
                                     <th><?= __('Name') ?></th>
                                     <th><?= __('Category') ?></th>
                                     <th><?= __('Qty') ?></th>
-                                    <th><?= __('Status') ?></th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -339,7 +334,6 @@
                                             <td><?= h($item->name) ?></td>
                                             <td><?= h($item->category) ?></td>
                                             <td><?= h($item->quantity_available) ?></td>
-                                            <td><?= h(ucfirst((string)$item->status)) ?></td>
                                         </tr>
                                     <?php endforeach; ?>
                                 <?php endif; ?>
