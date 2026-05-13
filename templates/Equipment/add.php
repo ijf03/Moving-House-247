@@ -76,14 +76,6 @@
                             </div>
 
                             <div class="col-md-6 auth-form-group">
-                                <?= $this->Form->control('status', [
-                                    'label' => 'Status',
-                                    'placeholder' => 'Enter status',
-                                    'class' => 'auth-input',
-                                ]) ?>
-                            </div>
-
-                            <div class="col-md-6 auth-form-group">
                                 <?= $this->Form->control('storage_location', [
                                     'label' => 'Storage Location',
                                     'placeholder' => 'Enter storage location',

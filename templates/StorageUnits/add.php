@@ -76,14 +76,6 @@
                             </div>
 
                             <div class="col-md-6 auth-form-group">
-                                <?= $this->Form->control('status', [
-                                    'label' => 'Status',
-                                    'placeholder' => 'Enter unit status',
-                                    'class' => 'auth-input',
-                                ]) ?>
-                            </div>
-
-                            <div class="col-md-6 auth-form-group">
                                 <?= $this->Form->control('security_level', [
                                     'label' => 'Security Level',
                                     'placeholder' => 'Enter security level',
