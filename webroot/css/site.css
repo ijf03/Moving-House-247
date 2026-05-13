@@ -37,6 +37,196 @@ body.mh-site {
     min-height: auto;
 }
 
+.tiny-text {
+    font-size: 0.7rem;
+}
+
+.admin-layout {
+    display: flex;
+    min-height: 100vh;
+    background: #edf2f6;
+}
+
+.admin-sidebar {
+    width: 280px;
+    background: linear-gradient(180deg, var(--mh-navy) 0%, var(--mh-navy-dark) 100%);
+    color: white;
+    padding: 1.4rem 1rem;
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    box-shadow: 8px 0 24px rgba(7, 27, 52, 0.12);
+    transition: width 0.25s ease;
+    z-index: 1040;
+}
+
+.admin-content {
+    flex: 1;
+    min-width: 0;
+    background: #edf2f6;
+}
+
+.admin-sidebar-top {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.admin-sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    color: #fff;
+    text-decoration: none;
+    min-width: 0;
+}
+
+.admin-sidebar-brand:hover {
+    color: #fff;
+}
+
+.admin-sidebar-logo {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.admin-sidebar-brand-text {
+    font-size: 1.2rem;
+    font-weight: 800;
+    line-height: 1.15;
+    white-space: nowrap;
+}
+
+.admin-sidebar-toggle {
+    align-self: flex-end;
+
+    width: 42px;
+    height: 42px;
+    min-width: 42px;
+    padding: 0;
+    flex-shrink: 0;
+
+    border: none;
+    border-radius: 12px;
+
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+
+    font-size: 1.2rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.admin-sidebar-toggle:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.admin-sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+}
+
+.admin-sidebar-link {
+    display: flex;
+    align-items: center;
+    min-height: 48px;
+    padding: 0.85rem 1rem;
+    border-radius: 14px;
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    font-weight: 700;
+    transition: 0.2s ease;
+}
+
+.admin-sidebar-link:hover,
+.admin-sidebar-link:focus {
+    background: rgba(255, 255, 255, 0.12);
+    color: var(--mh-orange);
+    text-decoration: none;
+}
+
+.admin-sidebar-footer {
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.admin-sidebar-logout {
+    color: #fff;
+}
+
+.admin-sidebar-collapsed .admin-sidebar {
+    width: 72px;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+}
+
+.admin-sidebar-collapsed .admin-sidebar-top {
+    align-items: center;
+}
+
+.admin-sidebar-collapsed .admin-sidebar-toggle {
+    align-self: center;
+}
+
+.admin-sidebar-collapsed .admin-sidebar-footer {
+    border-top: none;
+}
+
+.admin-sidebar-collapsed .admin-sidebar-link {
+    justify-content: center;
+    padding: 0.85rem;
+}
+
+.admin-sidebar-collapsed .admin-sidebar-logo {
+    width: 46px;
+    height: 46px;
+}
+
+.admin-sidebar-collapsed .admin-sidebar-nav,
+.admin-sidebar-collapsed .admin-sidebar-footer,
+.admin-sidebar-collapsed .admin-sidebar-brand-text {
+    display: none;
+}
+
+.admin-sidebar-collapsed .admin-sidebar {
+    width: 90px;
+    padding: 1rem 0.75rem;
+}
+
+.admin-sidebar-collapsed .admin-sidebar-top {
+    align-items: center;
+    margin-bottom: 0;
+}
+
+.admin-sidebar-collapsed .admin-sidebar-brand {
+    justify-content: center;
+}
+
+.admin-sidebar-collapsed .admin-sidebar-toggle {
+    align-self: center;
+    margin: 0 auto;
+}
+
+.admin-sidebar-brand-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.admin-sidebar-collapsed .admin-sidebar-brand-row {
+    justify-content: center;
+}
+
 .mh-brand {
     display: flex;
     align-items: center;
@@ -45,7 +235,6 @@ body.mh-site {
     text-decoration: none;
     color: var(--mh-navy);
     font-size: 1.15rem;
-    roun
 }
 
 .mh-brand img {
@@ -280,6 +469,7 @@ body.mh-site {
     border-radius: 20px;
     padding: 1.5rem 1.4rem;
     box-shadow: 0 8px 22px rgba(7, 27, 52, 0.08);
+    height: 100%;
 }
 
 .contact-info-icon {
@@ -309,6 +499,8 @@ body.mh-site {
     line-height: 1.6;
     font-size: 1.1rem;
     font-weight:500;
+    overflow-wrap: break-word;
+    word-break: break-word;
 }
 
 .mh-side-note {
@@ -973,10 +1165,6 @@ body.mh-site {
 .auth-form textarea {
     max-width: 100%;
     box-sizing: border-box;
-}
-
-.mh-info-card {
-    height: 100%;
 }
 
 /* 404 page */

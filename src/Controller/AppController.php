@@ -52,4 +52,30 @@ class AppController extends Controller
 
     }
 
+    public function beforeRender(\Cake\Event\EventInterface $event)
+    {
+        parent::beforeRender($event);
+
+        $identity = $this->request->getAttribute('identity');
+
+        $isAdmin = $identity && (int)$identity->get('user_type') === 1;
+
+        $adminControllers = [
+            'Users',
+            'Bookings',
+            'Invoices',
+            'ContactForms',
+            'Customers',
+            'Resources',
+            'ContentBlocks',
+        ];
+
+        if (
+            $isAdmin &&
+            in_array($this->request->getParam('controller'), $adminControllers)
+        ) {
+            $this->viewBuilder()->setLayout('admin');
+        }
+    }
+
 }

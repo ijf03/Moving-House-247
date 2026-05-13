@@ -61,67 +61,79 @@
                 <div class="col-lg-9">
                     <div class="admin-table-card">
                         <div class="admin-table-header">
-                            <h2><?= __('Message Details') ?></h2>
+                            <div class="d-flex align-items-center gap-2 flex-wrap mb-2">
+                                <h2 class="mb-0">
+                                    <?= $contactForm->hasValue('customer')
+                                        ? $this->Html->link(
+                                            $contactForm->customer->first_name . ' ' . $contactForm->customer->last_name,
+                                            ['controller' => 'Customers', 'action' => 'view', $contactForm->customer->customer_id],
+                                            ['class' => 'admin-inline-link']
+                                        )
+                                        : __('Guest Customer') ?>
+                                </h2>
+
+                                <span class="admin-status-badge admin-status-<?= strtolower((string)($contactForm->status ?? 'new')) ?>">
+                                    <?= h(ucfirst($contactForm->status ?? 'new')) ?>
+                                </span>
+                            </div>
                             <p><?= __('Review the selected contact form record below.') ?></p>
                         </div>
 
-                        <div class="admin-table-wrap">
-                            <table class="admin-table">
-                                <tbody>
-                                <tr>
-                                    <th><?= __('Customer') ?></th>
-                                    <td>
-                                        <?= $contactForm->hasValue('customer')
-                                            ? $this->Html->link(
-                                                $contactForm->customer->first_name . ' ' . $contactForm->customer->last_name,
-                                                ['controller' => 'Customers', 'action' => 'view', $contactForm->customer->customer_id],
-                                                ['class' => 'admin-inline-link']
-                                            )
-                                            : '' ?>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th><?= __('First Name') ?></th>
-                                    <td><?= h($contactForm->customer->first_name ?? '') ?></td>
-                                </tr>
-                                <tr>
-                                    <th><?= __('Last Name') ?></th>
-                                    <td><?= h($contactForm->customer->last_name ?? '') ?></td>
-                                </tr>
-                                <tr>
-                                    <th><?= __('Email') ?></th>
-                                    <td><?= h($contactForm->customer->email ?? '') ?></td>
-                                </tr>
-                                <tr>
-                                    <th><?= __('Phone') ?></th>
-                                    <td><?= h($contactForm->customer->phone ?? '') ?></td>
-                                </tr>
-                                <tr>
-                                    <th><?= __('Subject') ?></th>
-                                    <td><?= h($contactForm->subject) ?></td>
-                                </tr>
-                                <tr>
-                                    <th><?= __('Status') ?></th>
-                                    <td>
-                                            <span class="admin-status-badge admin-status-<?= strtolower((string)($contactForm->status ?? 'new')) ?>">
-                                                <?= h(ucfirst($contactForm->status ?? 'new')) ?>
-                                            </span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th><?= __('Contact Form Id') ?></th>
-                                    <td><?= $this->Number->format($contactForm->contact_form_id) ?></td>
-                                </tr>
-                                <tr>
-                                    <th><?= __('Created') ?></th>
-                                    <td><?= h($contactForm->created) ?></td>
-                                </tr>
-                                <tr>
-                                    <th><?= __('Replied At') ?></th>
-                                    <td><?= h($contactForm->replied_at ?? 'Not replied yet') ?></td>
-                                </tr>
-                                </tbody>
-                            </table>
+                        <div class="row g-3">
+
+                            <div class="col-md-6 col-lg-4">
+                                <div class="mh-info-card">
+                                    <div>
+                                        <h3><?= __('Email') ?></h3>
+                                        <p><?= h($contactForm->customer->email ?? '') ?></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 col-lg-4">
+                                <div class="mh-info-card">
+                                    <div>
+                                        <h3><?= __('Phone Number') ?></h3>
+                                        <p><?= h($contactForm->customer->phone ?? 'Not provided') ?></p>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="col-md-6 col-lg-4">
+                                <div class="mh-info-card">
+                                    <div>
+                                        <h3><?= __('Subject') ?></h3>
+                                        <p><?= h($contactForm->subject) ?></p>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                            <div class="col-12">
+                                <div class="mh-info-card">
+                                    <div class="col-6">
+                                        <h3><?= __('Created') ?></h3>
+                                        <p><?= h($contactForm->created) ?></p>
+                                    </div>
+                                    <div class="col-6">
+                                        <h3><?= __('Replied At') ?></h3>
+                                        <p><?= h($contactForm->replied_at ?? 'Not replied yet') ?></p>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="col-12">
+                                <div class="mh-info-card">
+                                    <div>
+                                        <h3><?= __('Originl Inquiry') ?></h3>
+                                        <p><?= nl2br(h($contactForm->message)) ?></p>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
 
                         <div class="mt-4">
