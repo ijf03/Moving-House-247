@@ -17,6 +17,11 @@ class JobsController extends AppController
      */
     public function index()
     {
+        $identity = $this->request->getAttribute('identity');
+        if (!$identity || (int)$identity->get('user_type') !== 1) {
+            $this->Flash->error(__('Only admins can access this page.'));
+            return $this->redirect(['controller' => 'Pages', 'action' => 'display', 'home']);
+        }
         $this->checkExpiredJobs();
         $query = $this->Jobs->find()
             ->contain(['JobTypes', 'Customers'])
