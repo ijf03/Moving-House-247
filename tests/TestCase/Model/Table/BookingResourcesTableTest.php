@@ -3,18 +3,18 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Model\Table;
 
-use App\Model\Table\BookingResourcesTable;
+use App\Model\Table\JobResourcesTable;
 use Cake\TestSuite\TestCase;
 
 /**
- * App\Model\Table\BookingResourcesTable Test Case
+ * App\Model\Table\JobResourcesTable Test Case
  */
 class BookingResourcesTableTest extends TestCase
 {
     /**
      * Test subject
      *
-     * @var \App\Model\Table\BookingResourcesTable
+     * @var \App\Model\Table\JobResourcesTable
      */
     protected $BookingResources;
 
@@ -24,7 +24,7 @@ class BookingResourcesTableTest extends TestCase
      * @var array<string>
      */
     protected array $fixtures = [
-        'app.BookingResources',
+        'app.JobResources',
         'app.Bookings',
     ];
 
@@ -36,8 +36,8 @@ class BookingResourcesTableTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $config = $this->getTableLocator()->exists('BookingResources') ? [] : ['className' => BookingResourcesTable::class];
-        $this->BookingResources = $this->getTableLocator()->get('BookingResources', $config);
+        $config = $this->getTableLocator()->exists('JobResources') ? [] : ['className' => JobResourcesTable::class];
+        $this->BookingResources = $this->getTableLocator()->get('JobResources', $config);
     }
 
     /**
@@ -56,7 +56,7 @@ class BookingResourcesTableTest extends TestCase
      * Test validationDefault method
      *
      * @return void
-     * @link \App\Model\Table\BookingResourcesTable::validationDefault()
+     * @link \App\Model\Table\JobResourcesTable::validationDefault()
      */
     public function testValidationDefault(): void
     {
@@ -67,7 +67,7 @@ class BookingResourcesTableTest extends TestCase
      * Test buildRules method
      *
      * @return void
-     * @link \App\Model\Table\BookingResourcesTable::buildRules()
+     * @link \App\Model\Table\JobResourcesTable::buildRules()
      */
     public function testBuildRules(): void
     {

@@ -1,10 +1,10 @@
 <?php
 /**
  * @var \App\View\AppView $this
- * @var iterable<\App\Model\Entity\BookingResource> $bookingResources
+ * @var iterable<\App\Model\Entity\JobResource> $jobResources
  */
 ?>
-<div class="bookingResources index content">
+<div class="jobResources index content">
     <?= $this->Html->link(__('New Booking Resource'), ['action' => 'add'], ['class' => 'button float-right']) ?>
     <h3><?= __('Booking Resources') ?></h3>
     <div class="table-responsive">
@@ -22,24 +22,22 @@
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($bookingResources as $bookingResource): ?>
+                <?php foreach ($jobResources as $jobResource): ?>
                 <tr>
-                    <td><?= $this->Number->format($bookingResource->booking_resource_id) ?></td>
-                    <td><?= $bookingResource->hasValue('booking') ? $this->Html->link($bookingResource->booking->booking_id, ['controller' => 'Bookings', 'action' => 'view', $bookingResource->booking->booking_id]) : '' ?></td>
-                    <td><?= h($bookingResource->resource_type) ?></td>
-                    <td><?= $this->Number->format($bookingResource->resource_id) ?></td>
-                    <td><?= $this->Number->format($bookingResource->quantity) ?></td>
-                    <td><?= h($bookingResource->created) ?></td>
-                    <td><?= h($bookingResource->modified) ?></td>
+                    <td><?= $this->Number->format($jobResource->job_resource_id) ?></td>
+                    <td><?= $jobResource->hasValue('booking') ? $this->Html->link($jobResource->job->booking_id, ['controller' => 'Jobs', 'action' => 'view', $jobResource->job->booking_id]) : '' ?></td>
+                    <td><?= h($jobResource->resource_type) ?></td>
+                    <td><?= $this->Number->format($jobResource->job_resource_id) ?></td>
+                    <td><?= $this->Number->format($jobResource->quantity) ?></td>
                     <td class="actions">
-                        <?= $this->Html->link(__('View'), ['action' => 'view', $bookingResource->booking_resource_id]) ?>
-                        <?= $this->Html->link(__('Edit'), ['action' => 'edit', $bookingResource->booking_resource_id]) ?>
+                        <?= $this->Html->link(__('View'), ['action' => 'view', $jobResource->job_resource_id]) ?>
+                        <?= $this->Html->link(__('Edit'), ['action' => 'edit', $jobResource->job_resource_id]) ?>
                         <?= $this->Form->postLink(
                             __('Delete'),
-                            ['action' => 'delete', $bookingResource->booking_resource_id],
+                            ['action' => 'delete', $jobResource->job_resource_id],
                             [
                                 'method' => 'delete',
-                                'confirm' => __('Are you sure you want to delete # {0}?', $bookingResource->booking_resource_id),
+                                'confirm' => __('Are you sure you want to delete # {0}?', $jobResource->job_resource_id),
                             ]
                         ) ?>
                     </td>
