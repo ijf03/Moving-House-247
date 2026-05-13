@@ -86,7 +86,7 @@ class JobsController extends AppController
         $job = $this->Jobs->get($id, contain: [
             'JobTypes',
             'Customers',
-            'JobTrucks.Trucks',
+            'JobResources.Trucks',
         ]);
 
         $staffJobsTable = $this->fetchTable('StaffJob');
@@ -533,17 +533,18 @@ class JobsController extends AppController
             $job->allocated_at = date('Y-m-d H:i:s');
 
             if ($this->Jobs->save($job)) {
-                $jobTrucksTable = $this->fetchTable('JobTrucks');
+                $jobResourcesTable = $this->fetchTable('JobResources');
 
-                $jobTrucksTable->deleteAll(['job_id' => $job->job_id]);
+                $jobResourcesTable->deleteAll(['job_id' => $job->job_id]);
 
                 foreach ($truckIds as $truckId) {
-                    $jobTruck = $jobTrucksTable->newEntity([
+                    $jobTruck = $jobResourcesTable->newEntity([
                         'job_id' => $job->job_id,
                         'truck_id' => $truckId,
+                        'quantity' => 1,
                     ]);
 
-                    $jobTrucksTable->save($jobTruck);
+                    $jobResourcesTable->save($jobTruck);
                 }
 
                 $this->Flash->success(__('Job allocated successfully.'));
