@@ -12,7 +12,6 @@ use Cake\ORM\Entity;
  * @property string $unit_code
  * @property string $facility_name
  * @property string|null $unit_size_m3
- * @property string $status
  * @property string|null $security_level
  * @property bool $is_climate_controlled
  * @property bool $is_active
@@ -34,7 +33,6 @@ class StorageUnit extends Entity
         'unit_code' => true,
         'facility_name' => true,
         'unit_size_m3' => true,
-        'status' => true,
         'security_level' => true,
         'is_climate_controlled' => true,
         'is_active' => true,

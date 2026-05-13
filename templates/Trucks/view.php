@@ -72,10 +72,6 @@
                                     <td><?= h($truck->truck_size) ?></td>
                                 </tr>
                                 <tr>
-                                    <th><?= __('Status') ?></th>
-                                    <td><?= h($truck->status) ?></td>
-                                </tr>
-                                <tr>
                                     <th><?= __('Current Location') ?></th>
                                     <td><?= h($truck->current_location) ?></td>
                                 </tr>

@@ -12,7 +12,6 @@ use Cake\ORM\Entity;
  * @property string $name
  * @property string $category
  * @property int $quantity_available
- * @property string $status
  * @property string|null $storage_location
  * @property string|null $condition_notes
  * @property bool $is_active
@@ -34,7 +33,6 @@ class Equipment extends Entity
         'name' => true,
         'category' => true,
         'quantity_available' => true,
-        'status' => true,
         'storage_location' => true,
         'condition_notes' => true,
         'is_active' => true,

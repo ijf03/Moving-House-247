@@ -68,14 +68,6 @@
                                     <td><?= h($equipmentEntity->category) ?></td>
                                 </tr>
                                 <tr>
-                                    <th><?= __('Status') ?></th>
-                                    <td>
-                                            <span class="admin-status-badge">
-                                                <?= h($equipmentEntity->status) ?>
-                                            </span>
-                                    </td>
-                                </tr>
-                                <tr>
                                     <th><?= __('Storage Location') ?></th>
                                     <td><?= h($equipmentEntity->storage_location) ?></td>
                                 </tr>

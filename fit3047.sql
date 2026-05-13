@@ -251,7 +251,6 @@ CREATE TABLE `trucks`
     `truck_size`        varchar(50)           DEFAULT NULL,
     `capacity_m3`       decimal(10, 2)        DEFAULT NULL,
     `max_payload_kg`    decimal(10, 2)        DEFAULT NULL,
-    `status`            varchar(30)  NOT NULL DEFAULT 'available',
     `current_location`  varchar(100)          DEFAULT NULL,
     `next_service_date` date                  DEFAULT NULL,
     `is_active`         tinyint(1) NOT NULL DEFAULT 1,
@@ -267,7 +266,6 @@ CREATE TABLE `storage_units`
     `unit_code`             varchar(50)  NOT NULL,
     `facility_name`         varchar(100) NOT NULL,
     `unit_size_m3`          decimal(10, 2)        DEFAULT NULL,
-    `status`                varchar(30)  NOT NULL DEFAULT 'available',
     `security_level`        varchar(50)           DEFAULT NULL,
     `is_climate_controlled` tinyint(1) NOT NULL DEFAULT 0,
     `is_active`             tinyint(1) NOT NULL DEFAULT 1,
@@ -283,7 +281,6 @@ CREATE TABLE `equipment`
     `name`               varchar(100) NOT NULL,
     `category`           varchar(50)  NOT NULL,
     `quantity_available` int(11) NOT NULL DEFAULT 1,
-    `status`             varchar(30)  NOT NULL DEFAULT 'available',
     `storage_location`   varchar(100)          DEFAULT NULL,
     `condition_notes`    text                  DEFAULT NULL,
     `is_active`          tinyint(1) NOT NULL DEFAULT 1,
@@ -434,20 +431,20 @@ VALUES ('labour_hour', 'Labour', 'Labour - per hour', 8500, 1),
        ('stairs_surcharge', 'Stairs surcharge', 'Stairs surcharge', 7500, 5);
 
 INSERT INTO `trucks`
-(`name`, `rego`, `truck_size`, `capacity_m3`, `max_payload_kg`, `status`, `current_location`)
-VALUES ('Truck 1', '1ABC123', 'Small', 20.00, 2000.00, 'available', 'Clayton Depot'),
-       ('Truck 2', '1DEF456', 'Large', 35.00, 4000.00, 'available', 'Springvale Depot');
+(`name`, `rego`, `truck_size`, `capacity_m3`, `max_payload_kg`, `current_location`)
+VALUES ('Truck 1', '1ABC123', 'Small', 20.00, 2000.00, 'Clayton Depot'),
+       ('Truck 2', '1DEF456', 'Large', 35.00, 4000.00, 'Springvale Depot');
 
 INSERT INTO `storage_units`
-(`unit_code`, `facility_name`, `unit_size_m3`, `status`, `security_level`, `is_climate_controlled`)
+(`unit_code`, `facility_name`, `unit_size_m3`, `security_level`, `is_climate_controlled`)
 VALUES ('A01', 'Springvale Storage', 12.00, 'available', 'standard', 0),
        ('B14', 'Moorabbin Storage', 25.00, 'available', 'high', 1);
 
 INSERT INTO `equipment`
-(`name`, `category`, `quantity_available`, `status`, `storage_location`)
-VALUES ('Heavy-duty trolley', 'Trolley', 4, 'available', 'Clayton Depot'),
-       ('Moving blanket', 'Protective', 20, 'available', 'Clayton Depot'),
-       ('Ratchet strap', 'Securing', 15, 'available', 'Springvale Depot');
+(`name`, `category`, `quantity_available`, `storage_location`)
+VALUES ('Heavy-duty trolley', 'Trolley', 4,  'Clayton Depot'),
+       ('Moving blanket', 'Protective', 20, 'Clayton Depot'),
+       ('Ratchet strap', 'Securing', 15, 'Springvale Depot');
 
 INSERT INTO `inventory_items`
 (`name`, `category`, `quantity_on_hand`, `reorder_threshold`, `unit`, `storage_location`)
