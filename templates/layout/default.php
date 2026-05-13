@@ -104,6 +104,12 @@ $isUser = ($identity && (int)$role === 3);
                             ['plugin' => false, 'controller' => 'Jobs', 'action' => 'index'],
                             ['class' => 'nav-link mh-nav-link'],
                         ) ?>
+                        <?= $this->Html->link(
+                            'Content Management',
+                            ['plugin' => 'ContentBlocks', 'controller' => 'ContentBlocks', 'action' => 'index'],
+                            ['class' => 'nav-link mh-nav-link'],
+                        ) ?>
+
 
                     <?php elseif ($isStaff) : ?>
                         <?= $this->Html->link(

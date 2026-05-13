@@ -45,12 +45,20 @@ class ContentBlocksSeed extends BaseSeed
                 'type' => 'image',
             ],
             [
+                'parent' => 'global',
+                'label' => 'Main Title (Footer)',
+                'description' => 'Shown in the footer of every pages.',
+                'slug' => 'title-footer',
+                'type' => 'text',
+                'value' => 'Get your free quote today',
+            ],
+            [
             'parent' => 'global',
             'label' => 'Phone Number (Footer)',
             'description' => 'Shown in the footer of every pages.',
             'slug' => 'phone-contact-footer',
             'type' => 'text',
-                'value' => '0412 345 678'
+                'value' => '0412 345 678',
             ],
             [
                 'parent' => 'global',
@@ -58,7 +66,14 @@ class ContentBlocksSeed extends BaseSeed
                 'description' => 'Shown in the footer of every pages.',
                 'slug' => 'email-contact-footer',
                 'type' => 'text',
-                'value' => 'hello@movinghouse247.com.au'
+                'value' => 'hello@movinghouse247.com.au',
+            ],
+            [
+                'parent' => 'global',
+                'label' => 'Logo (Footer)',
+                'description' => 'Shown in the footer of every pages.',
+                'slug' => 'logo-footer',
+                'type'=> 'image',
             ],
 
             [
