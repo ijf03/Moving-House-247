@@ -287,8 +287,9 @@ class StaffController extends AppController
                 $updated_event['staff_id'] = $id;
                 $updated_event['start_datetime'] = new DateTime($updated_event['start_datetime']);
                 $updated_event['end_datetime'] = new DateTime($updated_event['end_datetime']);
-                $entry = $availabilityTable->get($updated_event['id']);
-                if ($entry->staff_id != $staff->staff_id) {
+                $updated_event['id'] = ($updated_event['id'] == 'null') ? null : $updated_event['id'];
+                $entry = $updated_event['id'] ? $availabilityTable->get($updated_event['id']) : null;
+                if ($entry? $entry->staff_id != $staff->staff_id : false) {
                     $this->Flash->error(__('Access denied'));
                     return $this->redirect(['action' => 'index']);
                 }
