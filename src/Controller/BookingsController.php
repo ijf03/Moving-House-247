@@ -7,6 +7,23 @@ use Cake\Core\Configure;
 
 class BookingsController extends AppController
 {
+    public function beforeFilter(\Cake\Event\EventInterface $event)
+    {
+        parent::beforeFilter($event);
+        if ($this->Authentication->getIdentity()) {
+            $user = $this->Authentication->getIdentity();
+            $userId = $user->user_id;
+            $users = $this->fetchTable('Users');
+            $roleQuery = $users->find()
+                ->where(['user_id' => $userId])
+                ->contain(['UserTypes'])
+                ->first();
+            $isAdmin = $roleQuery->user_type_name == 'Admin';
+            if (!$isAdmin) {
+                return $this->redirect('/');
+            }
+        }
+    }
     public function index()
     {
         $identity = $this->request->getAttribute('identity');
@@ -285,10 +302,11 @@ class BookingsController extends AppController
         }
 
         $booking->status = 'Rejected';
+        $booking->rejected_notified = 0;
 
         if ($this->Bookings->save($booking)) {
             $this->Flash->success(__('The booking has been rejected.'));
-        } else {
+        }else {
             $this->Flash->error(__('The booking could not be rejected.'));
         }
 
@@ -300,13 +318,7 @@ class BookingsController extends AppController
         $identity = $this->request->getAttribute('identity');
 
         if (!$identity) {
-            $this->Flash->error(__('You must be logged in to view your bookings.'));
             return $this->redirect(['controller' => 'Users', 'action' => 'login']);
-        }
-
-        if ((int)$identity->get('user_type') !== 3) {
-            $this->Flash->error(__('Only customers can access this page.'));
-            return $this->redirect(['controller' => 'Pages', 'action' => 'display', 'home']);
         }
 
         $customersTable = $this->fetchTable('Customers');
@@ -316,32 +328,17 @@ class BookingsController extends AppController
             ->first();
 
         if (!$customer) {
-            $customer = $customersTable->newEntity([
-                'first_name' => $identity->get('first_name'),
-                'last_name' => $identity->get('last_name'),
-                'email' => $identity->get('email'),
-                'phone' => $identity->get('phone'),
-            ]);
-
-            if (!$customersTable->save($customer)) {
-                $this->Flash->error(__('The customer profile could not be created.'));
-                return $this->redirect('/');
-            }
-
-            $customer = $customersTable->find()
-                ->where(['email' => $identity->get('email')])
-                ->first();
+            $this->Flash->error(__('Customer profile not found.'));
+            return $this->redirect(['controller' => 'Pages', 'action' => 'display', 'home']);
         }
 
-        $query = $this->Bookings->find()
+        $bookings = $this->Bookings->find()
             ->contain(['JobTypes'])
             ->where([
-                'Bookings.customer_id' => $customer->customer_id,
-                'Bookings.status IN' => ['Processing', 'Done'],
+                'customer_id' => $customer->customer_id,
+                'status IN' => ['Processing', 'Done']
             ])
-            ->orderBy(['Bookings.job_date' => 'ASC']);
-
-        $bookings = $this->paginate($query);
+            ->all();
 
         $popupBooking = $this->Bookings->find()
             ->where([
@@ -356,7 +353,20 @@ class BookingsController extends AppController
             $this->Bookings->save($popupBooking);
         }
 
-        $this->set(compact('bookings', 'popupBooking'));
+        $popupRejected = $this->Bookings->find()
+            ->where([
+                'customer_id' => $customer->customer_id,
+                'status' => 'Rejected',
+                'rejected_notified' => 0,
+            ])
+            ->first();
+
+        if ($popupRejected) {
+            $popupRejected->rejected_notified = 1;
+            $this->Bookings->save($popupRejected);
+        }
+
+        $this->set(compact('bookings', 'popupBooking', 'popupRejected'));
     }
 
     private function isAdmin(): bool
