@@ -6,8 +6,14 @@
  */
 
 $identity = $this->request->getAttribute('identity');
-$isStaff = $identity && (int)$identity->get('user_type') === 2;
+$role = $identity ? (int)$identity->get('user_type') : null;
+
+$isAdmin = $role === 1;
+$isStaff = $role === 2;
 $isDriver = $isDriver ?? false;
+
+$jobReports = $jobReports ?? new \Cake\Collection\Collection([]);
+$assignedStaff = $assignedStaff ?? new \Cake\Collection\Collection([]);
 
 ?>
 
@@ -143,6 +149,123 @@ $isDriver = $isDriver ?? false;
                             </div>
                         </div>
 
+                        <?php if ($isAdmin): ?>
+                            <div class="admin-table-header" style="margin-top: 2rem;">
+                                <h2><?= __('Staff Job Report') ?></h2>
+                                <p><?= __('Submitted report and all staff assigned to this job') ?></p>
+                            </div>
+
+                            <?php if ($jobReports->isEmpty()): ?>
+                                <div class="mh-info-card">
+                                    <p><?= __('No staff report has been submitted yet.') ?></p>
+                                </div>
+                            <?php else: ?>
+                                <?php foreach ($jobReports as $report): ?>
+                                    <?php
+                                    $reporterName = trim(
+                                        ($report->staff->first_name ?? '') . ' ' .
+                                        ($report->staff->last_name ?? '')
+                                    );
+                                    ?>
+
+                                    <div class="mh-info-card" style="margin-bottom: 1rem;">
+                                        <div>
+                                            <h3><?= __('Submitted Report') ?></h3>
+
+                                            <p>
+                                                <strong><?= __('Submitted By:') ?></strong>
+                                                <?= $reporterName !== '' ? h($reporterName) : h($report->staff_id) ?>
+
+                                                <?php if (!empty($report->role)): ?>
+                                                    (<?= h($report->role) ?>)
+                                                <?php endif; ?>
+                                            </p>
+
+                                            <p>
+                                                <strong><?= __('Outcome:') ?></strong>
+                                                <?= h($report->report_outcome) ?>
+                                            </p>
+
+                                            <p>
+                                                <strong><?= __('Notes:') ?></strong>
+                                                <?= h($report->report_notes ?: 'No extra information provided.') ?>
+                                            </p>
+
+                                            <p>
+                                                <strong><?= __('Submitted At:') ?></strong>
+                                                <?= h($report->report_submitted_at) ?>
+                                            </p>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+
+                                <?php if ($job->status === 'Ready'): ?>
+                                    <div class="d-flex justify-content-center mt-4">
+                                        <?= $this->Form->postLink(
+                                            __('Mark Completed'),
+                                            ['action' => 'markCompleted', $job->job_id],
+                                            [
+                                                'class' => 'admin-action-link admin-action-link-success px-5 py-3 fs-4 text-center',
+                                                'confirm' => __('Are you sure you want to mark this job as completed?')
+                                            ]
+                                        ) ?>
+                                    </div>
+                                <?php endif; ?>
+                            <?php endif; ?>
+
+                            <div class="admin-table-header" style="margin-top: 2rem;">
+                                <h2><?= __('Assigned Staff') ?></h2>
+                                <p><?= __('Driver and porter assigned to this job') ?></p>
+                            </div>
+
+                            <?php if ($assignedStaff->isEmpty()): ?>
+                                <div class="mh-info-card">
+                                    <p><?= __('No staff have been assigned to this job yet.') ?></p>
+                                </div>
+                            <?php else: ?>
+                                <div class="row g-3">
+                                    <?php foreach ($assignedStaff as $allocation): ?>
+                                        <?php
+                                        $staffName = trim(
+                                            ($allocation->staff->first_name ?? '') . ' ' .
+                                            ($allocation->staff->last_name ?? '')
+                                        );
+                                        ?>
+
+                                        <div class="col-md-6">
+                                            <div class="mh-info-card h-100">
+                                                <div>
+                                                    <h3><?= h($allocation->role ?? 'Staff') ?></h3>
+
+                                                    <p>
+                                                        <strong><?= __('Name:') ?></strong>
+                                                        <?= $staffName !== '' ? h($staffName) : h($allocation->staff_id) ?>
+                                                    </p>
+
+                                                    <p>
+                                                        <strong><?= __('Email:') ?></strong>
+                                                        <?= h($allocation->staff->email ?? '') ?>
+                                                    </p>
+
+                                                    <p>
+                                                        <strong><?= __('Phone:') ?></strong>
+                                                        <?= h($allocation->staff->phone ?? '') ?>
+                                                    </p>
+
+                                                    <p>
+                                                        <strong><?= __('Report Status:') ?></strong>
+                                                        <?= !empty($allocation->report_outcome)
+                                                            ? __('Submitted')
+                                                            : __('Not Submitted') ?>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <?php endforeach; ?>
+                                </div>
+                            <?php endif; ?>
+                        <?php endif; ?>
+
                         <?php if (!empty($job->description)): ?>
                             <div class="admin-table-header" style="margin-top: 2rem;">
                                 <h2><?= __('Description') ?></h2>
@@ -155,11 +278,6 @@ $isDriver = $isDriver ?? false;
                                 </div>
                             </div>
                         <?php endif; ?>
-
-                        <?php
-                        $identity = $this->request->getAttribute('identity');
-                        $isStaff = $identity && (int)$identity->get('user_type') === 2;
-                        ?>
 
                         <?php if ($isStaff && $job->status === 'Processing' && empty($staffJob)): ?>
                         <div class="admin-table-header" style="margin-top: 2rem;">
@@ -210,7 +328,13 @@ $isDriver = $isDriver ?? false;
                         </div>
                         <?php endif; ?>
 
-                        <?php if ($isStaff && !empty($staffJob) && $staffJob->status === 'Confirmed' && $job->status == 'Ready'): ?>
+                        <?php if (
+                            $isStaff &&
+                            !empty($staffJob) &&
+                            $staffJob->status === 'Confirmed' &&
+                            $job->status === 'Ready' &&
+                            empty($staffJob->report_outcome)
+                        ): ?>
                             <div class="admin-table-header" style="margin-top: 2rem;">
                                 <h2><?= __('Report') ?></h2>
                                 <p><?= __('Submit your job completion report') ?></p>
@@ -225,6 +349,23 @@ $isDriver = $isDriver ?? false;
                                         'style' => 'display:block; width:280px;'
                                     ]
                                 ) ?>
+                            </div>
+                        <?php endif; ?>
+
+                        <?php if (
+                            $isStaff &&
+                            !empty($staffJob) &&
+                            !empty($staffJob->report_outcome)
+                        ): ?>
+                            <div class="admin-table-header" style="margin-top: 2rem;">
+                                <h2><?= __('Report') ?></h2>
+                                <p><?= __('You have already submitted a report for this job.') ?></p>
+                            </div>
+
+                            <div class="mh-info-card text-center">
+                                <p class="mb-0">
+                                    <?= __('Report Submitted') ?>
+                                </p>
                             </div>
                         <?php endif; ?>
 

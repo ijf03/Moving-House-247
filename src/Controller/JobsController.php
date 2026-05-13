@@ -86,7 +86,7 @@ class JobsController extends AppController
         $job = $this->Jobs->get($id, contain: [
             'JobTypes',
             'Customers',
-            'JobTrucks.Trucks',
+            'JobResources.Trucks',
         ]);
 
         $staffJobsTable = $this->fetchTable('StaffJob');
@@ -127,7 +127,24 @@ class JobsController extends AppController
             ])
             ->count();
 
-        $this->set(compact('job', 'staffJob', 'isDriver'));
+        $jobReports = $staffJobsTable->find()
+            ->contain(['Staff'])
+            ->where([
+                'StaffJob.job_id' => $id,
+                'StaffJob.status' => 'Confirmed',
+                'StaffJob.report_outcome IS NOT' => null,
+            ])
+            ->all();
+        $assignedStaff = $staffJobsTable->find()
+            ->contain(['Staff'])
+            ->where([
+                'StaffJob.job_id' => $id,
+                'StaffJob.status' => 'Confirmed',
+            ])
+            ->orderByAsc('StaffJob.role')
+            ->all();
+
+        $this->set(compact('job', 'staffJob', 'isDriver', 'jobReports', 'assignedStaff'));
     }
 
     /**
@@ -206,6 +223,7 @@ class JobsController extends AppController
 
         $staffTable = $this->fetchTable('Staff');
         $staffJobsTable = $this->fetchTable('StaffJob');
+        $availabilityTable = $this->fetchTable('Availability');
 
         $currentStaff = $staffTable->find()
             ->where(['email' => $identity->get('email')])
@@ -217,6 +235,10 @@ class JobsController extends AppController
         }
 
         $isDriver = (int)$currentStaff->isDriver === 1;
+
+        $availabilityList = $availabilityTable->find()
+            ->where(['staff_id' => $currentStaff->staff_id])
+            ->all();
 
         $hiddenJobIds = $staffJobsTable->find()
             ->select(['job_id'])
@@ -237,6 +259,27 @@ class JobsController extends AppController
         $visibleJobs = [];
 
         foreach ($allJobs as $job) {
+            $jobDateTime = strtotime(
+                $job->job_date->format('Y-m-d') . ' ' .
+                $job->job_time->format('H:i:s')
+            );
+
+            $fitsAvailability = false;
+
+            foreach ($availabilityList as $availability) {
+                $start = strtotime($availability->start_datetime->format('Y-m-d H:i:s'));
+                $end = strtotime($availability->end_datetime->format('Y-m-d H:i:s'));
+
+                if ($jobDateTime >= $start && $jobDateTime <= $end) {
+                    $fitsAvailability = true;
+                    break;
+                }
+            }
+
+            if (!$fitsAvailability) {
+                continue;
+            }
+
             $driverCount = $staffJobsTable->find()
                 ->where([
                     'job_id' => $job->job_id,
@@ -533,17 +576,18 @@ class JobsController extends AppController
             $job->allocated_at = date('Y-m-d H:i:s');
 
             if ($this->Jobs->save($job)) {
-                $jobTrucksTable = $this->fetchTable('JobTrucks');
+                $jobResourcesTable = $this->fetchTable('JobResources');
 
-                $jobTrucksTable->deleteAll(['job_id' => $job->job_id]);
+                $jobResourcesTable->deleteAll(['job_id' => $job->job_id]);
 
                 foreach ($truckIds as $truckId) {
-                    $jobTruck = $jobTrucksTable->newEntity([
+                    $jobTruck = $jobResourcesTable->newEntity([
                         'job_id' => $job->job_id,
                         'truck_id' => $truckId,
+                        'quantity' => 1,
                     ]);
 
-                    $jobTrucksTable->save($jobTruck);
+                    $jobResourcesTable->save($jobTruck);
                 }
 
                 $this->Flash->success(__('Job allocated successfully.'));
@@ -570,6 +614,18 @@ class JobsController extends AppController
             return $this->redirect(['action' => 'myJobs']);
         }
 
+        $staffTable = $this->fetchTable('Staff');
+        $staffJobsTable = $this->fetchTable('StaffJob');
+
+        $currentStaff = $staffTable->find()
+            ->where(['email' => $identity->get('email')])
+            ->first();
+
+        if (!$currentStaff) {
+            $this->Flash->error(__('Staff profile not found.'));
+            return $this->redirect(['action' => 'myJobs']);
+        }
+
         $job = $this->Jobs->get($jobId, contain: ['JobTypes', 'Customers']);
 
         if ($job->status !== 'Ready') {
@@ -577,19 +633,23 @@ class JobsController extends AppController
             return $this->redirect(['action' => 'view', $jobId]);
         }
 
-        $staffJobsTable = $this->fetchTable('StaffJob');
-
         $staffJob = $staffJobsTable->find()
             ->where([
-                'job_id' => $jobId,
-                'staff_id' => $identity->get('user_id'),
-                'status' => 'Confirmed',
+                'StaffJob.job_id' => $jobId,
+                'StaffJob.staff_id' => $currentStaff->staff_id,
+                'StaffJob.status' => 'Confirmed',
             ])
             ->first();
 
         if (!$staffJob) {
             $this->Flash->error(__('You are not authorized to report on this job.'));
             return $this->redirect(['action' => 'myJobs']);
+        }
+
+        // Prevent the same staff member from submitting twice.
+        if (!empty($staffJob->report_outcome)) {
+            $this->Flash->error(__('You have already submitted a report for this job.'));
+            return $this->redirect(['action' => 'view', $jobId]);
         }
 
         if ($this->request->is(['post', 'put', 'patch'])) {
@@ -646,9 +706,9 @@ class JobsController extends AppController
 
         $hasReport = $staffJobsTable->find()
             ->where([
-                'job_id' => $jobId,
-                'status' => 'Confirmed',
-                'report_outcome IS NOT' => null,
+                'StaffJob.job_id' => $jobId,
+                'StaffJob.status' => 'Confirmed',
+                'StaffJob.report_outcome IS NOT' => null,
             ])
             ->count();
 
