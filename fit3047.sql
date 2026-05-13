@@ -28,7 +28,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `content_blocks`;
 DROP TABLE IF EXISTS `content_blocks_phinxlog`;
 DROP TABLE IF EXISTS `phinxlog`;
-DROP TABLE IF EXISTS `booking_resources`;
+DROP TABLE IF EXISTS `job_resources`;
 DROP TABLE IF EXISTS `invoice_items`;
 DROP TABLE IF EXISTS `invoice_item_presets`;
 DROP TABLE IF EXISTS `invoices`;
@@ -309,18 +309,18 @@ CREATE TABLE `inventory_items`
     PRIMARY KEY (`inventory_item_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
-CREATE TABLE `booking_resources`
+CREATE TABLE `job_resources`
 (
-    `booking_resource_id` int(11) NOT NULL AUTO_INCREMENT,
-    `booking_id`          int(11) DEFAULT NULL,
+    `job_resource_id` int(11) NOT NULL AUTO_INCREMENT,
+    `job_id`          int(11) DEFAULT NULL,
     `resource_type`       varchar(30)    NOT NULL,
     `resource_id`         int(11) NOT NULL,
     `quantity`            decimal(10, 2) NOT NULL DEFAULT 1.00,
     `notes`               text                    DEFAULT NULL,
     `created`             datetime       NOT NULL DEFAULT current_timestamp(),
     `modified`            datetime       NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-    PRIMARY KEY (`booking_resource_id`),
-    KEY                   `booking_resources_booking_id` (`booking_id`)
+    PRIMARY KEY (`job_resource_id`),
+    KEY                   `job_resources_job_id` (`job_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 CREATE TABLE `job_trucks` (
@@ -477,8 +477,8 @@ INSERT INTO `staff` (`staff_id`,`first_name`,`last_name`,`email`,`phone`,`isDriv
 VALUES (1,'Jordan','Lee', 'staff@myapp.local', '0422222222', 0),
        (2,'Uba', 'Driver', 'driver@staff.com', '0444444444', 1);
 
-INSERT INTO `content_blocks` (`id`, `parent`, `slug`, `label`, `description`, `type`, `value`, `previous_value`,
-                              `modified`)
+INSERT INTO content_blocks (id, parent, slug, label, description, type, value, previous_value,
+                            modified)
 VALUES (1, 'global', 'website-title-main', 'Website Title (Main)',
         'Shown on the home page, as well  as any tabs in the users browser.', 'text', 'Move done right,', NULL,
         '2026-05-03 06:54:39'),
@@ -494,9 +494,13 @@ VALUES (1, 'global', 'website-title-main', 'Website Title (Main)',
        (5, 'global', 'email-contact-footer', 'Email (Footer)', 'Shown in the footer of every pages.',
         'text', 'hello@movinghouse247.com.au', NULL,
         '2026-05-03 06:53:07'),
-       (6, 'home', 'home-content', 'Home Page Content',
-        'Copyright information shown at the bottom of the home page.', 'text',
-        'The main content shown in the centre of the home page.', '<p>Example app showcasing the <code>ugie-cake/cakephp-content-blocks</code> plugin.</p>' ,
+       (6, 'global', 'logo-footer', 'Logo (Footer)',
+        'Shown in the footer of every pages.', 'image',
+        'company-logo.png', NULL,
+        '2026-05-03 06:53:07'),
+       (7, 'global', 'title-footer', 'Main Title (Footer)',
+        'Shown in the footer of every pages.', 'text',
+        'Get your free quote today', NULL,
         '2026-05-03 06:53:07');
 
 INSERT INTO `content_blocks_phinxlog` (`version`, `migration_name`, `start_time`, `end_time`, `breakpoint`)
@@ -633,9 +637,9 @@ ALTER TABLE `invoice_items`
     ADD CONSTRAINT `invoice_item_preset_id`
     FOREIGN KEY (`invoice_item_preset_id`) REFERENCES `invoice_item_presets` (`invoice_item_preset_id`);
 
-ALTER TABLE `booking_resources`
-    ADD CONSTRAINT `booking_resources_booking_id`
-        FOREIGN KEY (`booking_id`) REFERENCES `bookings` (`booking_id`);
+ALTER TABLE `job_resources`
+    ADD CONSTRAINT `job_resources_booking_id`
+        FOREIGN KEY (`job_id`) REFERENCES `jobs` (`job_id`);
 
 ALTER TABLE `staff_job`
     ADD CONSTRAINT `staff_job_staff_id`
