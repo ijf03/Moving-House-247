@@ -113,7 +113,7 @@
                                         ]
                                     ) ?>
 
-                                    <?php if (($job->status ?? '') === 'Ready' && empty($staffJob->report_outcome)): ?>
+                                    <?php if (($job->status ?? '') === 'Ready' && empty($staffJob->report_submitted_at)): ?>
                                         <?= $this->Html->link(
                                             __('Submit Report'),
                                             ['action' => 'report', $job->job_id],
@@ -122,7 +122,7 @@
                                                 'style' => 'display: block; width: 160px;'
                                             ]
                                         ) ?>
-                                    <?php elseif (!empty($staffJob->report_outcome)): ?>
+                                    <?php elseif (!empty($staffJob->report_submitted_at)): ?>
                                         <p class="text-center mt-2 mb-0">
                                             <?= __('Report Submitted') ?>
                                         </p>

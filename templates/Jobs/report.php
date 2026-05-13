@@ -75,43 +75,31 @@
                 <div class="col-lg-8">
                     <div class="mh-form-card">
                         <div class="booking-form-header">
-                            <h2><?= __('Job Outcome') ?></h2>
-                            <p><?= __('Select whether the job was completed or incomplete, then add any extra notes if needed.') ?></p>
+                            <h2><?= __('Job Report') ?></h2>
+                            <p><?= __('Upload a photo from the completed job and add any extra notes if needed.') ?></p>
                         </div>
 
-                        <?= $this->Form->create($staffJob, ['class' => 'booking-form']) ?>
+                        <?= $this->Form->create($staffJob, [
+                            'class' => 'booking-form',
+                            'type' => 'file',
+                        ]) ?>
 
                         <div class="row g-3">
                             <div class="col-12">
-                                <label class="fw-bold mb-2 d-block">
-                                    <?= __('Outcome') ?>
-                                </label>
+                                <?= $this->Form->control('report_photo', [
+                                    'type' => 'file',
+                                    'label' => 'Upload Job Photo',
+                                    'required' => true,
+                                    'accept' => 'image/jpeg,image/png,image/webp',
+                                    'class' => 'booking-input',
+                                    'templates' => [
+                                        'inputContainer' => '<div class="input booking-form-group {{type}}{{required}}">{{content}}</div>',
+                                    ],
+                                ]) ?>
 
-                                <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <label class="mh-info-card h-100" style="cursor: pointer;">
-                                            <?= $this->Form->radio('report_outcome', [
-                                                ['value' => 'Completed', 'text' => __('Job Completed')],
-                                            ], [
-                                                'value' => $staffJob->report_outcome ?? 'Completed',
-                                                'required' => true,
-                                                'hiddenField' => false,
-                                            ]) ?>
-                                        </label>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <label class="mh-info-card h-100" style="cursor: pointer;">
-                                            <?= $this->Form->radio('report_outcome', [
-                                                ['value' => 'Incomplete', 'text' => __('Job Incomplete')],
-                                            ], [
-                                                'value' => $staffJob->report_outcome ?? 'Completed',
-                                                'required' => true,
-                                                'hiddenField' => false,
-                                            ]) ?>
-                                        </label>
-                                    </div>
-                                </div>
+                                <p class="text-muted mt-1">
+                                    <?= __('Accepted formats: JPG, PNG, WEBP. Maximum size: 5MB.') ?>
+                                </p>
                             </div>
 
                             <div class="col-12">
