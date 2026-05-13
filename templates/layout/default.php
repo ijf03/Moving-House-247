@@ -196,7 +196,10 @@ $isUser = ($identity && (int)$role === 3);
         <div class="container-fluid px-4 px-lg-5">
             <div class="row align-items-center gy-4">
                 <div class="col-lg-8">
-                    <h2 class="mh-footer-title">Get your free quote today</h2>
+
+                    <h2 class = "mh-footer-title">
+                        <?= $this->ContentBlock->text('title-footer'); ?>
+                      </h2>
                     <p class="mh-footer-subtitle mb-0">Most quotes returned within the same day.</p>
                 </div>
                 <div class="col-lg-4 text-lg-end">
@@ -215,7 +218,13 @@ $isUser = ($identity && (int)$role === 3);
             <div class="row gy-5">
                 <div class="col-lg-4">
                     <div class="d-flex align-items-center gap-3 mb-3">
-                        <span class="mh-footer-icon">🚚</span>
+                        <span class="mh-brand-logo-footer">
+                 <?php if ($this->ContentBlock -> image('logo-footer')):?>
+                     <?= $this ->ContentBlock->image('logo-footer')?>
+                 <?php else:?>
+                     🚚
+                 <?php endif;?>
+                        </span>
                         <h3 class="mh-footer-brand mb-0">Moving House 24/7</h3>
                     </div>
                     <p class="mh-footer-text mb-0">

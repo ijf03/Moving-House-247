@@ -82,8 +82,7 @@ class ContentBlocksSeed extends BaseSeed
                 'description' => 'The main content shown in the centre of the home page.',
                 'slug' => 'home-content',
                 'type' => 'html',
-                'value' => '<p>Example app showcasing the <code>ugie-cake/cakephp-content-blocks</code> plugin.</p>',
-            ]
+            ],
         ];
 
         $table = $this->table('content_blocks');
