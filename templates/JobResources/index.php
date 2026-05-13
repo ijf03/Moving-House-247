@@ -66,11 +66,11 @@ foreach ($jobResources as $jobResource) {
                         <p><?= __('Each row shows the resources currently assigned to a job.') ?></p>
                     </div>
 
-                    <?= $this->Html->link(
-                        __('New Job Resource'),
-                        ['action' => 'add'],
-                        ['class' => 'admin-primary-link']
-                    ) ?>
+<!--                    --><?php //= $this->Html->link(
+//                        __('New Job Resource'),
+//                        ['action' => 'add'],
+//                        ['class' => 'admin-primary-link']
+//                    ) ?>
                 </div>
 
                 <div class="admin-table-wrap">
