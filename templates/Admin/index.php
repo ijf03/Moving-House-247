@@ -183,11 +183,11 @@ $this->assign('title', 'Admin Dashboard');
                             </div>
                         </div>
                         ',
-                        ['controller' => 'ContentBlocks', 'action' => 'index'],
+                        ['plugin' => 'ContentBlocks', 'controller' => 'ContentBlocks', 'action' => 'index'],
                         [
-                            'escape' => false,
-                            'class' => 'admin-dashboard-card'
-                        ]
+                            'class' => 'admin-dashboard-card',
+                            'escape' => false
+                        ],
                     ) ?>
                 </div>
 

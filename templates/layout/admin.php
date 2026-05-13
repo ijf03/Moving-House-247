@@ -40,7 +40,8 @@ $isUser = ($identity && (int)$role === 3);
     <aside class="admin-sidebar" id="adminSidebar">
         <div class="admin-sidebar-top">
             <div class="admin-sidebar-brand-row">
-                <a class="admin-sidebar-brand" href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'index']) ?>">
+                <a class="admin-sidebar-brand"
+                   href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'index']) ?>">
                     <span class="admin-sidebar-brand-text">
                         Moving House <span class="mh-accent">24/7</span>
                     </span>
@@ -53,14 +54,18 @@ $isUser = ($identity && (int)$role === 3);
         </div>
 
         <nav class="admin-sidebar-nav">
-            <?= $this->Html->link('Dashboard', ['controller' => 'Admin', 'action' => 'index'], ['class' => 'admin-sidebar-link']) ?>
-            <?= $this->Html->link('Manage Bookings', ['controller' => 'Bookings', 'action' => 'index'], ['class' => 'admin-sidebar-link']) ?>
-            <?= $this->Html->link('Manage Inquiries', ['controller' => 'ContactForms', 'action' => 'index'], ['class' => 'admin-sidebar-link']) ?>
-            <?= $this->Html->link('Manage Invoices', ['controller' => 'Invoices', 'action' => 'index'], ['class' => 'admin-sidebar-link']) ?>
-            <?= $this->Html->link('Resource Management', ['controller' => 'Resources', 'action' => 'index'], ['class' => 'admin-sidebar-link']) ?>
-            <?= $this->Html->link('Job Allocation', ['controller' => 'Jobs', 'action' => 'index'], ['class' => 'admin-sidebar-link'],) ?>
-            <?= $this->Html->link('Manage Users', ['controller' => 'Users', 'action' => 'index'], ['class' => 'admin-sidebar-link']) ?>
-            <?= $this->Html->link('Website Content', ['controller' => 'ContentBlocks', 'action' => 'index'], ['class' => 'admin-sidebar-link']) ?>
+            <?= $this->Html->link('Dashboard', ['plugin' => false, 'controller' => 'Admin', 'action' => 'index'], ['class' => 'admin-sidebar-link']) ?>
+            <?= $this->Html->link('Manage Bookings', ['plugin' => false, 'controller' => 'Bookings', 'action' => 'index'], ['class' => 'admin-sidebar-link']) ?>
+            <?= $this->Html->link('Manage Inquiries', ['plugin' => false, 'controller' => 'ContactForms', 'action' => 'index'], ['class' => 'admin-sidebar-link']) ?>
+            <?= $this->Html->link('Manage Invoices', ['plugin' => false, 'controller' => 'Invoices', 'action' => 'index'], ['class' => 'admin-sidebar-link']) ?>
+            <?= $this->Html->link('Resource Management', ['plugin' => false, 'controller' => 'Resources', 'action' => 'index'], ['class' => 'admin-sidebar-link']) ?>
+            <?= $this->Html->link('Job Allocation', ['plugin' => false, 'controller' => 'Jobs', 'action' => 'index'], ['class' => 'admin-sidebar-link']) ?>
+            <?= $this->Html->link('Manage Users', ['plugin' => false, 'controller' => 'Users', 'action' => 'index'], ['class' => 'admin-sidebar-link']) ?>
+            <?= $this->Html->link(
+                'Website Content',
+                ['plugin' => 'ContentBlocks', 'controller' => 'ContentBlocks', 'action' => 'index'],
+                ['class' => 'admin-sidebar-link'],
+            ) ?>
         </nav>
 
         <div class="admin-sidebar-footer">

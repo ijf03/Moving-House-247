@@ -25,8 +25,18 @@
         <div class="container">
             <div class="row g-4 align-items-start">
                 <div class="col-lg-3">
-                    <div class="mh-back-btn m-1">
-                        <?= $this->Html->link(__('← Back to List'), ['action' => 'index']) ?>
+                    <div class="mh-form-card">
+                        <div class="admin-table-header">
+                            <h2><?= __('Actions') ?></h2>
+                        </div>
+
+                        <div class="admin-action-stack">
+                            <?= $this->Html->link(
+                                __('Back to List'),
+                                ['action' => 'index'],
+                                ['class' => 'admin-action-link']
+                            ) ?>
+                        </div>
                     </div>
                 </div>
 
@@ -34,7 +44,7 @@
                     <?= $this->Form->create($job, ['class' => 'mh-form']) ?>
 
                     <div class="admin-table-card">
-                        <div class="admin-table-header mt-4">
+                        <div class="admin-table-header">
                             <h2><?= __('Job Information') ?></h2>
                             <p><?= __('Overview of the selected moving job.') ?></p>
                         </div>
@@ -44,9 +54,7 @@
                                 <div class="mh-info-card">
                                     <div>
                                         <h3><?= __('Customer') ?></h3>
-                                        <p>
-                                            <?= h($job->customer->first_name. ' ' . $job->customer->last_name) ?>
-                                        </p>
+                                        <p><?= h($job->customer->first_name . ' ' . $job->customer->last_name) ?></p>
                                     </div>
                                 </div>
                             </div>
@@ -55,7 +63,8 @@
                                 <div class="mh-info-card">
                                     <div>
                                         <h3><?= __('Job Type') ?></h3>
-                                        <p><?= $job->hasValue('job_type')
+                                        <p>
+                                            <?= $job->hasValue('job_type')
                                                 ? h($job->job_type->job_type_name)
                                                 : '' ?>
                                         </p>
@@ -105,22 +114,20 @@
                             <p><?= __('Use the controls below to set required staff and trucks.') ?></p>
                         </div>
 
-                        <div class="row g-3">
-                            <div class="col-md-6">
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-4">
                                 <div class="mh-info-card">
-                                    <div>
-                                        <h3><?= __('Number of Drivers Required') ?></h3>
+                                    <div class="w-100">
+                                        <h3><?= __('Drivers Required') ?></h3>
 
-                                        <div class="d-flex align-items-center gap-3 mt-2">
+                                        <div class="d-flex align-items-center gap-3 mt-3">
                                             <button type="button"
-                                                    class="btn btn-outline-secondary"
+                                                    class="admin-action-link"
                                                     onclick="changeValue('driver_required', -1); syncTruckWithDriver();">
                                                 −
                                             </button>
-                                            <div class="d-flex align-items-center gap-3 mt-3">
-                                                <button type="button" class="admin-action-link" onclick="changeValue('driver_required', -1)">−</button>
 
-                                                <input type="number"
+                                            <input type="number"
                                                    name="driver_required"
                                                    id="driver_required"
                                                    value="1"
@@ -130,20 +137,24 @@
                                                    class="form-control text-center"
                                                    style="max-width: 100px;">
 
-                                            <button type="button" class="admin-action-link" onclick="changeValue('driver_required', 1); syncTruckWithDriver();">+</button>
+                                            <button type="button"
+                                                    class="admin-action-link"
+                                                    onclick="changeValue('driver_required', 1); syncTruckWithDriver();">
+                                                +
+                                            </button>
                                         </div>
-                                            <p class="text-muted mt-2">
-                                                <?= __('Each driver requires one truck.') ?>
-                                            </p>
+
+                                        <p class="text-muted mt-3 mb-0">
+                                            <?= __('Each driver requires one truck.') ?>
+                                        </p>
                                     </div>
                                 </div>
                             </div>
 
-                      <div class="col-md-4">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="mh-info-card">
-                                    <div>
-                                        <h3><?= __('Number of Trucks Required') ?></h3>
+                                    <div class="w-100">
+                                        <h3><?= __('Trucks Required') ?></h3>
 
                                         <div class="d-flex align-items-center gap-3 mt-3">
                                             <input type="number"
@@ -156,8 +167,8 @@
                                                    style="max-width: 100px;">
                                         </div>
 
-                                        <p class="text-muted mt-2">
-                                            <?= __('This is automatically matched to the number of drivers.') ?>
+                                        <p class="text-muted mt-3 mb-0">
+                                            <?= __('Automatically matched to the number of drivers.') ?>
                                         </p>
                                     </div>
                                 </div>
@@ -165,12 +176,12 @@
 
                             <div class="col-md-4">
                                 <div class="mh-info-card">
-                                    <div>
-                                        <h3><?= __('Number of Porters Required') ?></h3>
+                                    <div class="w-100">
+                                        <h3><?= __('Porters Required') ?></h3>
 
-                                        <div class="d-flex align-items-center gap-3 mt-2">
+                                        <div class="d-flex align-items-center gap-3 mt-3">
                                             <button type="button"
-                                                    class="btn btn-outline-secondary"
+                                                    class="admin-action-link"
                                                     onclick="changeValue('porter_required', -1)">
                                                 −
                                             </button>
@@ -186,7 +197,7 @@
                                                    style="max-width: 100px;">
 
                                             <button type="button"
-                                                    class="btn btn-outline-secondary"
+                                                    class="admin-action-link"
                                                     onclick="changeValue('porter_required', 1)">
                                                 +
                                             </button>
