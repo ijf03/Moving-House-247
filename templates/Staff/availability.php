@@ -10,6 +10,30 @@
         const minutes = String(absOffset % 60).padStart(2, "0");
         window.timezoneOffset = (isPlus?"+":"-")+hours+":"+minutes;
 
+        window.addEventListener('load', ()=>{
+            var current = new Date().toISOString().split(".")[0];
+            var start_datetime = document.getElementById('start_datetime');
+            var end_datetime = document.getElementById('end_datetime');
+            var new_start = document.getElementById('new_start');
+            var new_end = document.getElementById('new_end');
+            start_datetime.min = current;
+            new_start.min = current;
+            start_datetime.addEventListener('change', ()=>{
+                end_datetime.min = start_datetime.value;
+
+                if (end_datetime.value && end_datetime.value < start_datetime.value){
+                    end_datetime.value = start_datetime.value;
+                }
+            })
+            new_start.addEventListener('change', ()=>{
+                new_end.min = new_start.value;
+
+                if (new_end.value && new_end.value < new_start.value){
+                    new_end.value = new_start.value;
+                }
+            })
+
+        })
         document.addEventListener('DOMContentLoaded', function() {
             var calendarEl = document.getElementById('calendar');
             var events = <?= json_encode($events) ?>;
@@ -32,8 +56,8 @@
                     activeEventID = event.id;
                     window.startTimezone = (event.startStr.includes("+")?"+":"-")+event.startStr.split(event.startStr.includes("+")?"+":"-")[1]
                     window.endTimezone = (event.endStr.includes("+")?"+":"-")+event.endStr.split(event.endStr.includes("+")?"+":"-")[1]
-                    document.getElementById('start-datetime').value = event.startStr.split(event.startStr.includes("+")?"+":"-")[0];
-                    document.getElementById('end-datetime').value = event.endStr.split(event.endStr.includes("+")?"+":"-")[0];
+                    document.getElementById('start_datetime').value = event.startStr.split(event.startStr.includes("+")?"+":"-")[0];
+                    document.getElementById('end_datetime').value = event.endStr.split(event.endStr.includes("+")?"+":"-")[0];
 
                     document.querySelector('.modal-title').innerText = 'Edit Availability';
 
@@ -59,8 +83,8 @@
         }
 
         function save() {
-            calendar.getEventById(activeEventID).setDates(document.getElementById('start-datetime').value + startTimezone,
-                document.getElementById('end-datetime').value + endTimezone);
+            calendar.getEventById(activeEventID).setDates(document.getElementById('start_datetime').value + startTimezone,
+                document.getElementById('end_datetime').value + endTimezone);
             submitForm();
         }
 
@@ -116,9 +140,9 @@
             </div>
             <div class="modal-body">
                 <p>Start time</p>
-                <input type="datetime-local" id="start-datetime" required>
+                <input type="datetime-local" id="start_datetime" required>
                 <p>End time</p>
-                <input type="datetime-local" id="end-datetime" required>
+                <input type="datetime-local" id="end_datetime" required>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger me-auto" id="btn-delete" onclick="deleteEvent()">Delete</button>
