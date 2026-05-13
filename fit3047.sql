@@ -28,7 +28,6 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `content_blocks`;
 DROP TABLE IF EXISTS `content_blocks_phinxlog`;
 DROP TABLE IF EXISTS `phinxlog`;
-DROP TABLE IF EXISTS `booking_resources`;
 DROP TABLE IF EXISTS `invoice_items`;
 DROP TABLE IF EXISTS `invoice_item_presets`;
 DROP TABLE IF EXISTS `invoices`;
@@ -47,7 +46,9 @@ DROP TABLE IF EXISTS `user_types`;
 DROP TABLE IF EXISTS `phinxlog`;
 DROP TABLE IF EXISTS `staff`;
 DROP TABLE IF EXISTS `staff_job`;
+DROP TABLE IF EXISTS `availability`;
 DROP TABLE IF EXISTS `job_trucks`;
+DROP TABLE IF EXISTS `job_resources`;
 SET FOREIGN_KEY_CHECKS = 1;
 
 CREATE TABLE `staff`
@@ -58,6 +59,14 @@ CREATE TABLE `staff`
     `email`       varchar(62) NOT NULL,
     `phone`       varchar(15) NOT NULL,
     `isDriver`    tinyint(1) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+CREATE TABLE `availability`
+(
+    `availability_id` int(11) NOT NULL,
+    `staff_id` int(11) NOT NULL,
+    `start_datetime` datetime NOT NULL,
+    `end_datetime` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 CREATE TABLE `staff_job`
@@ -159,7 +168,7 @@ CREATE TABLE `bookings`
     `customer_id`       int(11) NOT NULL,
     `job_type_id`       int(1) NOT NULL,
     `pickup_address`    varchar(95) NOT NULL,
-    `dropoff_address`   varchar(95) NOT NULL,
+    `dropoff_address`   varchar(95) DEFAULT NULL,
     `job_date`          date        NOT NULL,
     `job_time`          time        NOT NULL,
     `status`            varchar(20) NOT NULL DEFAULT 'Pending',
@@ -298,30 +307,20 @@ CREATE TABLE `inventory_items`
     PRIMARY KEY (`inventory_item_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
-CREATE TABLE `booking_resources`
-(
-    `booking_resource_id` int(11) NOT NULL AUTO_INCREMENT,
-    `booking_id`          int(11) DEFAULT NULL,
-    `resource_type`       varchar(30)    NOT NULL,
-    `resource_id`         int(11) NOT NULL,
-    `quantity`            decimal(10, 2) NOT NULL DEFAULT 1.00,
-    `notes`               text                    DEFAULT NULL,
-    `created`             datetime       NOT NULL DEFAULT current_timestamp(),
-    `modified`            datetime       NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-    PRIMARY KEY (`booking_resource_id`),
-    KEY                   `booking_resources_booking_id` (`booking_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
-
-CREATE TABLE `job_trucks` (
-                              `job_truck_id` INT(11) NOT NULL AUTO_INCREMENT,
-                              `job_id` INT(11) NOT NULL,
-                              `truck_id` INT(11) NOT NULL,
-                              `created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-                              PRIMARY KEY (`job_truck_id`),
-
-                              KEY `job_trucks_job_id` (`job_id`),
-                              KEY `job_trucks_truck_id` (`truck_id`)
+CREATE TABLE `job_resources` (
+                                 `job_resource_id` int(11) NOT NULL AUTO_INCREMENT,
+                                 `job_id` int(11) NOT NULL,
+                                 `truck_id` int(11) DEFAULT NULL,
+                                 `equipment_id` int(11) DEFAULT NULL,
+                                 `storage_unit_id` int(11) DEFAULT NULL,
+                                 `inventory_id` int(11) DEFAULT NULL,
+                                 `quantity` decimal(10,2) NOT NULL DEFAULT 0.00,
+                                 PRIMARY KEY (`job_resource_id`),
+                                 KEY `job_resources_job_id` (`job_id`),
+                                 KEY `job_resources_truck_id` (`truck_id`),
+                                 KEY `job_resources_storage_unit_id` (`storage_unit_id`),
+                                 KEY `job_resources_inventory_id` (`inventory_id`),
+                                 KEY `job_resources_equipment_id` (`equipment_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 INSERT INTO `contact_forms`
@@ -483,9 +482,17 @@ VALUES (1, 'global', 'website-title-main', 'Website Title (Main)',
        (5, 'global', 'email-contact-footer', 'Email (Footer)', 'Shown in the footer of every pages.',
         'text', 'hello@movinghouse247.com.au', NULL,
         '2026-05-03 06:53:07'),
-        (6, 'home', 'home-content', 'Home Page Content',
-        'Copyright information shown at the bottom of the home page.', 'text',
-        'The main content shown in the centre of the home page.', '<p>Example app showcasing the <code>ugie-cake/cakephp-content-blocks</code> plugin.</p>' ,
+       (6, 'home', 'home-content', 'Home Page Content',
+        'The main content shown in the centre of the home page.', 'text',
+        'The main content shown in the centre of the home page.', NULL ,
+        '2026-05-03 06:53:07'),
+       (7, 'global', 'logo-footer', 'Logo (Footer)',
+        'Shown in the footer of every pages.', 'image',
+        'company-logo.png', NULL,
+        '2026-05-03 06:53:07'),
+       (8, 'global', 'title-footer', 'Main Title (Footer)',
+        'Shown in the footer of every pages.', 'text',
+        'Get your free quote today', NULL,
         '2026-05-03 06:53:07');
 
 INSERT INTO `content_blocks_phinxlog` (`version`, `migration_name`, `start_time`, `end_time`, `breakpoint`)
@@ -494,6 +501,9 @@ VALUES (20230402063959, 'ContentBlocksMigration', '2026-05-02 11:25:48', '2026-0
 ALTER TABLE `staff`
     ADD PRIMARY KEY (`staff_id`),
     ADD KEY `email` (`email`);
+
+ALTER TABLE `availability`
+    ADD PRIMARY KEY (`availability_id`);
 
 ALTER TABLE `staff_job`
     ADD PRIMARY KEY (`allocation_id`);
@@ -541,6 +551,9 @@ ALTER TABLE `invoice_items`
 ALTER TABLE `staff`
     MODIFY `staff_id` int(11) NOT NULL AUTO_INCREMENT;
 
+ALTER TABLE `availability`
+    MODIFY `availability_id` int(11) NOT NULL AUTO_INCREMENT;
+
 ALTER TABLE `staff_job`
     MODIFY `allocation_id` int(11) NOT NULL AUTO_INCREMENT;
 
@@ -587,6 +600,10 @@ ALTER TABLE `contact_forms`
     ADD CONSTRAINT `contact_forms_customer_id`
         FOREIGN KEY (`customer_id`) REFERENCES `customers` (`customer_id`);
 
+ALTER TABLE `availability`
+    ADD CONSTRAINT `staff_availability_id`
+        FOREIGN KEY (`staff_id`) REFERENCES `staff` (`staff_id`);
+
 ALTER TABLE `jobs`
     ADD CONSTRAINT `jobs_customer_id`
         FOREIGN KEY (`customer_id`) REFERENCES `customers` (`customer_id`),
@@ -615,10 +632,6 @@ ALTER TABLE `invoice_items`
     ADD CONSTRAINT `invoice_item_preset_id`
     FOREIGN KEY (`invoice_item_preset_id`) REFERENCES `invoice_item_presets` (`invoice_item_preset_id`);
 
-ALTER TABLE `booking_resources`
-    ADD CONSTRAINT `booking_resources_booking_id`
-        FOREIGN KEY (`booking_id`) REFERENCES `bookings` (`booking_id`);
-
 ALTER TABLE `staff_job`
     ADD CONSTRAINT `staff_job_staff_id`
         FOREIGN KEY (`staff_id`) REFERENCES `staff` (`staff_id`),
@@ -634,13 +647,6 @@ ALTER TABLE jobs
     ADD driver_required INT NOT NULL DEFAULT 0,
     ADD porter_required INT NOT NULL DEFAULT 0;
 
-ALTER TABLE job_trucks
-    ADD CONSTRAINT `job_trucks_job_id_fk`
-        FOREIGN KEY (`job_id`) REFERENCES `jobs` (`job_id`),
-
-    ADD CONSTRAINT `job_trucks_truck_id_fk`
-        FOREIGN KEY (`truck_id`) REFERENCES `trucks` (`truck_id`);
-
 ALTER TABLE staff_job
     ADD report_outcome ENUM('Completed', 'Incomplete') NULL AFTER status,
     ADD report_notes TEXT NULL AFTER report_outcome,
@@ -648,4 +654,7 @@ ALTER TABLE staff_job
 
 ALTER TABLE staff_job
     ADD role VARCHAR(10) NULL AFTER status;
+
+ALTER TABLE bookings
+    ADD rejected_notified TINYINT(1) NOT NULL DEFAULT 0;
 COMMIT;
