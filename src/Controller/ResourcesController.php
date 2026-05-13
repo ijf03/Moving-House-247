@@ -15,6 +15,23 @@ namespace App\Controller;
  */
 class ResourcesController extends AppController
 {
+    public function beforeFilter(\Cake\Event\EventInterface $event)
+    {
+        parent::beforeFilter($event);
+        if ($this->Authentication->getIdentity()) {
+            $user = $this->Authentication->getIdentity();
+            $userId = $user->user_id;
+            $users = $this->fetchTable('Users');
+            $roleQuery = $users->find()
+                ->where(['user_id' => $userId])
+                ->contain(['UserTypes'])
+                ->first();
+            $isAdmin = $roleQuery->user_type_name == 'Admin';
+            if (!$isAdmin) {
+                return $this->redirect('/');
+            }
+        }
+    }
     public function index()
     {
         $identity = $this->request->getAttribute('identity');
@@ -31,19 +48,10 @@ class ResourcesController extends AppController
         $jobResourcesTable = $this->fetchTable('JobResources');
 
         $truckCount = $trucksTable->find()->count();
-        $availableTruckCount = $trucksTable->find()
-            ->where(['status' => 'available', 'is_active' => 1])
-            ->count();
 
         $storageUnitCount = $storageUnitsTable->find()->count();
-        $availableStorageUnitCount = $storageUnitsTable->find()
-            ->where(['status' => 'available', 'is_active' => 1])
-            ->count();
 
         $equipmentCount = $equipmentTable->find()->count();
-        $availableEquipmentCount = $equipmentTable->find()
-            ->where(['status' => 'available', 'is_active' => 1])
-            ->count();
 
         $inventoryItemCount = $inventoryItemsTable->find()->count();
 
@@ -131,11 +139,8 @@ class ResourcesController extends AppController
 
         $this->set(compact(
             'truckCount',
-            'availableTruckCount',
             'storageUnitCount',
-            'availableStorageUnitCount',
             'equipmentCount',
-            'availableEquipmentCount',
             'inventoryItemCount',
             'lowStockCount',
             'activeAssignmentCount',
