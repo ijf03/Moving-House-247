@@ -112,6 +112,21 @@
                                             'style' => 'display: block; width: 160px;'
                                         ]
                                     ) ?>
+
+                                    <?php if (($job->status ?? '') === 'Ready' && empty($staffJob->report_outcome)): ?>
+                                        <?= $this->Html->link(
+                                            __('Submit Report'),
+                                            ['action' => 'report', $job->job_id],
+                                            [
+                                                'class' => 'admin-action-link mx-auto text-center mt-2',
+                                                'style' => 'display: block; width: 160px;'
+                                            ]
+                                        ) ?>
+                                    <?php elseif (!empty($staffJob->report_outcome)): ?>
+                                        <p class="text-center mt-2 mb-0">
+                                            <?= __('Report Submitted') ?>
+                                        </p>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </div>
