@@ -66,17 +66,23 @@
 
                             <div class="col-md-6 auth-form-group">
                                 <?= $this->Form->control('quantity_on_hand', [
+                                    'type' => 'number',
                                     'label' => 'Quantity On Hand',
                                     'placeholder' => 'Enter current quantity',
                                     'class' => 'auth-input',
+                                    'min' => '0',
+                                    'step' => '1',
                                 ]) ?>
                             </div>
 
                             <div class="col-md-6 auth-form-group">
                                 <?= $this->Form->control('reorder_threshold', [
+                                    'type' => 'number',
                                     'label' => 'Reorder Threshold',
                                     'placeholder' => 'Enter reorder threshold',
                                     'class' => 'auth-input',
+                                    'min' => '0',
+                                    'step' => '1',
                                 ]) ?>
                             </div>
 

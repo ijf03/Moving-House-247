@@ -75,9 +75,12 @@
 
                             <div class="col-md-6 auth-form-group">
                                 <?= $this->Form->control('quantity_available', [
+                                    'type' => 'number',
                                     'label' => 'Quantity Available',
                                     'placeholder' => 'Enter quantity available',
                                     'class' => 'auth-input',
+                                    'min' => '0',
+                                    'step' => '1',
                                 ]) ?>
                             </div>
 
