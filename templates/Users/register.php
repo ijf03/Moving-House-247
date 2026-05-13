@@ -88,7 +88,7 @@ $this->assign('title', 'Register');
                             <div class="col-12">
                                 <div class="auth-form-actions">
                                     <?= $this->Form->button('Register', [
-                                        'class' => 'auth-btn',
+                                        'class' => 'mh-btn-primary',
                                     ]) ?>
                                 </div>
                             </div>

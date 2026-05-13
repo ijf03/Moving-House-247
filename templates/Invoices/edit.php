@@ -28,17 +28,16 @@
             <div class="row g-4 justify-content-center">
 
                 <div class="col-lg-3">
+                    <div class="mh-back-btn m-1">
+                        <?= $this->Html->link(__('← Back to List'), ['action' => 'index']) ?>
+                    </div>
                     <div class="admin-table-card">
                         <div class="admin-table-header">
                             <h2><?= __('Actions') ?></h2>
                         </div>
 
                         <div class="admin-action-stack">
-                            <?= $this->Html->link(__('Back to Invoices'), ['action' => 'index'], [
-                                'class' => 'admin-action-link'
-                            ]) ?>
-
-                            <?= $this->Html->link(__('View Invoice'), ['action' => 'view', $invoice->invoice_id], [
+                                                        <?= $this->Html->link(__('View Invoice'), ['action' => 'view', $invoice->invoice_id], [
                                 'class' => 'admin-action-link'
                             ]) ?>
 

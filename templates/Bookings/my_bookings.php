@@ -38,6 +38,12 @@
                     </script>
                 <?php endif; ?>
 
+                <?php if (!empty($popupRejected)) : ?>
+                    <script>
+                        alert('Your booking request has been rejected.');
+                    </script>
+                <?php endif; ?>
+
                 <?php if ($bookings->isEmpty()) : ?>
                     <p><?= __('You do not have any accepted bookings yet.') ?></p>
                 <?php else : ?>

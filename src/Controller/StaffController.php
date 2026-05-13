@@ -254,56 +254,85 @@ class StaffController extends AppController
 
     public function availability($id = null)
     {
-        $staff = $this->Staff->get($id);
+        $identity = $this->request->getAttribute('identity');
+
+        if (!$identity) {
+            return $this->redirect(['controller' => 'Users', 'action' => 'login']);
+        }
+
+        $staffTable = $this->fetchTable('Staff');
         $usersTable = $this->fetchTable('Users');
-        $userId = $this->request->getAttribute('identity')->get('user_id');
+
+        $userId = $identity->get('user_id');
+
         $roleQuery = $usersTable->find()
             ->where(['user_id' => $userId])
             ->contain(['UserTypes'])
             ->first();
+
         $isAdmin = $roleQuery->user_type_name == 'Admin';
-        if ($staff->email != $this->Authentication->getIdentity()->email && !$isAdmin) {
-            $this->Flash->error(__('You are not allowed to access this page'));
+        if ($id === null) {
+            $staff = $staffTable->find()
+                ->where(['email' => $identity->get('email')])
+                ->first();
+
+            if (!$staff) {
+                $this->Flash->error(__('Staff not found.'));
+                return $this->redirect(['controller' => 'Pages', 'action' => 'display', 'home']);
+            }
+
+            $id = $staff->staff_id;
+        } else {
+            $staff = $staffTable->get($id);
         }
+
+        if ($staff->email != $identity->get('email') && !$isAdmin) {
+            $this->Flash->error(__('You are not allowed to access this page'));
+            return $this->redirect(['action' => 'index']);
+        }
+
         $availabilityTable = $this->fetchTable('Availability');
+
         $availabilityList = $availabilityTable->find()
             ->where(['staff_id' => $staff->staff_id])
             ->toArray();
+
         $events = [];
+
         foreach ($availabilityList as $availability) {
-            $events += [count($events) + 1 => ['id' => $availability->availability_id,
+            $events[] = [
+                'id' => $availability->availability_id,
                 'start' => $availability->start_datetime->format('Y-m-d H:i:s'),
                 'end' => $availability->end_datetime->format('Y-m-d H:i:s'),
-            ]
             ];
         }
         $this->request->allowMethod(['post', 'get']);
         if ($this->request->is(['post'])) {
             $updated_events = json_decode($this->request->getData('availability_json'), true);
-            $availabilityTable = $this->fetchTable('Availability');
             foreach ($updated_events as $updated_event) {
-                $updated_event['allDay'] = null;
-                $updated_event['backgroundColor'] = null;
                 $updated_event['staff_id'] = $id;
-                $updated_event['start_datetime'] = new DateTime($updated_event['start_datetime']);
-                $updated_event['end_datetime'] = new DateTime($updated_event['end_datetime']);
+                $updated_event['start_datetime'] = new \DateTime($updated_event['start_datetime']);
+                $updated_event['end_datetime'] = new \DateTime($updated_event['end_datetime']);
                 $updated_event['id'] = ($updated_event['id'] == 'null') ? null : $updated_event['id'];
-                $entry = $updated_event['id'] ? $availabilityTable->get($updated_event['id']) : null;
-                if ($entry? $entry->staff_id != $staff->staff_id : false) {
+                $entry = $updated_event['id']
+                    ? $availabilityTable->get($updated_event['id'])
+                    : null;
+                if ($entry && $entry->staff_id != $staff->staff_id) {
                     $this->Flash->error(__('Access denied'));
                     return $this->redirect(['action' => 'index']);
                 }
                 if ($entry) {
                     $entry = $availabilityTable->patchEntity($entry, $updated_event);
+
                     if (!$availabilityTable->save($entry)) {
-                        $this->Flash->error(__('The availability could not be saved. Please, try again.'));
+                        $this->Flash->error(__('The availability could not be saved.'));
                         return;
                     }
                 } else {
                     $newEvent = $availabilityTable->newEntity($updated_event);
-                    $newEvent['staff_id'] = $id;
+
                     if (!$availabilityTable->save($newEvent)) {
-                        $this->Flash->error(__('The availability could not be saved. Please, try again.'));
+                        $this->Flash->error(__('The availability could not be saved.'));
                         return;
                     }
                 }
