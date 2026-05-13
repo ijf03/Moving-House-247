@@ -546,7 +546,10 @@ class JobsController extends AppController
             return $this->redirect(['action' => 'index']);
         }
 
-        $job = $this->Jobs->get($jobId);
+        $job = $this->Jobs->get($jobId, contain: [
+            'Customers',
+            'JobTypes',
+        ]);
 
         $trucksTable = $this->fetchTable('Trucks');
 

@@ -39,6 +39,11 @@ $assignedStaff = $assignedStaff ?? new \Cake\Collection\Collection([]);
 
                             <div class="admin-action-stack">
                                 <?= $this->Html->link(
+                                    __('Allocate'),
+                                    ['action' => 'allocate', $job->job_id],
+                                    ['class' => 'admin-action-link']
+                                ) ?>
+                                <?= $this->Html->link(
                                     __('Edit Job'),
                                     ['action' => 'edit', $job->job_id],
                                     ['class' => 'admin-action-link']
