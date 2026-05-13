@@ -91,7 +91,7 @@ class JobsController extends AppController
         $job = $this->Jobs->get($id, contain: [
             'JobTypes',
             'Customers',
-            'JobTrucks.Trucks',
+            'JobResources.Trucks',
         ]);
 
         $staffJobsTable = $this->fetchTable('StaffJob');
@@ -269,19 +269,19 @@ class JobsController extends AppController
                 $job->job_time->format('H:i:s')
             );
 
-            $fitsAvailability = false;
+            $isUnavailable = false;
 
             foreach ($availabilityList as $availability) {
                 $start = strtotime($availability->start_datetime->format('Y-m-d H:i:s'));
                 $end = strtotime($availability->end_datetime->format('Y-m-d H:i:s'));
 
                 if ($jobDateTime >= $start && $jobDateTime <= $end) {
-                    $fitsAvailability = true;
+                    $isUnavailable = true;
                     break;
                 }
             }
 
-            if (!$fitsAvailability) {
+            if ($isUnavailable) {
                 continue;
             }
 
@@ -573,25 +573,31 @@ class JobsController extends AppController
                 return;
             }
 
-            $job->driver_required = (int)$data['driver_required'];
+            $driverRequired = (int)$data['driver_required'];
+
+            if (count($truckIds) != $driverRequired) {
+                $this->Flash->error(__('Truck number must match driver number.'));
+                $this->set(compact('job', 'truckList'));
+                return;
+            }
+
+            $job->driver_required = $driverRequired;
             $job->porter_required = (int)$data['porter_required'];
-            $job->staff_required = (int)$data['driver_required'] + (int)$data['porter_required'];
-            $job->truck_required = (int)$data['truck_required'];
+            $job->staff_required = $driverRequired + (int)$data['porter_required'];
+            $job->truck_required = $driverRequired;
             $job->status = 'Processing';
             $job->allocated_at = date('Y-m-d H:i:s');
 
             if ($this->Jobs->save($job)) {
-                $jobTrucksTable = $this->fetchTable('JobTrucks');
-
-                $jobTrucksTable->deleteAll(['job_id' => $job->job_id]);
-
+                $jobResourcesTable = $this->fetchTable('JobResources');
+                $jobResourcesTable->deleteAll(['job_id' => $job->job_id]);
                 foreach ($truckIds as $truckId) {
-                    $jobTruck = $jobTrucksTable->newEntity([
+                    $jobResource = $jobResourcesTable->newEntity([
                         'job_id' => $job->job_id,
                         'truck_id' => $truckId,
+                        'quantity' => 1,
                     ]);
-
-                    $jobTrucksTable->save($jobTruck);
+                    $jobResourcesTable->save($jobResource);
                 }
 
                 $this->Flash->success(__('Job allocated successfully.'));
