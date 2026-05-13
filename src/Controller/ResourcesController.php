@@ -81,101 +81,53 @@ class ResourcesController extends AppController
             ->limit(5)
             ->all();
 
-        $recentAssignments = $jobResourcesTable->find()
+        $recentJobResources = $jobResourcesTable->find()
             ->contain([
-                'Jobs' => ['Customers', 'JobTypes']
+                'Jobs' => [
+                    'Customers',
+                    'JobTypes',
+                ],
             ])
-            ->limit(10)
-            ->all()
-            ->toList();
+            ->orderBy([
+                'JobResources.job_id' => 'DESC',
+                'JobResources.job_resource_id' => 'ASC',
+            ])
+            ->all();
 
-        $truckIds = [];
-        $storageUnitIds = [];
-        $equipmentIds = [];
-        $inventoryItemIds = [];
+        $groupedAssignments = [];
 
-        foreach ($recentAssignments as $assignment) {
-            $resourceType = (string)$assignment->resource_type;
-            $resourceId = (int)$assignment->resource_id;
+        foreach ($recentJobResources as $jobResource) {
+            $jobId = $jobResource->job_id;
 
-            switch ($resourceType) {
-                case 'truck':
-                    $truckIds[] = $resourceId;
-                    break;
-                case 'storage_unit':
-                    $storageUnitIds[] = $resourceId;
-                    break;
-                case 'equipment':
-                    $equipmentIds[] = $resourceId;
-                    break;
-                case 'inventory_item':
-                    $inventoryItemIds[] = $resourceId;
-                    break;
+            if (!isset($groupedAssignments[$jobId])) {
+                $groupedAssignments[$jobId] = [
+                    'job_id' => $jobId,
+                    'job' => $jobResource->job ?? null,
+                    'truck_count' => 0,
+                    'equipment_count' => 0,
+                    'storage_unit_count' => 0,
+                    'inventory_count' => 0,
+                ];
+            }
+
+            if (!empty($jobResource->truck_id)) {
+                $groupedAssignments[$jobId]['truck_count']++;
+            }
+
+            if (!empty($jobResource->equipment_id)) {
+                $groupedAssignments[$jobId]['equipment_count']++;
+            }
+
+            if (!empty($jobResource->storage_unit_id)) {
+                $groupedAssignments[$jobId]['storage_unit_count']++;
+            }
+
+            if (!empty($jobResource->inventory_id)) {
+                $groupedAssignments[$jobId]['inventory_count']++;
             }
         }
 
-        $truckMap = [];
-        if (!empty($truckIds)) {
-            $truckRows = $trucksTable->find()
-                ->where(['truck_id IN' => array_unique($truckIds)])
-                ->all();
-
-            foreach ($truckRows as $truck) {
-                $truckMap[(int)$truck->truck_id] = $truck->name . ' (' . $truck->rego . ')';
-            }
-        }
-
-        $storageUnitMap = [];
-        if (!empty($storageUnitIds)) {
-            $storageRows = $storageUnitsTable->find()
-                ->where(['storage_unit_id IN' => array_unique($storageUnitIds)])
-                ->all();
-
-            foreach ($storageRows as $unit) {
-                $storageUnitMap[(int)$unit->storage_unit_id] = $unit->unit_code . ' - ' . $unit->facility_name;
-            }
-        }
-
-        $equipmentMap = [];
-        if (!empty($equipmentIds)) {
-            $equipmentRows = $equipmentTable->find()
-                ->where(['equipment_id IN' => array_unique($equipmentIds)])
-                ->all();
-
-            foreach ($equipmentRows as $item) {
-                $equipmentMap[(int)$item->equipment_id] = $item->name;
-            }
-        }
-
-        $inventoryItemMap = [];
-        if (!empty($inventoryItemIds)) {
-            $inventoryRows = $inventoryItemsTable->find()
-                ->where(['inventory_item_id IN' => array_unique($inventoryItemIds)])
-                ->all();
-
-            foreach ($inventoryRows as $item) {
-                $inventoryItemMap[(int)$item->inventory_item_id] = $item->name;
-            }
-        }
-
-        foreach ($recentAssignments as $assignment) {
-            $assignment->resource_label = 'Unknown resource';
-
-            switch ((string)$assignment->resource_type) {
-                case 'truck':
-                    $assignment->resource_label = $truckMap[(int)$assignment->resource_id] ?? 'Unknown truck';
-                    break;
-                case 'storage_unit':
-                    $assignment->resource_label = $storageUnitMap[(int)$assignment->resource_id] ?? 'Unknown storage unit';
-                    break;
-                case 'equipment':
-                    $assignment->resource_label = $equipmentMap[(int)$assignment->resource_id] ?? 'Unknown equipment';
-                    break;
-                case 'inventory_item':
-                    $assignment->resource_label = $inventoryItemMap[(int)$assignment->resource_id] ?? 'Unknown inventory item';
-                    break;
-            }
-        }
+        $recentAssignments = array_slice(array_values($groupedAssignments), 0, 3);
 
         $this->set(compact(
             'truckCount',
