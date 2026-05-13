@@ -313,22 +313,27 @@ class StaffController extends AppController
                 $updated_event['staff_id'] = $id;
                 $updated_event['start_datetime'] = new \DateTime($updated_event['start_datetime']);
                 $updated_event['end_datetime'] = new \DateTime($updated_event['end_datetime']);
-                $updated_event['id'] = ($updated_event['id'] == 'null') ? null : $updated_event['id'];
-                $entry = $updated_event['id']
-                    ? $availabilityTable->get($updated_event['id'])
-                    : null;
-                if ($entry && $entry->staff_id != $staff->staff_id) {
+                $entry = $availabilityTable->find()
+                    ->where(['availability_id'=>$updated_event['id']])
+                ->first();
+                if ($entry && $entry->staff_id != $staff->staff_id && !$isAdmin) {
                     $this->Flash->error(__('Access denied'));
                     return $this->redirect(['action' => 'index']);
                 }
                 if ($entry) {
+                    if ($updated_event['deleted']){
+                        if (!$availabilityTable->delete($entry)){
+                            $this->Flash->error(__('Delete failed'));
+                            return;
+                        }
+                    }
                     $entry = $availabilityTable->patchEntity($entry, $updated_event);
 
                     if (!$availabilityTable->save($entry)) {
                         $this->Flash->error(__('The availability could not be saved.'));
                         return;
                     }
-                } else {
+                } else if (!$updated_event['deleted']) {
                     $newEvent = $availabilityTable->newEntity($updated_event);
 
                     if (!$availabilityTable->save($newEvent)) {
@@ -338,6 +343,7 @@ class StaffController extends AppController
                 }
             }
             $this->Flash->success(__('The availability has been saved.'));
+            return $this->redirect($this->request->getRequestTarget());
         }
         $this->set(compact('staff', 'events', 'availabilityList'));
     }
