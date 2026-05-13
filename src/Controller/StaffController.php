@@ -5,6 +5,8 @@ namespace App\Controller;
 
 use Cake\Mailer\Mailer;
 use Cake\Core\Configure;
+use Cake\I18n\DateTime;
+
 
 /**
  * Staff Controller
@@ -253,39 +255,60 @@ class StaffController extends AppController
     public function availability($id = null)
     {
         $staff = $this->Staff->get($id);
-        $targetStaffID = (int)$this->request->getParam('pass')[0];
         $usersTable = $this->fetchTable('Users');
-        $user = $usersTable->find()
-            ->where(['email' => $staff->email])
-            ->first();
         $userId = $this->request->getAttribute('identity')->get('user_id');
         $roleQuery = $usersTable->find()
             ->where(['user_id' => $userId])
             ->contain(['UserTypes'])
             ->first();
         $isAdmin = $roleQuery->user_type_name == 'Admin';
-        if ($staff->email != $this->Authentication->getIdentity()->email){
+        if ($staff->email != $this->Authentication->getIdentity()->email && !$isAdmin) {
             $this->Flash->error(__('You are not allowed to access this page'));
         }
         $availabilityTable = $this->fetchTable('Availability');
         $availabilityList = $availabilityTable->find()
             ->where(['staff_id' => $staff->staff_id])
-            ->all();
-        $event_set = [];
+            ->toArray();
+        $events = [];
         foreach ($availabilityList as $availability) {
-            $event_set += [$availability->start_datetime->format('Y-m-d H:i:s') => $availability->end_datetime->format('Y-m-d H:i:s')];
+            $events += [count($events) + 1 => ['id' => $availability->availability_id,
+                'start' => $availability->start_datetime->format('Y-m-d H:i:s'),
+                'end' => $availability->end_datetime->format('Y-m-d H:i:s'),
+            ]
+            ];
         }
         $this->request->allowMethod(['post', 'get']);
         if ($this->request->is(['post'])) {
+            $updated_events = json_decode($this->request->getData('availability_json'), true);
             $availabilityTable = $this->fetchTable('Availability');
-            $newEvent = $availabilityTable->newEntity($this->request->getData());
-            $newEvent['staff_id'] = $id;
-            if (!$availabilityTable->save($newEvent)) {
-                $this->Flash->error(__('The availability could not be saved. Please, try again.'));
-                return;
+            foreach ($updated_events as $updated_event) {
+                $updated_event['allDay'] = null;
+                $updated_event['backgroundColor'] = null;
+                $updated_event['staff_id'] = $id;
+                $updated_event['start_datetime'] = new DateTime($updated_event['start_datetime']);
+                $updated_event['end_datetime'] = new DateTime($updated_event['end_datetime']);
+                $entry = $availabilityTable->get($updated_event['id']);
+                if ($entry->staff_id != $staff->staff_id) {
+                    $this->Flash->error(__('Access denied'));
+                    return $this->redirect(['action' => 'index']);
+                }
+                if ($entry) {
+                    $entry = $availabilityTable->patchEntity($entry, $updated_event);
+                    if (!$availabilityTable->save($entry)) {
+                        $this->Flash->error(__('The availability could not be saved. Please, try again.'));
+                        return;
+                    }
+                } else {
+                    $newEvent = $availabilityTable->newEntity($updated_event);
+                    $newEvent['staff_id'] = $id;
+                    if (!$availabilityTable->save($newEvent)) {
+                        $this->Flash->error(__('The availability could not be saved. Please, try again.'));
+                        return;
+                    }
+                }
             }
             $this->Flash->success(__('The availability has been saved.'));
         }
-        $this->set(compact('staff','event_set'));
+        $this->set(compact('staff', 'events', 'availabilityList'));
     }
 }
