@@ -19,7 +19,6 @@ class ResourcesController extends AppController
     {
         $identity = $this->request->getAttribute('identity');
 
-        // Restrict to admin users only.
         if (!$identity || (int)$identity->get('user_type') !== 1) {
             $this->Flash->error(__('You are not authorized to access this page.'));
             return $this->redirect(['controller' => 'Pages', 'action' => 'display', 'home']);
