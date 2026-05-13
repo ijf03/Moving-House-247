@@ -206,6 +206,7 @@ class JobsController extends AppController
 
         $staffTable = $this->fetchTable('Staff');
         $staffJobsTable = $this->fetchTable('StaffJob');
+        $availabilityTable = $this->fetchTable('Availability');
 
         $currentStaff = $staffTable->find()
             ->where(['email' => $identity->get('email')])
@@ -217,6 +218,10 @@ class JobsController extends AppController
         }
 
         $isDriver = (int)$currentStaff->isDriver === 1;
+
+        $availabilityList = $availabilityTable->find()
+            ->where(['staff_id' => $currentStaff->staff_id])
+            ->all();
 
         $hiddenJobIds = $staffJobsTable->find()
             ->select(['job_id'])
@@ -237,6 +242,27 @@ class JobsController extends AppController
         $visibleJobs = [];
 
         foreach ($allJobs as $job) {
+            $jobDateTime = strtotime(
+                $job->job_date->format('Y-m-d') . ' ' .
+                $job->job_time->format('H:i:s')
+            );
+
+            $fitsAvailability = false;
+
+            foreach ($availabilityList as $availability) {
+                $start = strtotime($availability->start_datetime->format('Y-m-d H:i:s'));
+                $end = strtotime($availability->end_datetime->format('Y-m-d H:i:s'));
+
+                if ($jobDateTime >= $start && $jobDateTime <= $end) {
+                    $fitsAvailability = true;
+                    break;
+                }
+            }
+
+            if (!$fitsAvailability) {
+                continue;
+            }
+
             $driverCount = $staffJobsTable->find()
                 ->where([
                     'job_id' => $job->job_id,
