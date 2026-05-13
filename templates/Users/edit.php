@@ -24,7 +24,14 @@
         <div class="container">
             <div class="row g-4 justify-content-center">
                 <div class="col-lg-3">
-                    <div class="admin-table-card">
+                    <div class="mh-back-btn m-1">
+                        <?= $this->Html->link(
+                            __('← Back to List'),
+                            ['action' => 'index']
+                        ) ?>
+                    </div>
+
+                    <div class="admin-table-card mt-3">
                         <div class="admin-table-header">
                             <h2><?= __('Actions') ?></h2>
                             <p><?= __('Manage this user account.') ?></p>
@@ -32,15 +39,13 @@
 
                         <div class="admin-action-stack">
                             <?= $this->Form->postLink(
-                                __('Delete'),
+                                __('Delete User'),
                                 ['action' => 'delete', $user->user_id],
                                 [
                                     'confirm' => __('Are you sure you want to delete # {0}?', $user->user_id),
                                     'class' => 'admin-action-link admin-action-link-danger',
                                 ],
                             ) ?>
-
-                            <?= $this->Html->link(__('List Users'), ['action' => 'index'], ['class' => 'admin-action-link']) ?>
                         </div>
                     </div>
                 </div>
