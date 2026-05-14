@@ -91,10 +91,6 @@
         }
 
         function save() {
-            if (!document.getElementById('start_datetime').value || !document.getElementById('end_datetime').value){
-                alert("Start time and end time cannot be empty!")
-                return;
-            }
             calendar.getEventById(activeEventID).setDates(document.getElementById('start_datetime').value + startTimezone,
                 document.getElementById('end_datetime').value + endTimezone);
             submitForm();
@@ -107,10 +103,6 @@
             modal.show();
         }
         function add() {
-            if (!document.getElementById('new_start').value || !document.getElementById('new_end').value){
-                alert("Start time and end time cannot be empty!")
-                return;
-            }
             calendar.addEvent(
                 {
                     id: null,
@@ -130,60 +122,127 @@
     </script>
 </head>
 <body>
-<?= $this->Form->create(null, ['id' => 'availability-form']) ?>
+<div class="mh-page-soft">
+    <section class="admin-hero">
+        <div class="container">
+            <div class="admin-hero-shell">
+                <div class="admin-hero-content">
+                    <span class="admin-eyebrow"><?= __('Staff') ?></span>
+                    <h1><?= __('Manage Unavailability') ?></h1>
+                    <p class="admin-hero-text">
+                        <?= __('Add and manage times when you are unavailable for jobs.') ?>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<?= $this->Form->button(__('Add Event'), [
-    'type' => 'button',
-    'onclick' => 'newEvent()',
-    'class' => 'btn'
-]) ?>
+    <section class="admin-section">
+        <div class="container">
+            <div class="admin-table-card">
+                <div class="admin-table-header admin-table-header-split">
+                    <div>
+                        <h2><?= __('Unavailable Schedule') ?></h2>
+                        <p><?= __('Click an event to edit unavailable time blocks.') ?></p>
+                    </div>
 
-<?= $this->Form->control('availability_json', ['type' => 'hidden', 'id' => 'availability-json']) ?>
+                    <div class="d-flex gap-2 flex-wrap">
+                        <?= $this->Form->create(null, ['id' => 'availability-form']) ?>
 
-<div id="calendar"></div>
+                        <?= $this->Form->button(__('Add Unavailable Time'), [
+                            'type' => 'button',
+                            'onclick' => 'newEvent()',
+                            'class' => 'admin-primary-link'
+                        ]) ?>
 
-<?= $this->Form->button(__('Save'), [
-    'type' => 'button',
-    'onclick' => 'submitForm()',
-    'class' => 'btn'
-]) ?>
+                        <?= $this->Form->button(__('Save Schedule'), [
+                            'type' => 'button',
+                            'onclick' => 'submitForm()',
+                            'class' => 'admin-action-link'
+                        ]) ?>
 
-<?= $this->Form->end() ?>
+                        <?= $this->Form->control('availability_json', [
+                            'type' => 'hidden',
+                            'id' => 'availability-json'
+                        ]) ?>
+
+                        <?= $this->Form->end() ?>
+                    </div>
+                </div>
+
+                <div class="mh-form-card p-3">
+                    <div id="calendar"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
 <div class="modal fade" id="eventModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalTitle">Event Details</h5>
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content mh-form-card">
+            <div class="modal-header border-0 px-0 pt-0">
+                <h5 class="modal-title" id="modalTitle"><?= __('Event Details') ?></h5>
             </div>
-            <div class="modal-body">
-                <p>Start time</p>
-                <input type="datetime-local" id="start_datetime" required>
-                <p>End time</p>
-                <input type="datetime-local" id="end_datetime" required>
+
+            <div class="modal-body px-0 mh-form">
+                <div class="mb-3">
+                    <label for="start_datetime" class="form-label fw-bold"><?= __('Start time') ?></label>
+                    <input type="datetime-local" id="start_datetime" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="end_datetime" class="form-label fw-bold"><?= __('End time') ?></label>
+                    <input type="datetime-local" id="end_datetime" required>
+                </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" id="btn-delete" onclick="deleteEvent()">Delete</button>
-                <button type="button" class="btn" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn" onclick="save()">Apply Changes</button>
+
+            <div class="modal-footer border-0 px-0 pb-0 d-flex justify-content-between">
+                <button type="button" class="admin-action-link admin-action-link-danger" id="btn-delete" onclick="deleteEvent()">
+                    <?= __('Delete') ?>
+                </button>
+
+                <div class="d-flex gap-2">
+                    <button type="button" class="admin-action-link" data-bs-dismiss="modal">
+                        <?= __('Cancel') ?>
+                    </button>
+
+                    <button type="button" class="admin-primary-link" onclick="save()">
+                        <?= __('Apply Changes') ?>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
 <div class="modal fade" id="addEventModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalTitle">Event Details</h5>
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content mh-form-card">
+            <div class="modal-header border-0 px-0 pt-0">
+                <h5 class="modal-title" id="modalTitle"><?= __('Add Availability') ?></h5>
             </div>
-            <div class="modal-body">
-                <p>Start time</p>
-                <input type="datetime-local" id="new_start" required>
-                <p>End time</p>
-                <input type="datetime-local" id="new_end" required>
+
+            <div class="modal-body px-0 mh-form">
+                <div class="mb-3">
+                    <label for="new_start" class="form-label fw-bold"><?= __('Start time') ?></label>
+                    <input type="datetime-local" id="new_start" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="new_end" class="form-label fw-bold"><?= __('End time') ?></label>
+                    <input type="datetime-local" id="new_end" required>
+                </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn" onclick="add()">Save</button>
+
+            <div class="modal-footer border-0 px-0 pb-0">
+                <button type="button" class="admin-action-link" data-bs-dismiss="modal">
+                    <?= __('Cancel') ?>
+                </button>
+
+                <button type="button" class="admin-primary-link" onclick="add()">
+                    <?= __('Save') ?>
+                </button>
             </div>
         </div>
     </div>
