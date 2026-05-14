@@ -17,25 +17,48 @@ class JobsController extends AppController
      */
     public function index()
     {
+        $identity = $this->request->getAttribute('identity');
+        if (!$identity || (int)$identity->get('user_type') !== 1) {
+            $this->Flash->error(__('Only admins can access this page.'));
+            return $this->redirect(['controller' => 'Pages', 'action' => 'display', 'home']);
+        }
+        $this->checkExpiredJobs();
         $query = $this->Jobs->find()
             ->contain(['JobTypes', 'Customers'])
             ->orderByAsc(
                 $this->Jobs->query()->newExpr("
-            CASE
-                WHEN Jobs.status = 'Pending' THEN 1
-                WHEN Jobs.status = 'Processing' THEN 2
-                WHEN Jobs.status = 'Ready' THEN 3
-                WHEN Jobs.status = 'Cancelled' THEN 4
-                WHEN Jobs.status = 'Completed' THEN 5
-                ELSE 6
-            END
-        ")
+                CASE
+                    WHEN Jobs.status = 'Pending' THEN 1
+                    WHEN Jobs.status = 'Processing' THEN 2
+                    WHEN Jobs.status = 'Ready' THEN 3
+                    WHEN Jobs.status = 'Cancelled' THEN 4
+                    WHEN Jobs.status = 'Completed' THEN 5
+                    ELSE 6
+                END
+            ")
             )
             ->orderBy(['Jobs.job_date' => 'ASC']);
+
         $jobs = $this->paginate($query);
         $staffJobsTable = $this->fetchTable('StaffJob');
 
         foreach ($jobs as $job) {
+            $job->driver_count = $staffJobsTable->find()
+                ->where([
+                    'job_id' => $job->job_id,
+                    'status' => 'Confirmed',
+                    'role' => 'Driver',
+                ])
+                ->count();
+
+            $job->porter_count = $staffJobsTable->find()
+                ->where([
+                    'job_id' => $job->job_id,
+                    'status' => 'Confirmed',
+                    'role' => 'Porter',
+                ])
+                ->count();
+
             $job->confirmed_count = $staffJobsTable->find()
                 ->where([
                     'job_id' => $job->job_id,
@@ -59,7 +82,7 @@ class JobsController extends AppController
         $identity = $this->request->getAttribute('identity');
 
         if (!$identity) {
-            $this->Flash->error(__('You must be logged in to view jobs.'));
+            $this->Flash->error(__('You must be logged in.'));
             return $this->redirect(['controller' => 'Users', 'action' => 'login']);
         }
 
@@ -68,34 +91,65 @@ class JobsController extends AppController
         $job = $this->Jobs->get($id, contain: [
             'JobTypes',
             'Customers',
-            'JobTrucks.Trucks',
-            'StaffJob',
+            'JobResources.Trucks',
         ]);
 
         $staffJobsTable = $this->fetchTable('StaffJob');
+        $staffTable = $this->fetchTable('Staff');
 
         $staffJob = null;
+        $isDriver = false;
 
         if ($role === 2) {
-            $staffJob = $staffJobsTable->find()
-                ->where([
-                    'job_id' => $id,
-                    'staff_id' => $identity->get('user_id'),
-                ])
+            $currentStaff = $staffTable->find()
+                ->where(['email' => $identity->get('email')])
                 ->first();
 
-            if ($staffJob && $staffJob->status === 'Rejected') {
-                $this->Flash->error(__('You are not authorized to view this job.'));
-                return $this->redirect(['action' => 'available']);
-            }
+            if ($currentStaff) {
+                $isDriver = (int)$currentStaff->isDriver === 1;
 
-            if (!$staffJob && $job->status !== 'Processing') {
-                $this->Flash->error(__('You are not authorized to view this job.'));
-                return $this->redirect(['action' => 'available']);
+                $staffJob = $staffJobsTable->find()
+                    ->where([
+                        'job_id' => $id,
+                        'staff_id' => $currentStaff->staff_id,
+                    ])
+                    ->first();
             }
         }
+        $job->driver_count = $staffJobsTable->find()
+            ->where([
+                'job_id' => $id,
+                'status' => 'Confirmed',
+                'role' => 'Driver',
+            ])
+            ->count();
 
-        $this->set(compact('job', 'staffJob'));
+        $job->porter_count = $staffJobsTable->find()
+            ->where([
+                'job_id' => $id,
+                'status' => 'Confirmed',
+                'role' => 'Porter',
+            ])
+            ->count();
+
+        $jobReports = $staffJobsTable->find()
+            ->contain(['Staff'])
+            ->where([
+                'StaffJob.job_id' => $id,
+                'StaffJob.status' => 'Confirmed',
+                'StaffJob.report_submitted_at IS NOT' => null,
+            ])
+            ->all();
+        $assignedStaff = $staffJobsTable->find()
+            ->contain(['Staff'])
+            ->where([
+                'StaffJob.job_id' => $id,
+                'StaffJob.status' => 'Confirmed',
+            ])
+            ->orderByAsc('StaffJob.role')
+            ->all();
+
+        $this->set(compact('job', 'staffJob', 'isDriver', 'jobReports', 'assignedStaff'));
     }
 
     /**
@@ -172,11 +226,28 @@ class JobsController extends AppController
             return $this->redirect(['controller' => 'Pages', 'action' => 'display', 'home']);
         }
 
+        $staffTable = $this->fetchTable('Staff');
         $staffJobsTable = $this->fetchTable('StaffJob');
+        $availabilityTable = $this->fetchTable('Availability');
+
+        $currentStaff = $staffTable->find()
+            ->where(['email' => $identity->get('email')])
+            ->first();
+
+        if (!$currentStaff) {
+            $this->Flash->error(__('Staff profile not found.'));
+            return $this->redirect(['controller' => 'Pages', 'action' => 'display', 'home']);
+        }
+
+        $isDriver = (int)$currentStaff->isDriver === 1;
+
+        $availabilityList = $availabilityTable->find()
+            ->where(['staff_id' => $currentStaff->staff_id])
+            ->all();
 
         $hiddenJobIds = $staffJobsTable->find()
             ->select(['job_id'])
-            ->where(['staff_id' => $identity->get('user_id')])
+            ->where(['staff_id' => $currentStaff->staff_id])
             ->all()
             ->extract('job_id')
             ->toList();
@@ -189,23 +260,69 @@ class JobsController extends AppController
             $query->where(['Jobs.job_id NOT IN' => $hiddenJobIds]);
         }
 
-        $jobs = $query->all();
+        $allJobs = $query->all();
+        $visibleJobs = [];
 
-        $staffJobsTable = $this->fetchTable('StaffJob');
+        foreach ($allJobs as $job) {
+            $jobDateTime = strtotime(
+                $job->job_date->format('Y-m-d') . ' ' .
+                $job->job_time->format('H:i:s')
+            );
 
-        foreach ($jobs as $job) {
-            $job->confirmed_count = $staffJobsTable->find()
+            $isUnavailable = false;
+
+            foreach ($availabilityList as $availability) {
+                $start = strtotime($availability->start_datetime->format('Y-m-d H:i:s'));
+                $end = strtotime($availability->end_datetime->format('Y-m-d H:i:s'));
+
+                if ($jobDateTime >= $start && $jobDateTime <= $end) {
+                    $isUnavailable = true;
+                    break;
+                }
+            }
+
+            if ($isUnavailable) {
+                continue;
+            }
+
+            $driverCount = $staffJobsTable->find()
                 ->where([
                     'job_id' => $job->job_id,
                     'status' => 'Confirmed',
+                    'role' => 'Driver',
                 ])
                 ->count();
+
+            $porterCount = $staffJobsTable->find()
+                ->where([
+                    'job_id' => $job->job_id,
+                    'status' => 'Confirmed',
+                    'role' => 'Porter',
+                ])
+                ->count();
+
+            $job->driver_count = $driverCount;
+            $job->porter_count = $porterCount;
+
+            if ($isDriver) {
+                if (
+                    $driverCount < (int)$job->driver_required ||
+                    $porterCount < (int)$job->porter_required
+                ) {
+                    $visibleJobs[] = $job;
+                }
+            } else {
+                if ($porterCount < (int)$job->porter_required) {
+                    $visibleJobs[] = $job;
+                }
+            }
         }
 
+        $jobs = new \Cake\Collection\Collection($visibleJobs);
         $this->set(compact('jobs'));
     }
 
-    public function takeJob($jobId = null)
+    public function takeJob($jobId = null, $role = null)
     {
         $identity = $this->request->getAttribute('identity');
 
@@ -216,7 +333,30 @@ class JobsController extends AppController
 
         $this->request->allowMethod(['post']);
 
+        if (!in_array($role, ['Driver', 'Porter'], true)) {
+            $this->Flash->error(__('Invalid role selected.'));
+            return $this->redirect(['action' => 'available']);
+        }
+
+        $staffTable = $this->fetchTable('Staff');
         $staffJobsTable = $this->fetchTable('StaffJob');
+
+        $currentStaff = $staffTable->find()
+            ->where(['email' => $identity->get('email')])
+            ->first();
+
+        if (!$currentStaff) {
+            $this->Flash->error(__('Staff profile not found.'));
+            return $this->redirect(['action' => 'available']);
+        }
+
+        $isDriver = (int)$currentStaff->isDriver === 1;
+
+        if (!$isDriver && $role === 'Driver') {
+            $this->Flash->error(__('Porters cannot accept driver roles.'));
+            return $this->redirect(['action' => 'available']);
+        }
+
         $job = $this->Jobs->get($jobId);
 
         if ($job->status !== 'Processing') {
@@ -227,35 +367,64 @@ class JobsController extends AppController
         $existing = $staffJobsTable->find()
             ->where([
                 'job_id' => $jobId,
-                'staff_id' => $identity->get('user_id'),
+                'staff_id' => $currentStaff->staff_id,
             ])
             ->first();
 
         if ($existing) {
-            $this->Flash->error(__('You have already taken this job.'));
+            $this->Flash->error(__('You have already responded to this job.'));
+            return $this->redirect(['action' => 'available']);
+        }
+
+        $driverCount = $staffJobsTable->find()
+            ->where([
+                'job_id' => $jobId,
+                'status' => 'Confirmed',
+                'role' => 'Driver',
+            ])
+            ->count();
+
+        $porterCount = $staffJobsTable->find()
+            ->where([
+                'job_id' => $jobId,
+                'status' => 'Confirmed',
+                'role' => 'Porter',
+            ])
+            ->count();
+
+        if ($role === 'Driver' && $driverCount >= (int)$job->driver_required) {
+            $this->Flash->error(__('Driver positions are full.'));
+            return $this->redirect(['action' => 'available']);
+        }
+
+        if ($role === 'Porter' && $porterCount >= (int)$job->porter_required) {
+            $this->Flash->error(__('Porter positions are full.'));
             return $this->redirect(['action' => 'available']);
         }
 
         $staffJob = $staffJobsTable->newEntity([
             'job_id' => $jobId,
-            'staff_id' => $identity->get('user_id'),
+            'staff_id' => $currentStaff->staff_id,
             'status' => 'Confirmed',
+            'role' => $role,
         ]);
 
         if ($staffJobsTable->save($staffJob)) {
-            $confirmedStaffCount = $staffJobsTable->find()
-                ->where([
-                    'job_id' => $jobId,
-                    'status' => 'Confirmed',
-                ])
-                ->count();
+            if ($role === 'Driver') {
+                $driverCount++;
+            } else {
+                $porterCount++;
+            }
 
-            if ($confirmedStaffCount >= $job->staff_required) {
+            if (
+                $driverCount >= (int)$job->driver_required &&
+                $porterCount >= (int)$job->porter_required
+            ) {
                 $job->status = 'Ready';
                 $this->Jobs->save($job);
             }
 
-            $this->Flash->success(__('You have taken this job.'));
+            $this->Flash->success(__('You have taken this job as {0}.', $role));
             return $this->redirect(['action' => 'available']);
         }
 
@@ -272,22 +441,44 @@ class JobsController extends AppController
             return $this->redirect(['controller' => 'Pages', 'action' => 'display', 'home']);
         }
 
+        $staffTable = $this->fetchTable('Staff');
         $staffJobsTable = $this->fetchTable('StaffJob');
+
+        $currentStaff = $staffTable->find()
+            ->where(['email' => $identity->get('email')])
+            ->first();
+
+        if (!$currentStaff) {
+            $this->Flash->error(__('Staff profile not found.'));
+            return $this->redirect(['controller' => 'Pages', 'action' => 'display', 'home']);
+        }
 
         $staffJobs = $staffJobsTable->find()
             ->contain(['Jobs'])
             ->where([
-                'StaffJob.staff_id' => $identity->get('user_id'),
+                'StaffJob.staff_id' => $currentStaff->staff_id,
                 'StaffJob.status' => 'Confirmed',
             ])
             ->all();
+
         foreach ($staffJobs as $staffJob) {
-            $staffJob->confirmed_count = $staffJobsTable->find()
+            $staffJob->driver_count = $staffJobsTable->find()
                 ->where([
                     'job_id' => $staffJob->job_id,
+                    'status' => 'Confirmed',
+                    'role' => 'Driver',
+                ])
+                ->count();
+
+            $staffJob->porter_count = $staffJobsTable->find()
+                ->where([
+                    'job_id' => $staffJob->job_id,
+                    'status' => 'Confirmed',
+                    'role' => 'Porter',
                 ])
                 ->count();
         }
+
         $this->set(compact('staffJobs'));
     }
 
@@ -302,12 +493,22 @@ class JobsController extends AppController
 
         $this->request->allowMethod(['post']);
 
+        $staffTable = $this->fetchTable('Staff');
         $staffJobsTable = $this->fetchTable('StaffJob');
+
+        $currentStaff = $staffTable->find()
+            ->where(['email' => $identity->get('email')])
+            ->first();
+
+        if (!$currentStaff) {
+            $this->Flash->error(__('Staff profile not found.'));
+            return $this->redirect(['action' => 'available']);
+        }
 
         $existing = $staffJobsTable->find()
             ->where([
                 'job_id' => $jobId,
-                'staff_id' => $identity->get('user_id'),
+                'staff_id' => $currentStaff->staff_id,
             ])
             ->first();
 
@@ -318,12 +519,12 @@ class JobsController extends AppController
 
         $staffJob = $staffJobsTable->newEntity([
             'job_id' => $jobId,
-            'staff_id' => $identity->get('user_id'),
+            'staff_id' => $currentStaff->staff_id,
             'status' => 'Rejected',
         ]);
 
         if ($staffJobsTable->save($staffJob)) {
-            $this->Flash->success(__('Job hidden from your list.'));
+            $this->Flash->success(__('Job is rejected.'));
         } else {
             $this->Flash->error(__('Could not hide this job.'));
         }
@@ -345,7 +546,10 @@ class JobsController extends AppController
             return $this->redirect(['action' => 'index']);
         }
 
-        $job = $this->Jobs->get($jobId);
+        $job = $this->Jobs->get($jobId, contain: [
+            'Customers',
+            'JobTypes',
+        ]);
 
         $trucksTable = $this->fetchTable('Trucks');
 
@@ -353,18 +557,12 @@ class JobsController extends AppController
             'keyField' => 'truck_id',
             'valueField' => 'rego',
         ])
-            ->where(['status' => 'available'])
+            ->where(['is_active' => 1])
             ->toArray();
 
         if ($this->request->is(['post', 'put', 'patch'])) {
             $data = $this->request->getData();
-
             $truckIds = $data['truck_ids'] ?? [];
-            if (count($truckIds) !== count(array_unique($truckIds))) {
-                $this->Flash->error(__('Please select different trucks.'));
-                $this->set(compact('job', 'truckList'));
-                return;
-            }
 
             if (empty($truckIds)) {
                 $this->Flash->error(__('Please select at least one truck.'));
@@ -372,23 +570,37 @@ class JobsController extends AppController
                 return;
             }
 
-            $job->staff_required = $data['staff_required'];
-            $job->truck_required = $data['truck_required'];
+            if (count($truckIds) !== count(array_unique($truckIds))) {
+                $this->Flash->error(__('Please select different trucks.'));
+                $this->set(compact('job', 'truckList'));
+                return;
+            }
+
+            $driverRequired = (int)$data['driver_required'];
+
+            if (count($truckIds) != $driverRequired) {
+                $this->Flash->error(__('Truck number must match driver number.'));
+                $this->set(compact('job', 'truckList'));
+                return;
+            }
+
+            $job->driver_required = $driverRequired;
+            $job->porter_required = (int)$data['porter_required'];
+            $job->staff_required = $driverRequired + (int)$data['porter_required'];
+            $job->truck_required = $driverRequired;
             $job->status = 'Processing';
             $job->allocated_at = date('Y-m-d H:i:s');
 
             if ($this->Jobs->save($job)) {
-                $jobTrucksTable = $this->fetchTable('JobTrucks');
-
-                $jobTrucksTable->deleteAll(['job_id' => $job->job_id]);
-
+                $jobResourcesTable = $this->fetchTable('JobResources');
+                $jobResourcesTable->deleteAll(['job_id' => $job->job_id]);
                 foreach ($truckIds as $truckId) {
-                    $jobTruck = $jobTrucksTable->newEntity([
+                    $jobResource = $jobResourcesTable->newEntity([
                         'job_id' => $job->job_id,
                         'truck_id' => $truckId,
+                        'quantity' => 1,
                     ]);
-
-                    $jobTrucksTable->save($jobTruck);
+                    $jobResourcesTable->save($jobResource);
                 }
 
                 $this->Flash->success(__('Job allocated successfully.'));
@@ -415,6 +627,18 @@ class JobsController extends AppController
             return $this->redirect(['action' => 'myJobs']);
         }
 
+        $staffTable = $this->fetchTable('Staff');
+        $staffJobsTable = $this->fetchTable('StaffJob');
+
+        $currentStaff = $staffTable->find()
+            ->where(['email' => $identity->get('email')])
+            ->first();
+
+        if (!$currentStaff) {
+            $this->Flash->error(__('Staff profile not found.'));
+            return $this->redirect(['action' => 'myJobs']);
+        }
+
         $job = $this->Jobs->get($jobId, contain: ['JobTypes', 'Customers']);
 
         if ($job->status !== 'Ready') {
@@ -422,13 +646,11 @@ class JobsController extends AppController
             return $this->redirect(['action' => 'view', $jobId]);
         }
 
-        $staffJobsTable = $this->fetchTable('StaffJob');
-
         $staffJob = $staffJobsTable->find()
             ->where([
-                'job_id' => $jobId,
-                'staff_id' => $identity->get('user_id'),
-                'status' => 'Confirmed',
+                'StaffJob.job_id' => $jobId,
+                'StaffJob.staff_id' => $currentStaff->staff_id,
+                'StaffJob.status' => 'Confirmed',
             ])
             ->first();
 
@@ -437,20 +659,54 @@ class JobsController extends AppController
             return $this->redirect(['action' => 'myJobs']);
         }
 
+        if (!empty($staffJob->report_submitted_at)) {
+            $this->Flash->error(__('You have already submitted a report for this job.'));
+            return $this->redirect(['action' => 'view', $jobId]);
+        }
+
         if ($this->request->is(['post', 'put', 'patch'])) {
             $data = $this->request->getData();
 
-            $reportOutcome = $data['report_outcome'] ?? null;
             $reportNotes = trim((string)($data['report_notes'] ?? ''));
+            $photo = $data['report_photo'] ?? null;
 
-            if (!in_array($reportOutcome, ['Completed', 'Incomplete'], true)) {
-                $this->Flash->error(__('Please select whether the job was completed or incomplete.'));
+            if (!$photo || $photo->getError() !== UPLOAD_ERR_OK) {
+                $this->Flash->error(__('Please upload a report photo.'));
                 $this->set(compact('job', 'staffJob'));
                 return;
             }
 
-            $staffJob->report_outcome = $reportOutcome;
+            $allowedExtensions = ['jpg', 'jpeg', 'png', 'webp'];
+            $allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp'];
+
+            $originalName = $photo->getClientFilename();
+            $extension = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
+            $mimeType = $photo->getClientMediaType();
+
+            if (!in_array($extension, $allowedExtensions, true) || !in_array($mimeType, $allowedMimeTypes, true)) {
+                $this->Flash->error(__('Please upload a valid image file: JPG, PNG, or WEBP.'));
+                $this->set(compact('job', 'staffJob'));
+                return;
+            }
+
+            if ($photo->getSize() > 5 * 1024 * 1024) {
+                $this->Flash->error(__('The image must be smaller than 5MB.'));
+                $this->set(compact('job', 'staffJob'));
+                return;
+            }
+
+            $uploadDir = WWW_ROOT . 'uploads' . DS . 'job_reports' . DS;
+
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0775, true);
+            }
+
+            $newFilename = 'job_' . $jobId . '_staff_' . $currentStaff->staff_id . '_' . bin2hex(random_bytes(8)) . '.' . $extension;
+
+            $photo->moveTo($uploadDir . $newFilename);
+
             $staffJob->report_notes = $reportNotes;
+            $staffJob->report_photo = $newFilename;
             $staffJob->report_submitted_at = date('Y-m-d H:i:s');
 
             if ($staffJobsTable->save($staffJob)) {
@@ -491,9 +747,9 @@ class JobsController extends AppController
 
         $hasReport = $staffJobsTable->find()
             ->where([
-                'job_id' => $jobId,
-                'status' => 'Confirmed',
-                'report_outcome IS NOT' => null,
+                'StaffJob.job_id' => $jobId,
+                'StaffJob.status' => 'Confirmed',
+                'StaffJob.report_submitted_at IS NOT' => null,
             ])
             ->count();
 
@@ -511,5 +767,92 @@ class JobsController extends AppController
         }
 
         return $this->redirect(['action' => 'view', $jobId]);
+    }
+
+    private function checkExpiredJobs(): void
+    {
+        $staffJobsTable = $this->fetchTable('StaffJob');
+
+        $expiredJobs = $this->Jobs->find()
+            ->contain(['Customers'])
+            ->where([
+                'status' => 'Processing',
+                'allocated_at <=' => date('Y-m-d H:i:s', strtotime('-7 days')),
+            ])
+            ->all();
+
+        foreach ($expiredJobs as $job) {
+
+            $driverCount = $staffJobsTable->find()
+                ->where([
+                    'job_id' => $job->job_id,
+                    'status' => 'Confirmed',
+                    'role' => 'Driver',
+                ])
+                ->count();
+
+            $porterCount = $staffJobsTable->find()
+                ->where([
+                    'job_id' => $job->job_id,
+                    'status' => 'Confirmed',
+                    'role' => 'Porter',
+                ])
+                ->count();
+
+            if (
+                $driverCount < (int)$job->driver_required ||
+                $porterCount < (int)$job->porter_required
+            ) {
+                $job->status = 'Cancelled';
+                $job->cancelled_at = date('Y-m-d H:i:s');
+
+                if ($this->Jobs->save($job)) {
+
+                    $customer = $job->customer ?? null;
+
+                    $customerName = trim(
+                        ($customer->first_name ?? '') . ' ' .
+                        ($customer->last_name ?? '')
+                    );
+
+                    if ($customerName === '') {
+                        $customerName = 'N/A';
+                    }
+
+                    $customerEmail = $customer->email ?? 'N/A';
+                    $customerPhone = $customer->phone ?? 'N/A';
+
+                    $emailBody =
+                        "Job #{$job->job_id} cancelled.\n\n" .
+                        "Reason:\n" .
+                        "Not enough staff accepted within 7 days.\n\n" .
+
+                        "Customer Information:\n" .
+                        "Name: {$customerName}\n" .
+                        "Email: {$customerEmail}\n" .
+                        "Phone: {$customerPhone}\n\n" .
+
+                        "Job Details:\n" .
+                        "Pickup: {$job->pickup_address}\n" .
+                        "Dropoff: {$job->dropoff_address}\n" .
+                        "Date: {$job->job_date}\n" .
+                        "Time: {$job->job_time}\n\n" .
+
+                        "Staff Requirement:\n" .
+                        "Drivers: {$driverCount} / {$job->driver_required}\n" .
+                        "Porters: {$porterCount} / {$job->porter_required}\n\n" .
+
+                        "Please contact the customer.";
+
+                    $mailer = new \Cake\Mailer\Mailer('default');
+
+                    $result = $mailer
+                        ->setTo('admin@test.com')
+                        ->setSubject('Job Auto Cancelled')
+                        ->deliver($emailBody);
+
+                }
+            }
+        }
     }
 }

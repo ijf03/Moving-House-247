@@ -25,26 +25,57 @@
         <div class="container">
             <div class="row g-4 align-items-start">
                 <div class="col-lg-3">
-                    <div class="mh-back-btn m-1">
-                        <?= $this->Html->link(__('← Back to Jobs'), ['action' => 'index']) ?>
-                    </div>
+                    <div class="mh-form-card">
+                        <div class="admin-table-header">
+                            <h2><?= __('Actions') ?></h2>
+                        </div>
 
+                        <div class="admin-action-stack">
+                            <?= $this->Html->link(
+                                __('Back to List'),
+                                ['action' => 'index'],
+                                ['class' => 'admin-action-link']
+                            ) ?>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="col-lg-9">
-                    <?= $this->Form->create($job) ?>
+                    <?= $this->Form->create($job, ['class' => 'mh-form']) ?>
 
                     <div class="admin-table-card">
                         <div class="admin-table-header">
-                            <h2><?= __('Job #') . h($job->job_id) ?></h2>
-                            <p><?= h($job->description) ?></p>
+                            <h2><?= __('Job Information') ?></h2>
+                            <p><?= __('Overview of the selected moving job.') ?></p>
                         </div>
 
-                        <div class="row g-3">
+                        <div class="row g-3 mb-4">
                             <div class="col-md-6">
                                 <div class="mh-info-card">
                                     <div>
-                                        <h3><?= __('Pickup') ?></h3>
+                                        <h3><?= __('Customer') ?></h3>
+                                        <p><?= h($job->customer->first_name . ' ' . $job->customer->last_name) ?></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="mh-info-card">
+                                    <div>
+                                        <h3><?= __('Job Type') ?></h3>
+                                        <p>
+                                            <?= $job->hasValue('job_type')
+                                                ? h($job->job_type->job_type_name)
+                                                : '' ?>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="mh-info-card">
+                                    <div>
+                                        <h3><?= __('Pickup Address') ?></h3>
                                         <p><?= h($job->pickup_address) ?></p>
                                     </div>
                                 </div>
@@ -53,7 +84,7 @@
                             <div class="col-md-6">
                                 <div class="mh-info-card">
                                     <div>
-                                        <h3><?= __('Dropoff') ?></h3>
+                                        <h3><?= __('Drop-off Address') ?></h3>
                                         <p><?= h($job->dropoff_address) ?></p>
                                     </div>
                                 </div>
@@ -62,7 +93,7 @@
                             <div class="col-md-6">
                                 <div class="mh-info-card">
                                     <div>
-                                        <h3><?= __('Date') ?></h3>
+                                        <h3><?= __('Job Date') ?></h3>
                                         <p><?= h($job->job_date) ?></p>
                                     </div>
                                 </div>
@@ -71,29 +102,34 @@
                             <div class="col-md-6">
                                 <div class="mh-info-card">
                                     <div>
-                                        <h3><?= __('Time') ?></h3>
+                                        <h3><?= __('Job Time') ?></h3>
                                         <p><?= h($job->job_time) ?></p>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="admin-table-header" style="margin-top: 2rem;">
+                        <div class="admin-table-header">
                             <h2><?= __('Resource Requirements') ?></h2>
                             <p><?= __('Use the controls below to set required staff and trucks.') ?></p>
                         </div>
 
-                        <div class="row g-3">
-                            <div class="col-md-6">
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-4">
                                 <div class="mh-info-card">
-                                    <div>
-                                        <h3><?= __('Number of Staff Required') ?></h3>
-                                        <div class="d-flex align-items-center gap-3 mt-2">
-                                            <button type="button" class="btn btn-outline-secondary" onclick="changeValue('staff_required', -1)">−</button>
+                                    <div class="w-100">
+                                        <h3><?= __('Drivers Required') ?></h3>
+
+                                        <div class="d-flex align-items-center gap-3 mt-3">
+                                            <button type="button"
+                                                    class="admin-action-link"
+                                                    onclick="changeValue('driver_required', -1); syncTruckWithDriver();">
+                                                −
+                                            </button>
 
                                             <input type="number"
-                                                   name="staff_required"
-                                                   id="staff_required"
+                                                   name="driver_required"
+                                                   id="driver_required"
                                                    value="1"
                                                    min="1"
                                                    max="10"
@@ -101,46 +137,86 @@
                                                    class="form-control text-center"
                                                    style="max-width: 100px;">
 
-                                            <button type="button" class="btn btn-outline-secondary" onclick="changeValue('staff_required', 1)">+</button>
+                                            <button type="button"
+                                                    class="admin-action-link"
+                                                    onclick="changeValue('driver_required', 1); syncTruckWithDriver();">
+                                                +
+                                            </button>
                                         </div>
+
+                                        <p class="text-muted mt-3 mb-0">
+                                            <?= __('Each driver requires one truck.') ?>
+                                        </p>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="mh-info-card">
-                                    <div>
-                                        <h3><?= __('Number of Trucks Required') ?></h3>
-                                        <div class="d-flex align-items-center gap-3 mt-2">
-                                            <button type="button" class="btn btn-outline-secondary" onclick="changeTruck(-1)">−</button>
+                                    <div class="w-100">
+                                        <h3><?= __('Trucks Required') ?></h3>
 
+                                        <div class="d-flex align-items-center gap-3 mt-3">
                                             <input type="number"
                                                    name="truck_required"
                                                    id="truck-required"
                                                    value="1"
-                                                   min="1"
-                                                   max="5"
+                                                   readonly
+                                                   required
+                                                   class="form-control text-center"
+                                                   style="max-width: 100px;">
+                                        </div>
+
+                                        <p class="text-muted mt-3 mb-0">
+                                            <?= __('Automatically matched to the number of drivers.') ?>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="mh-info-card">
+                                    <div class="w-100">
+                                        <h3><?= __('Porters Required') ?></h3>
+
+                                        <div class="d-flex align-items-center gap-3 mt-3">
+                                            <button type="button"
+                                                    class="admin-action-link"
+                                                    onclick="changeValue('porter_required', -1)">
+                                                −
+                                            </button>
+
+                                            <input type="number"
+                                                   name="porter_required"
+                                                   id="porter_required"
+                                                   value="1"
+                                                   min="0"
+                                                   max="10"
                                                    required
                                                    class="form-control text-center"
                                                    style="max-width: 100px;">
 
-                                            <button type="button" class="btn btn-outline-secondary" onclick="changeTruck(1)">+</button>
+                                            <button type="button"
+                                                    class="admin-action-link"
+                                                    onclick="changeValue('porter_required', 1)">
+                                                +
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="admin-table-header" style="margin-top: 2rem;">
+                        <div class="admin-table-header mt-4">
                             <h2><?= __('Truck Selection') ?></h2>
                             <p><?= __('Choose the specific truck or trucks required for this job.') ?></p>
                         </div>
 
                         <div id="truck-select-area" class="row g-3"></div>
 
-                        <div class="mt-4 text-center">
+                        <div class="mt-4">
                             <?= $this->Form->button(__('Submit Allocation'), [
-                                'class' => 'admin-action-link admin-action-link-success px-5 py-3 fs-4'
+                                'class' => 'mh-btn-primary'
                             ]) ?>
                         </div>
                     </div>
@@ -153,31 +229,33 @@
 </div>
 
 <script>
+    const truckOptions = <?= json_encode($truckList) ?>;
+
     function changeValue(id, delta) {
         const input = document.getElementById(id);
         let value = parseInt(input.value) || 1;
 
         value += delta;
 
-        if (value < parseInt(input.min)) value = parseInt(input.min);
-        if (value > parseInt(input.max)) value = parseInt(input.max);
+        if (value < parseInt(input.min)) {
+            value = parseInt(input.min);
+        }
+
+        if (value > parseInt(input.max)) {
+            value = parseInt(input.max);
+        }
 
         input.value = value;
     }
 
-    const truckOptions = <?= json_encode($truckList) ?>;
+    function syncTruckWithDriver() {
+        const driverInput = document.getElementById('driver_required');
+        const truckInput = document.getElementById('truck-required');
 
-    function changeTruck(delta) {
-        const input = document.getElementById('truck-required');
-        let value = parseInt(input.value) || 1;
+        const count = parseInt(driverInput.value) || 1;
 
-        value += delta;
-
-        if (value < 1) value = 1;
-        if (value > 5) value = 5;
-
-        input.value = value;
-        renderTruckSelects(value);
+        truckInput.value = count;
+        renderTruckSelects(count);
     }
 
     function updateTruckOptions() {
@@ -197,7 +275,9 @@
             select.appendChild(empty);
 
             Object.keys(truckOptions).forEach(function (id) {
-                if (selectedValues.includes(id) && id !== currentValue) return;
+                if (selectedValues.includes(id) && id !== currentValue) {
+                    return;
+                }
 
                 const option = document.createElement('option');
                 option.value = id;
@@ -234,8 +314,6 @@
             select.className = 'form-select mt-2';
             select.addEventListener('change', updateTruckOptions);
 
-            select.addEventListener('change', updateTruckOptions);
-
             const empty = document.createElement('option');
             empty.value = '';
             empty.textContent = 'Select truck';
@@ -259,6 +337,6 @@
     }
 
     document.addEventListener('DOMContentLoaded', function () {
-        renderTruckSelects(1);
+        syncTruckWithDriver();
     });
 </script>

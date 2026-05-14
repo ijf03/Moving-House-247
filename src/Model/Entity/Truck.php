@@ -14,7 +14,6 @@ use Cake\ORM\Entity;
  * @property string|null $truck_size
  * @property string|null $capacity_m3
  * @property string|null $max_payload_kg
- * @property string $status
  * @property string|null $current_location
  * @property \Cake\I18n\Date|null $next_service_date
  * @property bool $is_active
@@ -38,7 +37,6 @@ class Truck extends Entity
         'truck_size' => true,
         'capacity_m3' => true,
         'max_payload_kg' => true,
-        'status' => true,
         'current_location' => true,
         'next_service_date' => true,
         'is_active' => true,

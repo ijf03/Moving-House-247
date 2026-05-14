@@ -23,7 +23,6 @@
         <div class="container">
             <div class="row g-4 justify-content-center">
 
-                <!-- Actions Sidebar -->
                 <div class="col-lg-3">
                     <div class="admin-table-card">
                         <div class="admin-table-header">

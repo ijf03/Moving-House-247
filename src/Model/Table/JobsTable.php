@@ -27,7 +27,7 @@ class JobsTable extends Table
             'joinType' => 'INNER',
         ]);
 
-        $this->hasMany('JobTrucks', [
+        $this->hasMany('JobResources', [
             'foreignKey' => 'job_id',
         ]);
 

@@ -7,66 +7,126 @@
  */
 ?>
 
-<div class="jobs report content">
-    <h3>Submit Job Report</h3>
+<div class="mh-page-soft">
+    <section class="admin-hero">
+        <div class="container">
+            <div class="admin-hero-shell">
+                <div class="admin-hero-content">
+                    <span class="admin-eyebrow"><?= __('Staff') ?></span>
+                    <h1><?= __('Submit Job Report') ?></h1>
+                    <p class="admin-hero-text">
+                        <?= __('Confirm the job outcome and add any extra information for the admin team.') ?>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    <table>
-        <tr>
-            <th>Job ID</th>
-            <td><?= h($job->job_id) ?></td>
-        </tr>
-        <tr>
-            <th>Description</th>
-            <td><?= h($job->description) ?></td>
-        </tr>
-        <tr>
-            <th>Pickup Address</th>
-            <td><?= h($job->pickup_address) ?></td>
-        </tr>
-        <tr>
-            <th>Dropoff Address</th>
-            <td><?= h($job->dropoff_address) ?></td>
-        </tr>
-        <tr>
-            <th>Date</th>
-            <td><?= h($job->job_date) ?></td>
-        </tr>
-        <tr>
-            <th>Time</th>
-            <td><?= h($job->job_time) ?></td>
-        </tr>
-        <tr>
-            <th>Current Job Status</th>
-            <td><?= h($job->status) ?></td>
-        </tr>
-    </table>
+    <section class="admin-section">
+        <div class="container">
+            <div class="mh-back-btn m-1">
+                <?= $this->Html->link(__('← Back to Job Details'), ['action' => 'view', $job->job_id]) ?>
+            </div>
 
-    <?= $this->Form->create($staffJob) ?>
+            <div class="row g-4 align-items-start">
+                <div class="col-lg-4">
+                    <div class="booking-info-stack">
+                        <div class="mh-info-card">
+                            <div>
+                                <h3><?= __('Job #') . h($job->job_id) ?></h3>
+                                <p><?= h($job->description) ?></p>
+                            </div>
+                        </div>
 
-    <fieldset>
-        <legend>Job Outcome</legend>
+                        <div class="mh-info-card">
+                            <div>
+                                <h3><?= __('Pickup') ?></h3>
+                                <p><?= h($job->pickup_address) ?></p>
+                            </div>
+                        </div>
 
-        <?= $this->Form->radio('report_outcome', [
-            ['value' => 'Completed', 'text' => 'Job Completed'],
-            ['value' => 'Incomplete', 'text' => 'Job Incomplete'],
-        ], [
-            'value' => $staffJob->report_outcome ?? 'Completed',
-            'required' => true,
-        ]) ?>
+                        <div class="mh-info-card">
+                            <div>
+                                <h3><?= __('Dropoff') ?></h3>
+                                <p><?= h($job->dropoff_address) ?></p>
+                            </div>
+                        </div>
 
-        <?= $this->Form->control('report_notes', [
-            'type' => 'textarea',
-            'label' => 'Extra Information',
-            'placeholder' => 'Add any notes about the job, issues, delays, damages, customer comments, or incomplete work.',
-            'rows' => 6,
-            'value' => $staffJob->report_notes ?? '',
-        ]) ?>
-    </fieldset>
+                        <div class="mh-info-card">
+                            <div>
+                                <h3><?= __('Date / Time') ?></h3>
+                                <p><?= h($job->job_date) ?> <?= h($job->job_time) ?></p>
+                            </div>
+                        </div>
 
-    <?= $this->Form->button(__('Submit Report')) ?>
-    <?= $this->Form->end() ?>
+                        <div class="mh-info-card">
+                            <div>
+                                <h3><?= __('Current Status') ?></h3>
+                                <p>
+                                    <span class="admin-role-badge">
+                                        <?= h($job->status) ?>
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-    <p>
-        <?= $this->Html->link(__('Back to Job Details'), ['action' => 'view', $job->job_id]) ?>
-    </p>
+                <div class="col-lg-8">
+                    <div class="mh-form-card">
+                        <div class="booking-form-header">
+                            <h2><?= __('Job Report') ?></h2>
+                            <p><?= __('Upload a photo from the completed job and add any extra notes if needed.') ?></p>
+                        </div>
+
+                        <?= $this->Form->create($staffJob, [
+                            'class' => 'booking-form',
+                            'type' => 'file',
+                        ]) ?>
+
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <?= $this->Form->control('report_photo', [
+                                    'type' => 'file',
+                                    'label' => 'Upload Job Photo',
+                                    'required' => true,
+                                    'accept' => 'image/jpeg,image/png,image/webp',
+                                    'class' => 'booking-input',
+                                    'templates' => [
+                                        'inputContainer' => '<div class="input booking-form-group {{type}}{{required}}">{{content}}</div>',
+                                    ],
+                                ]) ?>
+
+                                <p class="text-muted mt-1">
+                                    <?= __('Accepted formats: JPG, PNG, WEBP. Maximum size: 5MB.') ?>
+                                </p>
+                            </div>
+
+                            <div class="col-12">
+                                <?= $this->Form->control('report_notes', [
+                                    'type' => 'textarea',
+                                    'label' => 'Extra Information',
+                                    'placeholder' => 'Add any notes about the job, issues, delays, damages, customer comments, or incomplete work.',
+                                    'rows' => 6,
+                                    'value' => $staffJob->report_notes ?? '',
+                                    'class' => 'booking-input',
+                                    'templates' => [
+                                        'inputContainer' => '<div class="input booking-form-group {{type}}{{required}}">{{content}}</div>',
+                                    ],
+                                ]) ?>
+                            </div>
+                        </div>
+
+                        <div class="booking-form-actions">
+                            <?= $this->Form->button(__('Submit Report'), [
+                                'class' => 'mh-btn-primary',
+                            ]) ?>
+                        </div>
+
+                        <?= $this->Form->end() ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 </div>

@@ -78,9 +78,12 @@
                                             <div>
                                                 <h3><?= __('Staff') ?></h3>
                                                 <p>
-                                                    <span class="admin-role-badge">
-                                                        <?= h($staffJob->confirmed_count ?? 0) ?> / <?= h($job->staff_required ?? 0) ?>
-                                                    </span>
+                                                    <strong><?= __('Drivers:') ?></strong>
+                                                    <?= h($staffJob->driver_count ?? 0) ?> / <?= h($staffJob->job->driver_required ?? 0) ?>
+                                                </p>
+                                                <p>
+                                                    <strong><?= __('Porters:') ?></strong>
+                                                    <?= h($staffJob->porter_count ?? 0) ?> / <?= h($staffJob->job->porter_required ?? 0) ?>
                                                 </p>
                                             </div>
                                         </div>
@@ -109,6 +112,21 @@
                                             'style' => 'display: block; width: 160px;'
                                         ]
                                     ) ?>
+
+                                    <?php if (($job->status ?? '') === 'Ready' && empty($staffJob->report_submitted_at)): ?>
+                                        <?= $this->Html->link(
+                                            __('Submit Report'),
+                                            ['action' => 'report', $job->job_id],
+                                            [
+                                                'class' => 'admin-action-link mx-auto text-center mt-2',
+                                                'style' => 'display: block; width: 160px;'
+                                            ]
+                                        ) ?>
+                                    <?php elseif (!empty($staffJob->report_submitted_at)): ?>
+                                        <p class="text-center mt-2 mb-0">
+                                            <?= __('Report Submitted') ?>
+                                        </p>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </div>

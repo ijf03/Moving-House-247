@@ -14,19 +14,26 @@
                     <div class="mh-back-btn m-1">
                         <?= $this->Html->link(__('← Back to List'), ['action' => 'index']) ?>
                     </div>
-                    <?php if ($booking->status === 'Pending'): ?>
-                        <?= $this->Form->postLink(
-                            __('Accept'),
-                            ['action' => 'accept', $booking->booking_id],
-                            ['class' => 'admin-action-link admin-action-link-success']
-                        ) ?>
+                    <div class="admin-table-card">
+                        <div class="admin-table-header">
+                            <h2><?= __('Actions') ?></h2>
+                        </div>
+                        <div class="admin-action-stack">
+                            <?php if ($booking->status === 'Pending'): ?>
+                                <?= $this->Form->postLink(
+                                    __('Accept'),
+                                    ['action' => 'accept', $booking->booking_id],
+                                    ['class' => 'admin-action-link admin-action-link-success']
+                                ) ?>
 
-                        <?= $this->Form->postLink(
-                            __('Reject'),
-                            ['action' => 'reject', $booking->booking_id],
-                            ['class' => 'admin-action-link admin-action-link-danger']
-                        ) ?>
-                    <?php endif; ?>
+                                <?= $this->Form->postLink(
+                                    __('Reject'),
+                                    ['action' => 'reject', $booking->booking_id],
+                                    ['class' => 'admin-action-link admin-action-link-danger']
+                                ) ?>
+                            <?php endif; ?>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="col-lg-9">

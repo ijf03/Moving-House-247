@@ -5,6 +5,8 @@ namespace App\Controller;
 
 use Cake\Mailer\Mailer;
 use Cake\Core\Configure;
+use Cake\I18n\DateTime;
+
 
 /**
  * Staff Controller
@@ -169,29 +171,29 @@ class StaffController extends AppController
      */
     public function edit($id = null)
     {
-        $target = (int)$this->request->getParam('pass')[0];
-        $staffEntity = $this->Staff->get($id, contain: []);
-        $userId = $this->request->getAttribute('identity')->get('user_id');
+        $target = $this->Staff->get($id, contain: []);
+        $staff = $this->Staff->get($id, contain: []);
         $usersTable = $this->fetchTable('Users');
+        $user = $usersTable->find()
+            ->where(['email' => $target->email])
+            ->first();
+        $userId = $this->request->getAttribute('identity')->get('user_id');
         $roleQuery = $usersTable->find()
             ->where(['user_id' => $userId])
             ->contain(['UserTypes'])
             ->first();
-        $user = $usersTable->find()
-            ->where(['email'=>$staffEntity->email])
-            ->first();
         $isAdmin = $roleQuery->user_type_name == 'Admin';
-        if ($target !== $userId and !$isAdmin){
-            $this->Flash->error(__('Please access your own profile'));
+        if ($user->user_id !== $userId && !$isAdmin){
+            $this->Flash->error(__('You are not allowed to edit this user'));
             return $this->redirect(['action' => 'index']);
         }
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $staffEntity = $this->Staff->patchEntity($staffEntity, $this->request->getData());
-            if ($this->Staff->save($staffEntity)) {
-                $user = $usersTable->patchEntity($user, ['email' => $staffEntity->email,
-                    'phone' => $staffEntity->phone,
-                    'first_name' => $staffEntity->first_name,
-                    'last_name' => $staffEntity->last_name,]);
+            $staff = $this->Staff->patchEntity($staff, $this->request->getData());
+            if ($this->Staff->save($staff)) {
+                $user = $usersTable->patchEntity($user, ['email' => $staff->email,
+                    'phone' => $staff->phone,
+                    'first_name' => $staff->first_name,
+                    'last_name' => $staff->last_name,]);
                 if(!$this->Staff->save($user)){
                     $this->Flash->error(__('User detail cannot be saved'));
                     return;
@@ -202,7 +204,7 @@ class StaffController extends AppController
             }
             $this->Flash->error(__('The staff could not be saved. Please, try again.'));
         }
-        $this->set(compact('staffEntity','isAdmin'));
+        $this->set(compact('staff','isAdmin'));
     }
 
     /**
@@ -214,7 +216,6 @@ class StaffController extends AppController
      */
     public function delete($id = null)
     {
-        $targetStaffID = (int)$this->request->getParam('pass')[0];
         $target = $this->Staff->get($id, contain: []);
         $usersTable = $this->fetchTable('Users');
         $user = $usersTable->find()
@@ -226,7 +227,7 @@ class StaffController extends AppController
             ->contain(['UserTypes'])
             ->first();
         $isAdmin = $roleQuery->user_type_name == 'Admin';
-        if ($target !== $userId && !$isAdmin){
+        if ($user->user_id !== $userId && !$isAdmin){
             $this->Flash->error(__('You are not allowed to delete this user'));
             return $this->redirect(['action' => 'index']);
         }
@@ -249,5 +250,101 @@ class StaffController extends AppController
         }
 
         return $this->redirect(['action' => 'index']);
+    }
+
+    public function availability($id = null)
+    {
+        $identity = $this->request->getAttribute('identity');
+
+        if (!$identity) {
+            return $this->redirect(['controller' => 'Users', 'action' => 'login']);
+        }
+
+        $staffTable = $this->fetchTable('Staff');
+        $usersTable = $this->fetchTable('Users');
+
+        $userId = $identity->get('user_id');
+
+        $roleQuery = $usersTable->find()
+            ->where(['user_id' => $userId])
+            ->contain(['UserTypes'])
+            ->first();
+
+        $isAdmin = $roleQuery->user_type_name == 'Admin';
+        if ($id === null) {
+            $staff = $staffTable->find()
+                ->where(['email' => $identity->get('email')])
+                ->first();
+
+            if (!$staff) {
+                $this->Flash->error(__('Staff not found.'));
+                return $this->redirect(['controller' => 'Pages', 'action' => 'display', 'home']);
+            }
+
+            $id = $staff->staff_id;
+        } else {
+            $staff = $staffTable->get($id);
+        }
+
+        if ($staff->email != $identity->get('email') && !$isAdmin) {
+            $this->Flash->error(__('You are not allowed to access this page'));
+            return $this->redirect(['action' => 'index']);
+        }
+
+        $availabilityTable = $this->fetchTable('Availability');
+
+        $availabilityList = $availabilityTable->find()
+            ->where(['staff_id' => $staff->staff_id])
+            ->toArray();
+
+        $events = [];
+
+        foreach ($availabilityList as $availability) {
+            $events[] = [
+                'id' => $availability->availability_id,
+                'start' => $availability->start_datetime->format('Y-m-d H:i:s'),
+                'end' => $availability->end_datetime->format('Y-m-d H:i:s'),
+            ];
+        }
+        $this->request->allowMethod(['post', 'get']);
+        if ($this->request->is(['post'])) {
+            $updated_events = json_decode($this->request->getData('availability_json'), true);
+            foreach ($updated_events as $updated_event) {
+                $updated_event['staff_id'] = $id;
+                $updated_event['start_datetime'] = new \DateTime($updated_event['start_datetime']);
+                $updated_event['end_datetime'] = new \DateTime($updated_event['end_datetime']);
+                $entry = $availabilityTable->find()
+                    ->where(['availability_id'=>$updated_event['id']])
+                ->first();
+                if ($entry && $entry->staff_id != $staff->staff_id && !$isAdmin) {
+                    $this->Flash->error(__('Access denied'));
+                    return $this->redirect(['action' => 'index']);
+                }
+                if ($entry) {
+                    if ($updated_event['deleted']){
+                        if (!$availabilityTable->delete($entry)){
+                            $this->Flash->error(__('Delete failed'));
+                            return;
+                        }
+                    }
+                    $entry = $availabilityTable->patchEntity($entry, $updated_event);
+
+                    if (!$availabilityTable->save($entry)) {
+                        $this->Flash->error(__('The availability could not be saved.'));
+                        return;
+                    }
+                } else if (!$updated_event['deleted']) {
+                    $newEvent = $availabilityTable->newEntity($updated_event);
+
+                    if (!$availabilityTable->save($newEvent)) {
+                        $this->Flash->error(__('The availability could not be saved.'));
+                        return;
+                    }
+                }
+            }
+            $this->Flash->success(__('The availability has been saved.'));
+            return $this->redirect($this->request->getRequestTarget());
+        }
+        $this->set(compact('staff', 'events', 'availabilityList'));
     }
 }

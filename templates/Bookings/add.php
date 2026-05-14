@@ -66,7 +66,7 @@
                                 <div class="col-md-6">
                                     <?= $this->Form->control('job_date', [
                                         'type' => 'date',
-                                        'min' => date('Y-m-d'),
+                                        'min' => date('Y-m-d', strtotime('+7 day')),
                                         'class' => 'booking-input',
                                         'templates' => [
                                             'inputContainer' => '<div class="input booking-form-group {{type}}{{required}}">{{content}}</div>',
@@ -174,7 +174,7 @@
                             </div>
 
                             <div class="booking-form-actions">
-                                <?= $this->Form->button(__('Submit Booking'), ['class' => 'booking-submit-btn']) ?>
+                                <?= $this->Form->button(__('Submit Booking'), ['class' => 'mh-btn-primary']) ?>
                             </div>
 
                             <?= $this->Form->end() ?>
