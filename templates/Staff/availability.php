@@ -91,6 +91,10 @@
         }
 
         function save() {
+            if (!document.getElementById('start_datetime').value || !document.getElementById('end_datetime').value){
+                alert("Start time and end time cannot be empty!")
+                return;
+            }
             calendar.getEventById(activeEventID).setDates(document.getElementById('start_datetime').value + startTimezone,
                 document.getElementById('end_datetime').value + endTimezone);
             submitForm();
@@ -103,6 +107,10 @@
             modal.show();
         }
         function add() {
+            if (!document.getElementById('new_start').value || !document.getElementById('new_end').value){
+                alert("Start time and end time cannot be empty!")
+                return;
+            }
             calendar.addEvent(
                 {
                     id: null,

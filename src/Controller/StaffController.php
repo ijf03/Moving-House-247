@@ -313,6 +313,7 @@ class StaffController extends AppController
                 $updated_event['staff_id'] = $id;
                 $updated_event['start_datetime'] = new \DateTime($updated_event['start_datetime']);
                 $updated_event['end_datetime'] = new \DateTime($updated_event['end_datetime']);
+                $updated_event['id'] = $updated_event['id'] == 'null' ? -1 : $updated_event['id'];
                 $entry = $availabilityTable->find()
                     ->where(['availability_id'=>$updated_event['id']])
                 ->first();
@@ -343,7 +344,7 @@ class StaffController extends AppController
                 }
             }
             $this->Flash->success(__('The availability has been saved.'));
-            return $this->redirect($this->request->getRequestTarget());
+            return $this->redirect(['action' => 'availability', $id]);
         }
         $this->set(compact('staff', 'events', 'availabilityList'));
     }
