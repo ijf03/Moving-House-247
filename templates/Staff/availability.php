@@ -10,11 +10,6 @@
         const minutes = String(absOffset % 60).padStart(2, "0");
         window.timezoneOffset = (isPlus?"+":"-")+hours+":"+minutes;
 
-        function addOffset(datetime){
-            var head = datetime.toString().split(datetime.toString().includes("+")?"+":"-")[0];
-            return head;
-        }
-
         window.addEventListener('load', ()=>{
             var current = new Date().toISOString().split(".")[0];
             var start_datetime = document.getElementById('start_datetime');
@@ -47,16 +42,14 @@
                     start: events[id]['start'],
                     end: events[id]['end'],
                     id: events[id]['id'],
-                    backgroundColor: '#FF0000',
-                    deleted: false
+                    backgroundColor: '#FF0000'
                 };
             });
             window.calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'timeGridWeek',
-                height: 'auto',
+                height: '1600px',
                 editable: true,
                 events: formatted_events,
-                allDaySlot: false,
                 eventResizableFromStart: true,
                 eventClick: function(info) {
                     const event = info.event;
@@ -80,9 +73,8 @@
         function submitForm() {
             const events = calendar.getEvents().map(event => ({
                 id: event.id,
-                start_datetime: addOffset(event.start),
-                end_datetime: addOffset(event.end),
-                deleted: event.extendedProps.deleted
+                start_datetime: event.start,
+                end_datetime: event.end
             }));
 
             document.getElementById('availability-json').value = JSON.stringify(events);
@@ -91,6 +83,10 @@
         }
 
         function save() {
+            if (!document.getElementById('start_datetime').value || !document.getElementById('end_datetime').value){
+                alert('Start time and end time cannot be empty!');
+                return;
+            }
             calendar.getEventById(activeEventID).setDates(document.getElementById('start_datetime').value + startTimezone,
                 document.getElementById('end_datetime').value + endTimezone);
             submitForm();
@@ -103,11 +99,15 @@
             modal.show();
         }
         function add() {
+            if (!document.getElementById('new_start').value || !document.getElementById('new_end').value){
+                alert('Start time and end time cannot be empty!');
+                return;
+            }
             calendar.addEvent(
                 {
                     id: null,
-                    start: document.getElementById('new_start').value,
-                    end: document.getElementById('new_end').value,
+                    start: document.getElementById('new_start').value+timezoneOffset,
+                    end: document.getElementById('new_end').value+timezoneOffset,
                     backgroundColor: '#FF0000',
                     deleted: false
                 });
@@ -115,7 +115,7 @@
         }
 
         function deleteEvent() {
-            calendar.getEventById(activeEventID).setExtendedProp('deleted', true);
+            calendar.getEventById(activeEventID).remove();
             submitForm();
         }
 
