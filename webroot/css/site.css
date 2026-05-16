@@ -278,6 +278,18 @@ body.mh-site {
     overflow: hidden;
 }
 
+.mh-footer a,
+.mh-footer a:visited {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+}
+
+.mh-footer a:hover,
+.mh-footer a:focus {
+    color: var(--mh-orange);
+    text-decoration: none;
+}
+
 .mh-brand-text {
     font-size: 1.2rem;
     line-height: 1.1;
