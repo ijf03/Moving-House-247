@@ -88,7 +88,7 @@
                     <table class="admin-table">
                         <thead>
                         <tr>
-                            <th><?= __('Booking ID') ?></th>
+                            <th><?= __('ID') ?></th>
                             <th><?= __('Customer') ?></th>
                             <th><?= __('Contact') ?></th>
                             <th><?= __('Service') ?></th>

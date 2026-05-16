@@ -42,7 +42,6 @@ $userId = $identity ? $identity->get('user_id') : null;
                     <table class="admin-table">
                         <thead>
                         <tr>
-                            <th><?= $this->Paginator->sort('user_id') ?></th>
                             <th><?= $this->Paginator->sort('email') ?></th>
                             <th><?= $this->Paginator->sort('first_name') ?></th>
                             <th><?= $this->Paginator->sort('last_name') ?></th>
@@ -54,7 +53,6 @@ $userId = $identity ? $identity->get('user_id') : null;
                         <?php foreach ($users as $user): ?>
                             <?php if ($user->user_id == $userId || $isAdmin): ?>
                                 <tr>
-                                    <td><?= $this->Number->format($user->user_id) ?></td>
                                     <td><?= h($user->email) ?></td>
                                     <td><?= h($user->first_name) ?></td>
                                     <td><?= h($user->last_name) ?></td>

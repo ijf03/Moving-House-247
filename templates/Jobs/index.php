@@ -34,12 +34,11 @@
                     <table class="admin-table">
                         <thead>
                         <tr>
-                            <th><?= $this->Paginator->sort('job_id') ?></th>
+                            <th><?= $this->Paginator->sort('customer') ?></th>
                             <th><?= $this->Paginator->sort('job_type_id') ?></th>
                             <th><?= $this->Paginator->sort('pickup') ?></th>
                             <th><?= $this->Paginator->sort('dropoff') ?></th>
                             <th><?= $this->Paginator->sort('Details') ?></th>
-                            <th><?= $this->Paginator->sort('customer') ?></th>
                             <th><?= $this->Paginator->sort('status') ?></th>
                             <th><?= __('Staff') ?></th>
                             <th class="actions"><?= __('Actions') ?></th>
@@ -49,8 +48,11 @@
                         <tbody>
                         <?php foreach ($jobs as $job): ?>
                             <tr>
-                                <td><?= $this->Number->format($job->job_id) ?></td>
-
+                                <td>
+                                    <?= $job->hasValue('customer')
+                                        ? h($job->customer->first_name. ' ' . $job->customer->last_name)
+                                        : '' ?>
+                                </td>
                                 <td>
                                     <?= $job->hasValue('job_type')
                                         ? h($job->job_type->job_type_name)
@@ -60,13 +62,6 @@
                                 <td><?= h($job->pickup_address) ?></td>
                                 <td><?= h($job->dropoff_address) ?></td>
                                 <td><?= h($job->job_date) ?> <br> <?= h($job->job_time) ?></td>
-
-
-                                <td>
-                                    <?= $job->hasValue('customer')
-                                        ? h($job->customer->first_name. ' ' . $job->customer->last_name)
-                                        : '' ?>
-                                </td>
 
                                 <td>
                                     <span class="admin-role-badge">
