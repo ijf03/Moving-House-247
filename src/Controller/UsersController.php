@@ -158,7 +158,7 @@ class UsersController extends AppController
         $userTypes = $this->Users->UserTypes->find('list', [
             'keyField' => 'user_type_id',
             'valueField' => 'name'
-        ])->all();
+        ])->all()->toArray();
         if ($this->request->is('post')) {
             $data = $this->request->getData();
             $data['isDriver'] = null;
