@@ -10,6 +10,11 @@
         const minutes = String(absOffset % 60).padStart(2, "0");
         window.timezoneOffset = (isPlus?"+":"-")+hours+":"+minutes;
 
+        function addOffset(datetime){
+            var head = datetime.toString().split(datetime.toString().includes("+")?"+":"-")[0];
+            return head;
+        }
+
         window.addEventListener('load', ()=>{
             var current = new Date().toISOString().split(".")[0];
             var start_datetime = document.getElementById('start_datetime');
@@ -42,7 +47,8 @@
                     start: events[id]['start'],
                     end: events[id]['end'],
                     id: events[id]['id'],
-                    backgroundColor: '#FF0000'
+                    backgroundColor: '#FF0000',
+                    deleted: false
                 };
             });
             window.calendar = new FullCalendar.Calendar(calendarEl, {
@@ -73,8 +79,9 @@
         function submitForm() {
             const events = calendar.getEvents().map(event => ({
                 id: event.id,
-                start_datetime: event.start,
-                end_datetime: event.end
+                start_datetime: addOffset(event.start),
+                end_datetime: addOffset(event.end),
+                deleted: event.extendedProps.deleted
             }));
 
             document.getElementById('availability-json').value = JSON.stringify(events);
@@ -83,9 +90,17 @@
         }
 
         function save() {
+            if (isNaN(new Date(document.getElementById('start_datetime').value))||isNaN(new Date(document.getElementById('end_datetime').value))){
+                alert('Invalid Datetime!');
+                return;
+            }
             if (!document.getElementById('start_datetime').value || !document.getElementById('end_datetime').value){
                 alert('Start time and end time cannot be empty!');
                 return;
+            }
+            if (Date.parse(document.getElementById('start_datetime').value) >= Date.parse(document.getElementById('end_datetime').value)){
+                alert('Start time must be earlier than end time');
+                return
             }
             calendar.getEventById(activeEventID).setDates(document.getElementById('start_datetime').value + startTimezone,
                 document.getElementById('end_datetime').value + endTimezone);
@@ -99,8 +114,16 @@
             modal.show();
         }
         function add() {
+            if (isNaN(new Date(document.getElementById('new_start').value))||isNaN(new Date(document.getElementById('new_end').value))){
+                alert('Invalid Datetime!');
+                return;
+            }
             if (!document.getElementById('new_start').value || !document.getElementById('new_end').value){
                 alert('Start time and end time cannot be empty!');
+                return;
+            }
+            if (Date.parse(document.getElementById('new_start').value) >= Date.parse(document.getElementById('new_end').value)){
+                alert('Start time must be earlier than end time');
                 return;
             }
             calendar.addEvent(
@@ -111,11 +134,11 @@
                     backgroundColor: '#FF0000',
                     deleted: false
                 });
-            submitForm();
+            //submitForm();
         }
 
         function deleteEvent() {
-            calendar.getEventById(activeEventID).remove();
+            calendar.getEventById(activeEventID).setExtendedProp('deleted', true);
             submitForm();
         }
 
