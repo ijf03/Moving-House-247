@@ -31,6 +31,14 @@ img {
     padding-right: 3rem;
 }
 
+.how-shell {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+
 /* Hero section */
 .hero {
     min-height: calc(100vh - 88px);
@@ -313,9 +321,10 @@ img {
 
 .steps {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2.4rem;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.5rem;
 }
+
 
 .step-card {
     background: rgba(255, 255, 255, 0.92);
@@ -368,6 +377,12 @@ img {
     margin: 0;
 }
 
+.step-card,
+.step {
+    width: 100%;
+    min-width: 0;
+}
+
 @media (min-width: 1600px) {
     .hero h1 {
         font-size: clamp(5.5rem, 5vw, 8rem);
@@ -391,5 +406,30 @@ img {
 
     .hero-stat-card strong {
         font-size: 2.4rem;
+    }
+}
+
+/* Tablet */
+@media (max-width: 991.98px) {
+    .steps {
+        grid-template-columns: 1fr;
+    }
+
+    .how-shell {
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+}
+
+/* Mobile */
+@media (max-width: 575.98px) {
+    .how-shell {
+        padding-left: 1.25rem;
+        padding-right: 1.25rem;
+    }
+
+    .step-card,
+    .step {
+        padding: 1.25rem;
     }
 }
