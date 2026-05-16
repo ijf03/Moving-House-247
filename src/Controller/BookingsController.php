@@ -69,7 +69,21 @@ class BookingsController extends AppController
             }
         }
 
-        $this->set(compact('booking'));
+        $relatedJob = null;
+
+        if ($this->isAdmin() && $booking->status === 'Processing') {
+            $jobsTable = $this->fetchTable('Jobs');
+
+            $relatedJob = $jobsTable->find()
+                ->where([
+                    'customer_id' => $booking->customer_id,
+                    'job_type_id' => $booking->job_type_id,
+                    'description' => 'Booking accepted from request #' . $booking->booking_id,
+                ])
+                ->first();
+        }
+
+        $this->set(compact('booking', 'relatedJob'));
     }
 
     public function chooseType()
