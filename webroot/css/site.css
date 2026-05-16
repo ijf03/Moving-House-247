@@ -890,6 +890,8 @@ body.mh-site {
     line-height: 1.2;
     box-shadow: 0 8px 20px rgba(255, 138, 0, 0.2);
     margin-bottom: 0;
+    display: inline-flex;
+    align-items: center;
 }
 
 .btn:hover,
