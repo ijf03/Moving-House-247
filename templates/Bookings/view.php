@@ -14,41 +14,26 @@
                     <div class="mh-back-btn m-1">
                         <?= $this->Html->link(__('← Back to List'), ['action' => 'index']) ?>
                     </div>
-                    <?php if ($booking->status === 'Pending' || ($booking->status === 'Processing' && !empty($relatedJob))): ?>
-                        <div class="admin-table-card">
-                            <div class="admin-table-header">
-                                <h2><?= __('Actions') ?></h2>
-                            </div>
-
-                            <div class="admin-action-stack">
-                                <?php if ($booking->status === 'Pending'): ?>
-                                    <?= $this->Form->postLink(
-                                        __('Accept'),
-                                        ['action' => 'accept', $booking->booking_id],
-                                        [
-                                            'class' => 'admin-action-link admin-action-link-success',
-                                            'confirm' => __('Are you sure you want to accept this booking?')
-                                        ]
-                                    ) ?>
-
-                                    <?= $this->Form->postLink(
-                                        __('Reject'),
-                                        ['action' => 'reject', $booking->booking_id],
-                                        [
-                                            'class' => 'admin-action-link admin-action-link-danger',
-                                            'confirm' => __('Are you sure you want to reject this booking?')
-                                        ]
-                                    ) ?>
-                                <?php elseif ($booking->status === 'Processing' && !empty($relatedJob)): ?>
-                                    <?= $this->Html->link(
-                                        __('Go to Job Order'),
-                                        ['controller' => 'Jobs', 'action' => 'view', $relatedJob->job_id],
-                                        ['class' => 'admin-action-link']
-                                    ) ?>
-                                <?php endif; ?>
-                            </div>
+                    <div class="admin-table-card">
+                        <div class="admin-table-header">
+                            <h2><?= __('Actions') ?></h2>
                         </div>
-                    <?php endif; ?>
+                        <div class="admin-action-stack">
+                            <?php if ($booking->status === 'Pending'): ?>
+                                <?= $this->Form->postLink(
+                                    __('Accept'),
+                                    ['action' => 'accept', $booking->booking_id],
+                                    ['class' => 'admin-action-link admin-action-link-success']
+                                ) ?>
+
+                                <?= $this->Form->postLink(
+                                    __('Reject'),
+                                    ['action' => 'reject', $booking->booking_id],
+                                    ['class' => 'admin-action-link admin-action-link-danger']
+                                ) ?>
+                            <?php endif; ?>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="col-lg-9">
