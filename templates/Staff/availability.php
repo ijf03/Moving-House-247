@@ -53,9 +53,10 @@
             });
             window.calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'timeGridWeek',
-                height: '1600px',
+                height: 'auto',
                 editable: true,
                 events: formatted_events,
+                allDaySlot: false,
                 eventResizableFromStart: true,
                 eventClick: function(info) {
                     const event = info.event;
@@ -134,7 +135,7 @@
                     backgroundColor: '#FF0000',
                     deleted: false
                 });
-            //submitForm();
+            submitForm();
         }
 
         function deleteEvent() {
