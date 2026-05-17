@@ -79,9 +79,10 @@
                     <table class="admin-table">
                         <thead>
                         <tr>
-                            <th><?= $this->Paginator->sort('unit_code', 'Unit Code') ?></th>
+                            <th><?= $this->Paginator->sort('storage_unit_id', 'ID') ?></th>
                             <th><?= $this->Paginator->sort('facility_name', 'Facility') ?></th>
-                            <th><?= $this->Paginator->sort('unit_size_m3', 'Size m³') ?></th>
+                            <th><?= $this->Paginator->sort('unit_code', 'Unit Code') ?></th>
+                            <th><?= $this->Paginator->sort('unit_size_m3', 'Size (m³)') ?></th>
                             <th><?= $this->Paginator->sort('security_level', 'Security') ?></th>
                             <th><?= $this->Paginator->sort('is_climate_controlled', 'Climate Controlled') ?></th>
                             <th><?= $this->Paginator->sort('is_active', 'Active') ?></th>
@@ -92,12 +93,13 @@
                         <tbody>
                         <?php foreach ($storageUnits as $storageUnit): ?>
                             <tr>
-                                <td><?= h($storageUnit->unit_code) ?></td>
+                                <td><?= $this->Number->format($storageUnit->storage_unit_id) ?></td>
                                 <td><?= h($storageUnit->facility_name) ?></td>
+                                <td><?= h($storageUnit->unit_code) ?></td>
                                 <td>
                                     <?= $storageUnit->unit_size_m3 === null ? '' : $this->Number->format($storageUnit->unit_size_m3) ?>
                                 </td>
-                                <td><?= h($storageUnit->security_level) ?></td>
+                                <td><?= h(ucfirst($storageUnit->security_level)) ?></td>
                                 <td><?= $storageUnit->is_climate_controlled ? __('Yes') : __('No') ?></td>
                                 <td>
                                         <span class="admin-status-badge">

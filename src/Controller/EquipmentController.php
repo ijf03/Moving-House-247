@@ -92,6 +92,7 @@ class EquipmentController extends AppController
      */
     public function add()
     {
+        $categoryOptions = $this->getCategoryOptions();
         $equipmentEntity = $this->Equipment->newEmptyEntity();
         if ($this->request->is('post')) {
             $equipmentEntity = $this->Equipment->patchEntity($equipmentEntity, $this->request->getData());
@@ -102,7 +103,7 @@ class EquipmentController extends AppController
             }
             $this->Flash->error(__('The equipment could not be saved. Please, try again.'));
         }
-        $this->set(compact('equipmentEntity'));
+        $this->set(compact('equipmentEntity', 'categoryOptions'));
     }
 
     /**
@@ -114,6 +115,7 @@ class EquipmentController extends AppController
      */
     public function edit($id = null)
     {
+        $categoryOptions = $this->getCategoryOptions();
         $equipmentEntity = $this->Equipment->get($id, contain: []);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $equipmentEntity = $this->Equipment->patchEntity($equipmentEntity, $this->request->getData());
@@ -124,7 +126,7 @@ class EquipmentController extends AppController
             }
             $this->Flash->error(__('The equipment could not be saved. Please, try again.'));
         }
-        $this->set(compact('equipmentEntity'));
+        $this->set(compact('equipmentEntity', 'categoryOptions'));
     }
 
     /**
@@ -145,5 +147,18 @@ class EquipmentController extends AppController
         }
 
         return $this->redirect(['action' => 'index']);
+    }
+
+    private function getCategoryOptions(): array
+    {
+        return [
+            'Trolley' => 'Trolley',
+            'Protective' => 'Protective',
+            'Securing' => 'Securing',
+            'Packing' => 'Packing',
+            'Lifting' => 'Lifting',
+            'Cleaning' => 'Cleaning',
+            'Other' => 'Other',
+        ];
     }
 }

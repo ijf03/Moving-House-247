@@ -48,18 +48,19 @@
                         <?= $this->Form->create($storageUnit, ['class' => 'auth-form']) ?>
 
                         <div class="row g-3">
-                            <div class="col-md-6 auth-form-group">
-                                <?= $this->Form->control('unit_code', [
-                                    'label' => 'Unit Code',
-                                    'placeholder' => 'Enter unit code',
-                                    'class' => 'auth-input',
-                                ]) ?>
-                            </div>
 
                             <div class="col-md-6 auth-form-group">
                                 <?= $this->Form->control('facility_name', [
                                     'label' => 'Facility Name',
                                     'placeholder' => 'Enter facility name',
+                                    'class' => 'auth-input',
+                                ]) ?>
+                            </div>
+
+                            <div class="col-md-6 auth-form-group">
+                                <?= $this->Form->control('unit_code', [
+                                    'label' => 'Unit Code',
+                                    'placeholder' => 'Enter unit code',
                                     'class' => 'auth-input',
                                 ]) ?>
                             </div>
@@ -77,8 +78,10 @@
 
                             <div class="col-md-6 auth-form-group">
                                 <?= $this->Form->control('security_level', [
+                                    'type' => 'select',
                                     'label' => 'Security Level',
-                                    'placeholder' => 'Enter security level',
+                                    'options' => $securityLevelOptions,
+                                    'empty' => 'Select security level',
                                     'class' => 'auth-input',
                                 ]) ?>
                             </div>

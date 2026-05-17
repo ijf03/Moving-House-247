@@ -58,26 +58,11 @@
 
                         <div class="row g-3">
                             <div class="col-md-6 auth-form-group">
-                                <?= $this->Form->control('name', [
-                                    'label' => 'Truck Name',
-                                    'placeholder' => 'Enter truck name',
-                                    'class' => 'auth-input',
-                                ]) ?>
-                            </div>
-
-                            <div class="col-md-6 auth-form-group">
                                 <?= $this->Form->control('rego', [
                                     'label' => 'Registration',
-                                    'placeholder' => 'Enter registration number',
+                                    'placeholder' => 'Example: 1AB2CD or FB23CA',
                                     'class' => 'auth-input',
-                                ]) ?>
-                            </div>
-
-                            <div class="col-md-6 auth-form-group">
-                                <?= $this->Form->control('truck_size', [
-                                    'label' => 'Truck Size',
-                                    'placeholder' => 'Enter truck size',
-                                    'class' => 'auth-input',
+                                    'maxlength' => 6,
                                 ]) ?>
                             </div>
 
@@ -105,8 +90,10 @@
 
                             <div class="col-md-6 auth-form-group">
                                 <?= $this->Form->control('current_location', [
+                                    'type' => 'select',
                                     'label' => 'Current Location',
-                                    'placeholder' => 'Enter current location',
+                                    'options' => $depotOptions,
+                                    'empty' => 'Select depot',
                                     'class' => 'auth-input',
                                 ]) ?>
                             </div>

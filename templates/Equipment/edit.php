@@ -67,8 +67,10 @@
 
                             <div class="col-md-6 auth-form-group">
                                 <?= $this->Form->control('category', [
+                                    'type' => 'select',
                                     'label' => 'Category',
-                                    'placeholder' => 'Enter category',
+                                    'options' => $categoryOptions,
+                                    'empty' => 'Select category',
                                     'class' => 'auth-input',
                                 ]) ?>
                             </div>
