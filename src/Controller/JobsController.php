@@ -22,22 +22,61 @@ class JobsController extends AppController
             $this->Flash->error(__('Only admins can access this page.'));
             return $this->redirect(['controller' => 'Pages', 'action' => 'display', 'home']);
         }
+
         $this->checkExpiredJobs();
+
         $query = $this->Jobs->find()
-            ->contain(['JobTypes', 'Customers'])
-            ->orderByAsc(
-                $this->Jobs->query()->newExpr("
-                CASE
-                    WHEN Jobs.status = 'Pending' THEN 1
-                    WHEN Jobs.status = 'Processing' THEN 2
-                    WHEN Jobs.status = 'Ready' THEN 3
-                    WHEN Jobs.status = 'Cancelled' THEN 4
-                    WHEN Jobs.status = 'Completed' THEN 5
-                    ELSE 6
-                END
-            ")
-            )
-            ->orderBy(['Jobs.job_date' => 'ASC']);
+            ->contain(['JobTypes', 'Customers']);
+
+        $search = trim((string)$this->request->getQuery('search'));
+        $status = $this->request->getQuery('status');
+        $jobTypeId = $this->request->getQuery('job_type_id');
+
+        $jobTypes = $this->Jobs->JobTypes->find('list', [
+            'keyField' => 'job_type_id',
+            'valueField' => 'job_type_name',
+        ])->all();
+
+        if ($search !== '') {
+            $like = '%' . $search . '%';
+            $query->where(function ($exp) use ($like) {
+                return $exp->or([
+                    'Jobs.description LIKE' => $like,
+                    'Jobs.pickup_address LIKE' => $like,
+                    'Jobs.dropoff_address LIKE' => $like,
+                    'Jobs.status LIKE' => $like,
+                    'Customers.first_name LIKE' => $like,
+                    'Customers.last_name LIKE' => $like,
+                    'Customers.email LIKE' => $like,
+                    'JobTypes.job_type_name LIKE' => $like,
+                ]);
+            });
+        }
+
+        if (!empty($status)) {
+            $query->where(['Jobs.status' => $status]);
+        }
+
+        if (!empty($jobTypeId)) {
+            $query->where(['Jobs.job_type_id' => $jobTypeId]);
+        }
+
+        if (!$this->request->getQuery('sort')) {
+            $query
+                ->orderByAsc(
+                    $this->Jobs->query()->newExpr("
+                    CASE
+                        WHEN Jobs.status = 'Pending' THEN 1
+                        WHEN Jobs.status = 'Processing' THEN 2
+                        WHEN Jobs.status = 'Ready' THEN 3
+                        WHEN Jobs.status = 'Cancelled' THEN 4
+                        WHEN Jobs.status = 'Completed' THEN 5
+                        ELSE 6
+                    END
+                ")
+                )
+                ->orderBy(['Jobs.job_date' => 'ASC']);
+        }
 
         $jobs = $this->paginate($query);
         $staffJobsTable = $this->fetchTable('StaffJob');
@@ -67,7 +106,7 @@ class JobsController extends AppController
                 ->count();
         }
 
-        $this->set(compact('jobs'));
+        $this->set(compact('jobs', 'search', 'status', 'jobTypeId', 'jobTypes'));
     }
 
     /**

@@ -73,14 +73,48 @@ foreach ($jobResources as $jobResource) {
 //                    ) ?>
                 </div>
 
+                <div class="admin-filter-card">
+                    <?= $this->Form->create(null, ['type' => 'get', 'class' => 'admin-filter-form mh-form']) ?>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <?= $this->Form->control('search', [
+                                'label' => 'Search',
+                                'placeholder' => 'Job, customer, service type, resource name...',
+                                'value' => $search ?? '',
+                            ]) ?>
+                        </div>
+
+                        <div class="col-md-6">
+                            <?= $this->Form->control('resource_type', [
+                                'type' => 'select',
+                                'label' => 'Resource Type',
+                                'empty' => 'All Resource Types',
+                                'options' => [
+                                    'truck' => 'Truck',
+                                    'equipment' => 'Equipment',
+                                    'storage_unit' => 'Storage Unit',
+                                    'inventory' => 'Inventory Item',
+                                ],
+                                'default' => $resourceType ?? null,
+                            ]) ?>
+                        </div>
+                    </div>
+
+                    <div class="admin-filter-actions">
+                        <?= $this->Form->button(__('Apply Filters'), ['class' => 'admin-primary-link admin-primary-button']) ?>
+                        <?= $this->Html->link(__('Reset'), ['action' => 'index'], ['class' => 'admin-action-link']) ?>
+                    </div>
+                    <?= $this->Form->end() ?>
+                </div>
+
                 <div class="admin-table-wrap">
                     <table class="admin-table">
                         <thead>
                         <tr>
-                            <th><?= __('Job') ?></th>
-                            <th><?= __('Customer') ?></th>
-                            <th><?= __('Service Type') ?></th>
-                            <th><?= __('Job Date') ?></th>
+                            <th><?= $this->Paginator->sort('job_id', 'Job') ?></th>
+                            <th><?= $this->Paginator->sort('Customers.first_name', 'Customer') ?></th>
+                            <th><?= $this->Paginator->sort('JobTypes.job_type_name', 'Service Type') ?></th>
+                            <th><?= $this->Paginator->sort('Jobs.job_date', 'Job Date') ?></th>
                             <th><?= __('Trucks') ?></th>
                             <th><?= __('Equipment') ?></th>
                             <th><?= __('Storage Units') ?></th>

@@ -35,9 +35,49 @@ class TrucksController extends AppController
     public function index()
     {
         $query = $this->Trucks->find();
+
+        $search = trim((string)$this->request->getQuery('search'));
+        $truckSize = $this->request->getQuery('truck_size');
+        $isActive = $this->request->getQuery('is_active');
+
+        $truckSizeOptions = $this->Trucks->find('list', [
+            'keyField' => 'truck_size',
+            'valueField' => function ($truck) {
+                return ucfirst((string)$truck->truck_size);
+            },
+        ])
+            ->where(['truck_size IS NOT' => null])
+            ->distinct(['truck_size'])
+            ->orderBy(['truck_size' => 'ASC'])
+            ->toArray();
+
+        if ($search !== '') {
+            $like = '%' . $search . '%';
+            $query->where(function ($exp) use ($like) {
+                return $exp->or([
+                    'Trucks.name LIKE' => $like,
+                    'Trucks.rego LIKE' => $like,
+                    'Trucks.truck_size LIKE' => $like,
+                    'Trucks.current_location LIKE' => $like,
+                ]);
+            });
+        }
+
+        if (!empty($truckSize)) {
+            $query->where(['Trucks.truck_size' => $truckSize]);
+        }
+
+        if (!empty($status)) {
+            $query->where(['Trucks.status' => $status]);
+        }
+
+        if ($isActive !== null && $isActive !== '') {
+            $query->where(['Trucks.is_active' => (int)$isActive]);
+        }
+
         $trucks = $this->paginate($query);
 
-        $this->set(compact('trucks'));
+        $this->set(compact('trucks', 'search', 'truckSize', 'isActive', 'truckSizeOptions'));
     }
 
     /**
@@ -60,6 +100,7 @@ class TrucksController extends AppController
      */
     public function add()
     {
+        $depotOptions = $this->getDepotOptions();
         $truck = $this->Trucks->newEmptyEntity();
         if ($this->request->is('post')) {
             $truck = $this->Trucks->patchEntity($truck, $this->request->getData());
@@ -70,7 +111,7 @@ class TrucksController extends AppController
             }
             $this->Flash->error(__('The truck could not be saved. Please, try again.'));
         }
-        $this->set(compact('truck'));
+        $this->set(compact('truck', 'depotOptions'));
     }
 
     /**
@@ -82,6 +123,7 @@ class TrucksController extends AppController
      */
     public function edit($id = null)
     {
+        $depotOptions = $this->getDepotOptions();
         $truck = $this->Trucks->get($id, contain: []);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $truck = $this->Trucks->patchEntity($truck, $this->request->getData());
@@ -92,7 +134,7 @@ class TrucksController extends AppController
             }
             $this->Flash->error(__('The truck could not be saved. Please, try again.'));
         }
-        $this->set(compact('truck'));
+        $this->set(compact('truck', 'depotOptions'));
     }
 
     /**
@@ -113,5 +155,16 @@ class TrucksController extends AppController
         }
 
         return $this->redirect(['action' => 'index']);
+    }
+    private function getDepotOptions(): array
+    {
+        return [
+            'Clayton Depot' => 'Clayton Depot',
+            'Springvale Depot' => 'Springvale Depot',
+            'Dandenong Depot' => 'Dandenong Depot',
+            'Moorabbin Depot' => 'Moorabbin Depot',
+            'Melbourne Depot' => 'Melbourne Depot',
+            'Other' => 'Other',
+        ];
     }
 }

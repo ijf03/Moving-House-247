@@ -35,9 +35,44 @@ class EquipmentController extends AppController
     public function index()
     {
         $query = $this->Equipment->find();
+
+        $search = trim((string)$this->request->getQuery('search'));
+        $category = $this->request->getQuery('category');
+        $isActive = $this->request->getQuery('is_active');
+
+        $categoryOptions = $this->Equipment->find('list', [
+            'keyField' => 'category',
+            'valueField' => function ($equipment) {
+                return ucwords((string)$equipment->category);
+            },
+        ])
+            ->where(['category IS NOT' => null])
+            ->distinct(['category'])
+            ->orderBy(['category' => 'ASC'])
+            ->toArray();
+
+        if ($search !== '') {
+            $like = '%' . $search . '%';
+            $query->where(function ($exp) use ($like) {
+                return $exp->or([
+                    'Equipment.name LIKE' => $like,
+                    'Equipment.category LIKE' => $like,
+                    'Equipment.storage_location LIKE' => $like,
+                ]);
+            });
+        }
+
+        if (!empty($category)) {
+            $query->where(['Equipment.category' => $category]);
+        }
+
+        if ($isActive !== null && $isActive !== '') {
+            $query->where(['Equipment.is_active' => (int)$isActive]);
+        }
+
         $equipment = $this->paginate($query);
 
-        $this->set(compact('equipment'));
+        $this->set(compact('equipment', 'search', 'category', 'isActive', 'categoryOptions'));
     }
 
     /**
@@ -60,6 +95,7 @@ class EquipmentController extends AppController
      */
     public function add()
     {
+        $categoryOptions = $this->getCategoryOptions();
         $equipmentEntity = $this->Equipment->newEmptyEntity();
         if ($this->request->is('post')) {
             $equipmentEntity = $this->Equipment->patchEntity($equipmentEntity, $this->request->getData());
@@ -70,7 +106,7 @@ class EquipmentController extends AppController
             }
             $this->Flash->error(__('The equipment could not be saved. Please, try again.'));
         }
-        $this->set(compact('equipmentEntity'));
+        $this->set(compact('equipmentEntity', 'categoryOptions'));
     }
 
     /**
@@ -82,6 +118,7 @@ class EquipmentController extends AppController
      */
     public function edit($id = null)
     {
+        $categoryOptions = $this->getCategoryOptions();
         $equipmentEntity = $this->Equipment->get($id, contain: []);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $equipmentEntity = $this->Equipment->patchEntity($equipmentEntity, $this->request->getData());
@@ -92,7 +129,7 @@ class EquipmentController extends AppController
             }
             $this->Flash->error(__('The equipment could not be saved. Please, try again.'));
         }
-        $this->set(compact('equipmentEntity'));
+        $this->set(compact('equipmentEntity', 'categoryOptions'));
     }
 
     /**
@@ -113,5 +150,18 @@ class EquipmentController extends AppController
         }
 
         return $this->redirect(['action' => 'index']);
+    }
+
+    private function getCategoryOptions(): array
+    {
+        return [
+            'Trolley' => 'Trolley',
+            'Protective' => 'Protective',
+            'Securing' => 'Securing',
+            'Packing' => 'Packing',
+            'Lifting' => 'Lifting',
+            'Cleaning' => 'Cleaning',
+            'Other' => 'Other',
+        ];
     }
 }

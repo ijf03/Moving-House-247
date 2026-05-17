@@ -55,22 +55,22 @@ class TrucksTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->scalar('name')
-            ->maxLength('name', 100)
-            ->requirePresence('name', 'create')
-            ->notEmptyString('name');
-
-        $validator
             ->scalar('rego')
-            ->maxLength('rego', 20)
+            ->maxLength('rego', 6, 'Registration must be 6 characters long.')
             ->requirePresence('rego', 'create')
-            ->notEmptyString('rego')
-            ->add('rego', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
+            ->notEmptyString('rego', 'Please enter a registration number.')
+            ->add('rego', 'validFormat', [
+                'rule' => function ($value, $context) {
+                    $value = strtoupper(trim((string)$value));
 
-        $validator
-            ->scalar('truck_size')
-            ->maxLength('truck_size', 50)
-            ->allowEmptyString('truck_size');
+                    $normalRegistration = '/^[0-9][A-Z]{2}[0-9][A-Z]{2}$/';
+                    $nationalHeavyVehicleRegistration = '/^[A-Z]{2}[0-9]{2}[A-Z]{2}$/';
+
+                    return preg_match($normalRegistration, $value) === 1
+                        || preg_match($nationalHeavyVehicleRegistration, $value) === 1;
+                },
+                'message' => 'Registration must match either normal format 1AB2CD or national heavy vehicle format FB23CA.',
+            ]);
 
         $validator
             ->decimal('capacity_m3')
@@ -89,8 +89,16 @@ class TrucksTable extends Table
 
         $validator
             ->scalar('current_location')
-            ->maxLength('current_location', 100)
-            ->allowEmptyString('current_location');
+            ->requirePresence('current_location', 'create')
+            ->notEmptyString('current_location', 'Please select a depot location.')
+            ->inList('current_location', [
+                'Clayton Depot',
+                'Springvale Depot',
+                'Dandenong Depot',
+                'Moorabbin Depot',
+                'Melbourne Depot',
+                'Other',
+            ], 'Please select a valid depot location.');
 
         $validator
             ->date('next_service_date')

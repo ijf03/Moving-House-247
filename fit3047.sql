@@ -557,9 +557,7 @@ INSERT INTO `storage_units` (`storage_unit_id`, `unit_code`, `facility_name`, `u
 
 CREATE TABLE `trucks` (
                           `truck_id` int(11) NOT NULL,
-                          `name` varchar(100) NOT NULL,
                           `rego` varchar(20) NOT NULL,
-                          `truck_size` varchar(50) DEFAULT NULL,
                           `capacity_m3` decimal(10,2) DEFAULT NULL,
                           `max_payload_kg` decimal(10,2) DEFAULT NULL,
                           `status` varchar(30) NOT NULL DEFAULT 'available',
@@ -574,9 +572,9 @@ CREATE TABLE `trucks` (
 -- Dumping data for table `trucks`
 --
 
-INSERT INTO `trucks` (`truck_id`, `name`, `rego`, `truck_size`, `capacity_m3`, `max_payload_kg`, `status`, `current_location`, `next_service_date`, `is_active`, `created`, `modified`) VALUES
-                                                                                                                                                                                            (1, 'Truck 1', '1ABC123', 'Small', 20.00, 2000.00, 'available', 'Clayton Depot', NULL, 1, '2026-05-13 11:28:29', '2026-05-13 11:28:29'),
-                                                                                                                                                                                            (2, 'Truck 2', '1DEF456', 'Large', 35.00, 4000.00, 'available', 'Springvale Depot', NULL, 1, '2026-05-13 11:28:29', '2026-05-13 11:28:29');
+INSERT INTO `trucks` (`truck_id`, `rego`, `capacity_m3`, `max_payload_kg`, `status`, `current_location`, `next_service_date`, `is_active`, `created`, `modified`) VALUES
+                                                                                                                                                                                            (1, '1ABC123', 20.00, 2000.00, 'available', 'Clayton Depot', NULL, 1, '2026-05-13 11:28:29', '2026-05-13 11:28:29'),
+                                                                                                                                                                                            (2,  '1DEF456', 35.00, 4000.00, 'available', 'Springvale Depot', NULL, 1, '2026-05-13 11:28:29', '2026-05-13 11:28:29');
 
 -- --------------------------------------------------------
 
@@ -974,8 +972,6 @@ ALTER TABLE `staff_job`
 ALTER TABLE `users`
     ADD CONSTRAINT `users_user_type_id` FOREIGN KEY (`user_type`) REFERENCES `user_types` (`user_type_id`);
 
-ALTER TABLE bookings
-    ADD rejected_notified TINYINT(1) NOT NULL DEFAULT 0;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
