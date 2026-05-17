@@ -52,7 +52,12 @@
                 };
             });
             window.calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'timeGridWeek',
+                initialView: window.innerWidth < 800 ? 'timeGrid' : 'timeGridWeek',
+                duration: {days: window.innerWidth < 400 ? 1 : 3},
+                windowResize: function (){
+                    calendar.changeView(window.innerWidth < 800 ? 'timeGrid' : 'timeGridWeek');
+                    calendar.setOption('duration', { days: window.innerWidth < 400 ? 1 : 3 });
+                },
                 height: 'auto',
                 editable: true,
                 events: formatted_events,
@@ -91,17 +96,22 @@
         }
 
         function save() {
-            if (isNaN(new Date(document.getElementById('start_datetime').value))||isNaN(new Date(document.getElementById('end_datetime').value))){
+            var start = document.getElementById('start_datetime').value;
+            var end = document.getElementById('end_datetime').value;
+            if (isNaN(new Date(start))||isNaN(new Date(end))){
                 alert('Invalid Datetime!');
                 return;
             }
-            if (!document.getElementById('start_datetime').value || !document.getElementById('end_datetime').value){
+            if (!start|| !end){
                 alert('Start time and end time cannot be empty!');
                 return;
             }
-            if (Date.parse(document.getElementById('start_datetime').value) >= Date.parse(document.getElementById('end_datetime').value)){
+            if (Date.parse(start) >= Date.parse(end)){
                 alert('Start time must be earlier than end time');
                 return
+            }
+            if (!confirm('Change unavailable time to '+start.replace('T',' ')+' - '+end.replace('T',' ')+'?\nYou will not receive jobs in that period of time')){
+                return;
             }
             calendar.getEventById(activeEventID).setDates(document.getElementById('start_datetime').value + startTimezone,
                 document.getElementById('end_datetime').value + endTimezone);
@@ -115,16 +125,21 @@
             modal.show();
         }
         function add() {
-            if (isNaN(new Date(document.getElementById('new_start').value))||isNaN(new Date(document.getElementById('new_end').value))){
+            var start = document.getElementById('new_start').value;
+            var end = document.getElementById('new_end').value;
+            if (isNaN(new Date(start))||isNaN(new Date(end))){
                 alert('Invalid Datetime!');
                 return;
             }
-            if (!document.getElementById('new_start').value || !document.getElementById('new_end').value){
+            if (!start || !end){
                 alert('Start time and end time cannot be empty!');
                 return;
             }
-            if (Date.parse(document.getElementById('new_start').value) >= Date.parse(document.getElementById('new_end').value)){
+            if (Date.parse(start) >= Date.parse(end)){
                 alert('Start time must be earlier than end time');
+                return;
+            }
+            if (!confirm('Do you want to mark '+start.replace('T',' ')+' - '+end.replace('T',' ')+' as unavailable?\nYou will not receive jobs in that period of time')){
                 return;
             }
             calendar.addEvent(
