@@ -41,9 +41,29 @@ class InvoicesController extends AppController
     {
         $query = $this->Invoices->find()
             ->contain(['Bookings', 'Customers']);
+
+        $search = trim((string)$this->request->getQuery('search'));
+
+        if ($search !== '') {
+            $conditions = [
+                'OR' => [
+                    'Invoices.status LIKE' => "%$search%",
+                    'Customers.first_name LIKE' => "%$search%",
+                    'Customers.last_name LIKE' => "%$search%",
+                    'Customers.email LIKE' => "%$search%",
+                ]
+            ];
+
+            if (is_numeric($search)) {
+                $conditions['OR']['Invoices.invoice_id'] = (int)$search;
+            }
+
+            $query->where($conditions);
+        }
+
         $invoices = $this->paginate($query);
 
-        $this->set(compact('invoices'));
+        $this->set(compact('invoices', 'search'));
     }
 
     /**
