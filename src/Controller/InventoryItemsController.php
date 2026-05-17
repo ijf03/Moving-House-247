@@ -35,9 +35,55 @@ class InventoryItemsController extends AppController
     public function index()
     {
         $query = $this->InventoryItems->find();
+
+        $search = trim((string)$this->request->getQuery('search'));
+        $category = $this->request->getQuery('category');
+        $unit = $this->request->getQuery('unit');
+        $isActive = $this->request->getQuery('is_active');
+
+        $categoryOptions = $this->InventoryItems->find('list', [
+            'keyField' => 'category',
+            'valueField' => 'category',
+        ])
+            ->distinct(['category'])
+            ->orderBy(['category' => 'ASC'])
+            ->toArray();
+
+        $unitOptions = $this->InventoryItems->find('list', [
+            'keyField' => 'unit',
+            'valueField' => 'unit',
+        ])
+            ->distinct(['unit'])
+            ->orderBy(['unit' => 'ASC'])
+            ->toArray();
+
+        if ($search !== '') {
+            $like = '%' . $search . '%';
+            $query->where(function ($exp) use ($like) {
+                return $exp->or([
+                    'InventoryItems.name LIKE' => $like,
+                    'InventoryItems.category LIKE' => $like,
+                    'InventoryItems.unit LIKE' => $like,
+                    'InventoryItems.storage_location LIKE' => $like,
+                ]);
+            });
+        }
+
+        if (!empty($category)) {
+            $query->where(['InventoryItems.category' => $category]);
+        }
+
+        if (!empty($unit)) {
+            $query->where(['InventoryItems.unit' => $unit]);
+        }
+
+        if ($isActive !== null && $isActive !== '') {
+            $query->where(['InventoryItems.is_active' => (int)$isActive]);
+        }
+
         $inventoryItems = $this->paginate($query);
 
-        $this->set(compact('inventoryItems'));
+        $this->set(compact('inventoryItems', 'search', 'category', 'unit', 'isActive', 'categoryOptions', 'unitOptions'));
     }
 
     /**

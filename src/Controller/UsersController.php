@@ -34,16 +34,49 @@ class UsersController extends AppController
     {
         $user = $this->Authentication->getIdentity();
         $userId = $user->user_id;
+
         $roleQuery = $this->Users->find()
             ->where(['user_id' => $userId])
             ->contain(['UserTypes'])
             ->first();
+
         $isAdmin = $roleQuery->user_type_name == 'Admin';
+
         $query = $this->Users->find()
             ->contain(['UserTypes']);
+
+        $search = trim((string)$this->request->getQuery('search'));
+        $userTypeId = $this->request->getQuery('user_type');
+
+        $userTypes = $this->Users->UserTypes->find('list', [
+            'keyField' => 'user_type_id',
+            'valueField' => 'name',
+        ])->all();
+
+        if (!$isAdmin) {
+            $query->where(['Users.user_id' => $userId]);
+        }
+
+        if ($search !== '') {
+            $like = '%' . $search . '%';
+            $query->where(function ($exp) use ($like) {
+                return $exp->or([
+                    'Users.email LIKE' => $like,
+                    'Users.phone LIKE' => $like,
+                    'Users.first_name LIKE' => $like,
+                    'Users.last_name LIKE' => $like,
+                    'UserTypes.name LIKE' => $like,
+                ]);
+            });
+        }
+
+        if (!empty($userTypeId)) {
+            $query->where(['Users.user_type' => $userTypeId]);
+        }
+
         $users = $this->paginate($query);
 
-        $this->set(compact('users', 'isAdmin'));
+        $this->set(compact('users', 'isAdmin', 'search', 'userTypeId', 'userTypes'));
     }
 
     /**

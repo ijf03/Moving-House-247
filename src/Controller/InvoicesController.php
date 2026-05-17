@@ -43,27 +43,36 @@ class InvoicesController extends AppController
             ->contain(['Bookings', 'Customers']);
 
         $search = trim((string)$this->request->getQuery('search'));
+        $status = $this->request->getQuery('status');
+
+        $statusOptions = $this->Invoices->find('list', [
+            'keyField' => 'status',
+            'valueField' => 'status',
+        ])
+            ->distinct(['status'])
+            ->orderBy(['status' => 'ASC'])
+            ->toArray();
 
         if ($search !== '') {
-            $conditions = [
-                'OR' => [
-                    'Invoices.status LIKE' => "%$search%",
-                    'Customers.first_name LIKE' => "%$search%",
-                    'Customers.last_name LIKE' => "%$search%",
-                    'Customers.email LIKE' => "%$search%",
-                ]
-            ];
+            $like = '%' . $search . '%';
+            $query->where(function ($exp) use ($like) {
+                return $exp->or([
+                    'Invoices.stripe_invoice_id LIKE' => $like,
+                    'Invoices.status LIKE' => $like,
+                    'Customers.first_name LIKE' => $like,
+                    'Customers.last_name LIKE' => $like,
+                    'Customers.email LIKE' => $like,
+                ]);
+            });
+        }
 
-            if (is_numeric($search)) {
-                $conditions['OR']['Invoices.invoice_id'] = (int)$search;
-            }
-
-            $query->where($conditions);
+        if (!empty($status)) {
+            $query->where(['Invoices.status' => $status]);
         }
 
         $invoices = $this->paginate($query);
 
-        $this->set(compact('invoices', 'search'));
+        $this->set(compact('invoices', 'search', 'status', 'statusOptions'));
     }
 
     /**

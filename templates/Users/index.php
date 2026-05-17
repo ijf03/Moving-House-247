@@ -2,9 +2,15 @@
 /**
  * @var \App\View\AppView $this
  * @var iterable<\App\Model\Entity\User> $users
+ * @var bool $isAdmin
+ * @var string|null $search
+ * @var string|int|null $userTypeId
+ * @var iterable $userTypes
  */
+
 $identity = $this->request->getAttribute('identity');
 $userId = $identity ? $identity->get('user_id') : null;
+$isAdmin = $isAdmin ?? false;
 ?>
 
 <div class="mh-page-soft">
@@ -32,20 +38,49 @@ $userId = $identity ? $identity->get('user_id') : null;
                     </div>
 
                     <?=
-                    $isAdmin
+                    ($isAdmin ?? false)
                         ? $this->Html->link(__('New User'), ['action' => 'add'], ['class' => 'admin-primary-link'])
-                        : null
+                        : ''
                     ?>
+                </div>
+
+                <div class="admin-filter-card">
+                    <?= $this->Form->create(null, ['type' => 'get', 'class' => 'admin-filter-form mh-form']) ?>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <?= $this->Form->control('search', [
+                                'label' => 'Search',
+                                'placeholder' => 'Name, email, phone, role...',
+                                'value' => $search ?? '',
+                            ]) ?>
+                        </div>
+
+                        <div class="col-md-6">
+                            <?= $this->Form->control('user_type', [
+                                'type' => 'select',
+                                'label' => 'User Type',
+                                'empty' => 'All User Types',
+                                'options' => $userTypes ?? [],
+                                'default' => $userTypeId ?? null,
+                            ]) ?>
+                        </div>
+                    </div>
+
+                    <div class="admin-filter-actions">
+                        <?= $this->Form->button(__('Apply Filters'), ['class' => 'admin-primary-link admin-primary-button']) ?>
+                        <?= $this->Html->link(__('Reset'), ['action' => 'index'], ['class' => 'admin-action-link']) ?>
+                    </div>
+                    <?= $this->Form->end() ?>
                 </div>
 
                 <div class="admin-table-wrap">
                     <table class="admin-table">
                         <thead>
                         <tr>
-                            <th><?= $this->Paginator->sort('email') ?></th>
-                            <th><?= $this->Paginator->sort('first_name') ?></th>
-                            <th><?= $this->Paginator->sort('last_name') ?></th>
-                            <th><?= $this->Paginator->sort('user_type') ?></th>
+                            <th><?= $this->Paginator->sort('email', 'Email') ?></th>
+                            <th><?= $this->Paginator->sort('first_name', 'First Name') ?></th>
+                            <th><?= $this->Paginator->sort('last_name', 'Last Name') ?></th>
+                            <th><?= $this->Paginator->sort('UserTypes.name', 'User Type') ?></th>
                             <th class="actions"><?= __('Actions') ?></th>
                         </tr>
                         </thead>

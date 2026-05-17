@@ -19,15 +19,30 @@ class BookingsController extends AppController
 
         $query = $this->Bookings->find()->contain(['Customers', 'JobTypes']);
 
+        $search = trim((string)$this->request->getQuery('search'));
         $status = $this->request->getQuery('status');
         $jobTypeId = $this->request->getQuery('job_type_id');
-        $sort = $this->request->getQuery('sort');
-        $direction = $this->request->getQuery('direction');
-        $booking = $this->Bookings->newEmptyEntity();
+
         $job_types = $this->Bookings->JobTypes->find('list', [
             'keyField' => 'job_type_id',
             'valueField' => 'job_type_name',
         ])->all();
+
+        if ($search !== '') {
+            $like = '%' . $search . '%';
+            $query->where(function ($exp) use ($like) {
+                return $exp->or([
+                    'Bookings.pickup_address LIKE' => $like,
+                    'Bookings.dropoff_address LIKE' => $like,
+                    'Bookings.status LIKE' => $like,
+                    'Customers.first_name LIKE' => $like,
+                    'Customers.last_name LIKE' => $like,
+                    'Customers.email LIKE' => $like,
+                    'Customers.phone LIKE' => $like,
+                    'JobTypes.job_type_name LIKE' => $like,
+                ]);
+            });
+        }
 
         if (!empty($status)) {
             $query->where(['Bookings.status' => $status]);
@@ -37,13 +52,8 @@ class BookingsController extends AppController
             $query->where(['Bookings.job_type_id' => $jobTypeId]);
         }
 
-        if (!empty($sort) && in_array($sort, ['job_date'])) {
-            $direction = strtolower((string)$direction) === 'desc' ? 'DESC' : 'ASC';
-            $query->order(["Bookings.$sort" => $direction]);
-        }
-
         $bookings = $this->paginate($query);
-        $this->set(compact('bookings', 'job_types', 'status', 'jobTypeId', 'sort', 'direction'));
+        $this->set(compact('bookings', 'job_types', 'search', 'status', 'jobTypeId'));
     }
 
     public function view($id = null)

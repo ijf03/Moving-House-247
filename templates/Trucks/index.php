@@ -36,6 +36,45 @@
                     ) ?>
                 </div>
 
+                <div class="admin-filter-card">
+                    <?= $this->Form->create(null, ['type' => 'get', 'class' => 'admin-filter-form mh-form']) ?>
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <?= $this->Form->control('search', [
+                                'label' => 'Search',
+                                'placeholder' => 'Name, rego, location...',
+                                'value' => $search ?? '',
+                            ]) ?>
+                        </div>
+
+                        <div class="col-md-3">
+                            <?= $this->Form->control('truck_size', [
+                                'type' => 'select',
+                                'label' => 'Truck Size',
+                                'empty' => 'All Sizes',
+                                'options' => $truckSizeOptions ?? [],
+                                'default' => $truckSize ?? null,
+                            ]) ?>
+                        </div>
+
+                        <div class="col-md-3">
+                            <?= $this->Form->control('is_active', [
+                                'type' => 'select',
+                                'label' => 'Active',
+                                'empty' => 'All',
+                                'options' => [1 => 'Active', 0 => 'Inactive'],
+                                'default' => $isActive ?? null,
+                            ]) ?>
+                        </div>
+                    </div>
+
+                    <div class="admin-filter-actions">
+                        <?= $this->Form->button(__('Apply Filters'), ['class' => 'admin-primary-link admin-primary-button']) ?>
+                        <?= $this->Html->link(__('Reset'), ['action' => 'index'], ['class' => 'admin-action-link']) ?>
+                    </div>
+                    <?= $this->Form->end() ?>
+                </div>
+
                 <div class="admin-table-wrap">
                     <table class="admin-table">
                         <thead>

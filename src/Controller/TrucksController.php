@@ -35,9 +35,47 @@ class TrucksController extends AppController
     public function index()
     {
         $query = $this->Trucks->find();
+
+        $search = trim((string)$this->request->getQuery('search'));
+        $truckSize = $this->request->getQuery('truck_size');
+        $isActive = $this->request->getQuery('is_active');
+
+        $truckSizeOptions = $this->Trucks->find('list', [
+            'keyField' => 'truck_size',
+            'valueField' => 'truck_size',
+        ])
+            ->where(['truck_size IS NOT' => null])
+            ->distinct(['truck_size'])
+            ->orderBy(['truck_size' => 'ASC'])
+            ->toArray();
+
+        if ($search !== '') {
+            $like = '%' . $search . '%';
+            $query->where(function ($exp) use ($like) {
+                return $exp->or([
+                    'Trucks.name LIKE' => $like,
+                    'Trucks.rego LIKE' => $like,
+                    'Trucks.truck_size LIKE' => $like,
+                    'Trucks.current_location LIKE' => $like,
+                ]);
+            });
+        }
+
+        if (!empty($truckSize)) {
+            $query->where(['Trucks.truck_size' => $truckSize]);
+        }
+
+        if (!empty($status)) {
+            $query->where(['Trucks.status' => $status]);
+        }
+
+        if ($isActive !== null && $isActive !== '') {
+            $query->where(['Trucks.is_active' => (int)$isActive]);
+        }
+
         $trucks = $this->paginate($query);
 
-        $this->set(compact('trucks'));
+        $this->set(compact('trucks', 'search', 'truckSize', 'isActive', 'truckSizeOptions'));
     }
 
     /**
