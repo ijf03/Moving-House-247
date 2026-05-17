@@ -32,6 +32,7 @@ class Job extends Entity
      * @var array<string, bool>
      */
     protected array $_accessible = [
+        'booking_id' => true,
         'job_type_id' => true,
         'description' => true,
         'pickup_address' => true,

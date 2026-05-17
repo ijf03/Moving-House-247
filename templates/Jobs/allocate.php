@@ -36,6 +36,21 @@
                                 ['action' => 'index'],
                                 ['class' => 'admin-action-link']
                             ) ?>
+
+                            <?= $this->Html->link(
+                                __('View Job'),
+                                ['action' => 'view', $job->job_id],
+                                ['class' => 'admin-action-link']
+                            ) ?>
+
+                            <?= $this->Form->postLink(
+                                __('Delete Job'),
+                                ['action' => 'delete', $job->job_id],
+                                [
+                                    'class' => 'admin-action-link admin-action-link-danger',
+                                    'confirm' => __('Are you sure you want to delete job #{0}?', $job->job_id),
+                                ]
+                            ) ?>
                         </div>
                     </div>
                 </div>
@@ -94,7 +109,7 @@
                                 <div class="mh-info-card">
                                     <div>
                                         <h3><?= __('Job Date') ?></h3>
-                                        <p><?= h($job->job_date) ?></p>
+                                        <p><?= h($job->job_date?->format('d/m/Y')) ?></p>
                                     </div>
                                 </div>
                             </div>
@@ -103,7 +118,7 @@
                                 <div class="mh-info-card">
                                     <div>
                                         <h3><?= __('Job Time') ?></h3>
-                                        <p><?= h($job->job_time) ?></p>
+                                        <p><?= h($job->job_time ? date('H:i', strtotime($job->job_time)) : '')?></p>
                                     </div>
                                 </div>
                             </div>
