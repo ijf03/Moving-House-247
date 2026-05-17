@@ -57,8 +57,8 @@
                         <?php foreach ($storageUnits as $storageUnit): ?>
                             <tr>
                                 <td><?= $this->Number->format($storageUnit->storage_unit_id) ?></td>
-                                <td><?= h($storageUnit->unit_code) ?></td>
                                 <td><?= h($storageUnit->facility_name) ?></td>
+                                <td><?= h($storageUnit->unit_code) ?></td>
                                 <td>
                                     <?= $storageUnit->unit_size_m3 === null ? '' : $this->Number->format($storageUnit->unit_size_m3) ?>
                                 </td>

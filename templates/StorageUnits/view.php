@@ -60,12 +60,12 @@
                             <table class="table admin-table">
                                 <tbody>
                                 <tr>
-                                    <th><?= __('Unit Code') ?></th>
-                                    <td><?= h($storageUnit->unit_code) ?></td>
-                                </tr>
-                                <tr>
                                     <th><?= __('Facility Name') ?></th>
                                     <td><?= h($storageUnit->facility_name) ?></td>
+                                </tr>
+                                <tr>
+                                    <th><?= __('Unit Code') ?></th>
+                                    <td><?= h($storageUnit->unit_code) ?></td>
                                 </tr>
                                 <tr>
                                     <th><?= __('Security Level') ?></th>
