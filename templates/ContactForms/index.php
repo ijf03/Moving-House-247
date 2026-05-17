@@ -34,7 +34,7 @@
                     <table class="admin-table">
                         <thead>
                         <tr>
-                            <th><?= __('Contact Form') ?></th>
+                            <th><?= __('ID') ?></th>
                             <th><?= __('Customer') ?></th>
                             <th><?= __('Email') ?></th>
                             <th><?= __('Phone') ?></th>

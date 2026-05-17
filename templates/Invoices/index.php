@@ -32,7 +32,7 @@
                 <table class="admin-table">
                     <thead>
                     <tr>
-                        <th><?= $this->Paginator->sort('invoice_id') ?></th>
+                        <th><?= $this->Paginator->sort('ID') ?></th>
                         <th><?= $this->Paginator->sort('booking_id') ?></th>
                         <th><?= $this->Paginator->sort('customer_id') ?></th>
                         <th><?= __('Invoice URL') ?></th>

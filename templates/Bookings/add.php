@@ -209,26 +209,7 @@
 
 <?php if (!empty($geoapifyApiKey)): ?>
     <style>
-        .address-suggestions {
-            position: relative;
-            z-index: 1000;
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            margin-top: 4px;
-            max-height: 220px;
-            overflow-y: auto;
-        }
 
-        .address-suggestion-item {
-            padding: 10px;
-            cursor: pointer;
-            border-bottom: 1px solid #eee;
-        }
-
-        .address-suggestion-item:hover {
-            background: #f5f5f5;
-        }
     </style>
 
     <script>
