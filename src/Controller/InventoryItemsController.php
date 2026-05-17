@@ -60,6 +60,9 @@ class InventoryItemsController extends AppController
      */
     public function add()
     {
+        $categoryOptions = $this->getCategoryOptions();
+        $storageLocationOptions = $this->getStorageLocationOptions();
+
         $inventoryItem = $this->InventoryItems->newEmptyEntity();
         if ($this->request->is('post')) {
             $inventoryItem = $this->InventoryItems->patchEntity($inventoryItem, $this->request->getData());
@@ -70,7 +73,7 @@ class InventoryItemsController extends AppController
             }
             $this->Flash->error(__('The inventory item could not be saved. Please, try again.'));
         }
-        $this->set(compact('inventoryItem'));
+        $this->set(compact('inventoryItem', 'categoryOptions', 'storageLocationOptions'));
     }
 
     /**
@@ -82,6 +85,9 @@ class InventoryItemsController extends AppController
      */
     public function edit($id = null)
     {
+        $categoryOptions = $this->getCategoryOptions();
+        $storageLocationOptions = $this->getStorageLocationOptions();
+
         $inventoryItem = $this->InventoryItems->get($id, contain: []);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $inventoryItem = $this->InventoryItems->patchEntity($inventoryItem, $this->request->getData());
@@ -92,7 +98,7 @@ class InventoryItemsController extends AppController
             }
             $this->Flash->error(__('The inventory item could not be saved. Please, try again.'));
         }
-        $this->set(compact('inventoryItem'));
+        $this->set(compact('inventoryItem', 'categoryOptions', 'storageLocationOptions'));
     }
 
     /**
@@ -113,5 +119,30 @@ class InventoryItemsController extends AppController
         }
 
         return $this->redirect(['action' => 'index']);
+    }
+    private function getCategoryOptions(): array
+    {
+        return [
+            'Boxes' => 'Boxes',
+            'Packing' => 'Packing',
+            'Cleaning' => 'Cleaning',
+            'Protective' => 'Protective',
+            'Tools' => 'Tools',
+            'Other' => 'Other',
+        ];
+    }
+
+    private function getStorageLocationOptions(): array
+    {
+        return [
+            'Warehouse Shelf A' => 'Warehouse Shelf A',
+            'Warehouse Shelf B' => 'Warehouse Shelf B',
+            'Warehouse Shelf C' => 'Warehouse Shelf C',
+            'Warehouse Shelf D' => 'Warehouse Shelf D',
+            'Clayton Depot' => 'Clayton Depot',
+            'Springvale Depot' => 'Springvale Depot',
+            'Moorabbin Depot' => 'Moorabbin Depot',
+            'Other' => 'Other',
+        ];
     }
 }
