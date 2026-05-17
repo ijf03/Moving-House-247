@@ -41,10 +41,13 @@ class InventoryItemsController extends AppController
         $unit = $this->request->getQuery('unit');
         $isActive = $this->request->getQuery('is_active');
 
-        $categoryOptions = $this->InventoryItems->find('list', [
+        $categoryOptions = $this->Equipment->find('list', [
             'keyField' => 'category',
-            'valueField' => 'category',
+            'valueField' => function ($equipment) {
+                return ucwords((string)$equipment->category);
+            },
         ])
+            ->where(['category IS NOT' => null])
             ->distinct(['category'])
             ->orderBy(['category' => 'ASC'])
             ->toArray();

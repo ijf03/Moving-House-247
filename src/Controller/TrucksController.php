@@ -42,7 +42,9 @@ class TrucksController extends AppController
 
         $truckSizeOptions = $this->Trucks->find('list', [
             'keyField' => 'truck_size',
-            'valueField' => 'truck_size',
+            'valueField' => function ($truck) {
+                return ucfirst((string)$truck->truck_size);
+            },
         ])
             ->where(['truck_size IS NOT' => null])
             ->distinct(['truck_size'])

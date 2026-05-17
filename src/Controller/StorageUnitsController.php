@@ -42,7 +42,9 @@ class StorageUnitsController extends AppController
 
         $securityLevelOptions = $this->StorageUnits->find('list', [
             'keyField' => 'security_level',
-            'valueField' => 'security_level',
+            'valueField' => function ($storageUnit) {
+                return ucfirst((string)$storageUnit->security_level);
+            },
         ])
             ->where(['security_level IS NOT' => null])
             ->distinct(['security_level'])

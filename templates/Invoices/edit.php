@@ -31,14 +31,15 @@
                     <div class="mh-back-btn m-1">
                         <?= $this->Html->link(__('← Back to List'), ['action' => 'index']) ?>
                     </div>
+
                     <div class="admin-table-card">
                         <div class="admin-table-header">
                             <h2><?= __('Actions') ?></h2>
                         </div>
 
                         <div class="admin-action-stack">
-                                                        <?= $this->Html->link(__('View Invoice'), ['action' => 'view', $invoice->invoice_id], [
-                                'class' => 'admin-action-link'
+                            <?= $this->Html->link(__('View Invoice'), ['action' => 'view', $invoice->invoice_id], [
+                                'class' => 'admin-action-link',
                             ]) ?>
 
                             <?= $this->Form->postLink(
@@ -46,7 +47,7 @@
                                 ['action' => 'delete', $invoice->invoice_id],
                                 [
                                     'confirm' => __('Are you sure you want to delete invoice # {0}?', $invoice->invoice_id),
-                                    'class' => 'admin-action-link admin-action-link-danger'
+                                    'class' => 'admin-action-link admin-action-link-danger',
                                 ]
                             ) ?>
                         </div>
@@ -91,7 +92,7 @@
                                 <input
                                     type="text"
                                     class="auth-input"
-                                    value="<?= h(ucfirst($invoice->status)) ?>"
+                                    value="<?= h(ucfirst((string)$invoice->status)) ?>"
                                     readonly
                                 >
                             </div>
@@ -116,7 +117,7 @@
                                     'type' => 'date',
                                     'label' => 'Due Date',
                                     'class' => 'auth-input',
-                                    'min' => date('Y-m-d')
+                                    'min' => date('Y-m-d'),
                                 ]) ?>
                             </div>
                         </div>
@@ -125,7 +126,7 @@
                             <?= $this->Form->button(__('Save Invoice Details'), [
                                 'name' => 'action',
                                 'value' => 'save_invoice',
-                                'class' => 'mh-btn-primary'
+                                'class' => 'mh-btn-primary',
                             ]) ?>
                         </div>
 
@@ -145,11 +146,11 @@
                         <div class="row g-3">
 
                             <div class="col-md-6 auth-form-group">
-                                <?= $this->Form->control('preset', [
+                                <?= $this->Form->control('preset_id', [
                                     'type' => 'select',
                                     'options' => $presetOptions,
                                     'label' => 'Preset',
-                                    'class' => 'auth-input'
+                                    'class' => 'auth-input',
                                 ]) ?>
                             </div>
 
@@ -157,25 +158,29 @@
                                 <?= $this->Form->control('description', [
                                     'label' => 'Description',
                                     'placeholder' => 'Only required for custom items',
-                                    'class' => 'auth-input'
+                                    'class' => 'auth-input',
                                 ]) ?>
                             </div>
 
                             <div class="col-md-6 auth-form-group">
                                 <?= $this->Form->control('quantity', [
-                                    'type' => 'text',
+                                    'type' => 'number',
                                     'label' => 'Quantity',
                                     'class' => 'auth-input',
-                                    'required' => true
+                                    'required' => true,
+                                    'min' => 0.01,
+                                    'step' => 0.01,
                                 ]) ?>
                             </div>
 
                             <div class="col-md-6 auth-form-group">
                                 <?= $this->Form->control('unit_price', [
-                                    'type' => 'text',
+                                    'type' => 'number',
                                     'label' => 'Unit Price (custom items only)',
                                     'placeholder' => 'Only required for custom items',
-                                    'class' => 'auth-input'
+                                    'class' => 'auth-input',
+                                    'min' => 0,
+                                    'step' => 0.01,
                                 ]) ?>
                             </div>
 
@@ -185,7 +190,7 @@
                             <?= $this->Form->button(__('Add Item'), [
                                 'name' => 'action',
                                 'value' => 'add_item',
-                                'class' => 'mh-btn-primary'
+                                'class' => 'mh-btn-primary',
                             ]) ?>
                         </div>
 
@@ -209,6 +214,7 @@
                                         <th><?= __('Action') ?></th>
                                     </tr>
                                     </thead>
+
                                     <tbody>
                                     <?php foreach ($invoice->invoice_items as $item): ?>
                                         <tr>
@@ -226,13 +232,14 @@
                                                     ['action' => 'removeItem', $item->invoice_item_id],
                                                     [
                                                         'confirm' => __('Remove this invoice item?'),
-                                                        'class' => 'admin-action-link'
+                                                        'class' => 'admin-action-link',
                                                     ]
                                                 ) ?>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
                                     </tbody>
+
                                     <tfoot>
                                     <tr>
                                         <th colspan="3" class="text-end"><?= __('Subtotal') ?></th>
@@ -252,7 +259,9 @@
                                 </table>
                             </div>
                         <?php else: ?>
-                            <p><?= __('No invoice items have been added yet.') ?></p>
+                            <div class="p-3">
+                                <p class="mb-0"><?= __('No invoice items have been added yet.') ?></p>
+                            </div>
                         <?php endif; ?>
                     </div>
 
@@ -266,14 +275,17 @@
 
                         <div class="auth-form-actions">
                             <?php if (!empty($invoice->invoice_items)): ?>
-                                <?= $this->Form->postLink(
-                                    __('Finalise and Send Invoice'),
-                                    ['action' => 'send', $invoice->invoice_id],
-                                    [
-                                        'confirm' => __('Are you sure you want to finalise and send this invoice?'),
-                                        'class' => 'mh-btn-primary'
-                                    ]
-                                ) ?>
+                                <?= $this->Form->create(null, [
+                                    'url' => ['action' => 'send', $invoice->invoice_id],
+                                    'class' => 'mh-btn-primary',
+                                    'onsubmit' => "return confirm('Are you sure you want to finalise and send this invoice?');",
+                                ]) ?>
+
+                                <?= $this->Form->button(__('Finalise and Send Invoice'), [
+                                    'class' => 'mh-btn-primary',
+                                ]) ?>
+
+                                <?= $this->Form->end() ?>
                             <?php else: ?>
                                 <button class="mh-btn-primary" type="button" disabled>
                                     <?= __('Add at least one item before sending') ?>

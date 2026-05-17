@@ -42,8 +42,11 @@ class EquipmentController extends AppController
 
         $categoryOptions = $this->Equipment->find('list', [
             'keyField' => 'category',
-            'valueField' => 'category',
+            'valueField' => function ($equipment) {
+                return ucwords((string)$equipment->category);
+            },
         ])
+            ->where(['category IS NOT' => null])
             ->distinct(['category'])
             ->orderBy(['category' => 'ASC'])
             ->toArray();
