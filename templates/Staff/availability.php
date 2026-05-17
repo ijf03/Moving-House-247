@@ -110,7 +110,7 @@
                 alert('Start time must be earlier than end time');
                 return
             }
-            if (!confirm('Change unavailable time to '+start.replace('T',' ')+' - '+end.replace('T',' ')+'?\nYou will not receive jobs in that period of time')){
+            if (!confirm('Change available time to '+start.replace('T',' ')+' - '+end.replace('T',' ')+'?\nYou will receive jobs for that period of time')){
                 return;
             }
             calendar.getEventById(activeEventID).setDates(document.getElementById('start_datetime').value + startTimezone,
@@ -139,7 +139,7 @@
                 alert('Start time must be earlier than end time');
                 return;
             }
-            if (!confirm('Do you want to mark '+start.replace('T',' ')+' - '+end.replace('T',' ')+' as unavailable?\nYou will not receive jobs in that period of time')){
+            if (!confirm('Do you want to mark '+start.replace('T',' ')+' - '+end.replace('T',' ')+' as available?\nYou will receive jobs for that period of time')){
                 return;
             }
             calendar.addEvent(
@@ -167,9 +167,9 @@
             <div class="admin-hero-shell">
                 <div class="admin-hero-content">
                     <span class="admin-eyebrow"><?= __('Staff') ?></span>
-                    <h1><?= __('Manage Unavailability') ?></h1>
+                    <h1><?= __('Manage Availability') ?></h1>
                     <p class="admin-hero-text">
-                        <?= __('Add and manage times when you are unavailable for jobs.') ?>
+                        <?= __('Add and manage times when you are available for jobs.') ?>
                     </p>
                 </div>
             </div>
@@ -181,14 +181,14 @@
             <div class="admin-table-card">
                 <div class="admin-table-header admin-table-header-split">
                     <div>
-                        <h2><?= __('Unavailable Schedule') ?></h2>
-                        <p><?= __('Click an event to edit unavailable time blocks.') ?></p>
+                        <h2><?= __('Available Schedule') ?></h2>
+                        <p><?= __('Click an event to edit available time blocks.') ?></p>
                     </div>
 
                     <div class="d-flex gap-2 flex-wrap">
                         <?= $this->Form->create(null, ['id' => 'availability-form']) ?>
 
-                        <?= $this->Form->button(__('Add Unavailable Time'), [
+                        <?= $this->Form->button(__('Add Available Time'), [
                             'type' => 'button',
                             'onclick' => 'newEvent()',
                             'class' => 'admin-primary-link'
@@ -221,7 +221,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content mh-form-card">
             <div class="modal-header border-0 px-0 pt-0">
-                <h5 class="modal-title" id="modalTitle"><?= __('Event Details') ?></h5>
+                <h5 class="modal-title" id="modalTitle"><?= __('Timeslot Details') ?></h5>
             </div>
 
             <div class="modal-body px-0 mh-form">
