@@ -35,9 +35,46 @@ class StorageUnitsController extends AppController
     public function index()
     {
         $query = $this->StorageUnits->find();
+
+        $search = trim((string)$this->request->getQuery('search'));
+        $securityLevel = $this->request->getQuery('security_level');
+        $isActive = $this->request->getQuery('is_active');
+
+        $securityLevelOptions = $this->StorageUnits->find('list', [
+            'keyField' => 'security_level',
+            'valueField' => 'security_level',
+        ])
+            ->where(['security_level IS NOT' => null])
+            ->distinct(['security_level'])
+            ->orderBy(['security_level' => 'ASC'])
+            ->toArray();
+
+        if ($search !== '') {
+            $like = '%' . $search . '%';
+            $query->where(function ($exp) use ($like) {
+                return $exp->or([
+                    'StorageUnits.unit_code LIKE' => $like,
+                    'StorageUnits.facility_name LIKE' => $like,
+                    'StorageUnits.security_level LIKE' => $like,
+                ]);
+            });
+        }
+
+        if (!empty($status)) {
+            $query->where(['StorageUnits.status' => $status]);
+        }
+
+        if (!empty($securityLevel)) {
+            $query->where(['StorageUnits.security_level' => $securityLevel]);
+        }
+
+        if ($isActive !== null && $isActive !== '') {
+            $query->where(['StorageUnits.is_active' => (int)$isActive]);
+        }
+
         $storageUnits = $this->paginate($query);
 
-        $this->set(compact('storageUnits'));
+        $this->set(compact('storageUnits', 'search', 'securityLevel', 'isActive', 'securityLevelOptions'));
     }
 
     /**
