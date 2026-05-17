@@ -269,6 +269,7 @@ class BookingsController extends AppController
         $jobsTable = $this->fetchTable('Jobs');
 
         $job = $jobsTable->newEntity([
+            'booking_id' => $booking->booking_id,
             'job_type_id' => $booking->job_type_id,
             'description' => 'Booking accepted from request #' . $booking->booking_id,
             'pickup_address' => $booking->pickup_address,
@@ -357,7 +358,7 @@ class BookingsController extends AppController
             ->contain(['JobTypes'])
             ->where([
                 'customer_id' => $customer->customer_id,
-                'status IN' => ['Processing', 'Done'],
+                'status IN' => ['Pending','Processing', 'Ready', 'Done', 'Cancelled'],
             ])
             ->all();
 

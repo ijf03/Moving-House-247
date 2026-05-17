@@ -148,6 +148,20 @@ class TrucksController extends AppController
     {
         $this->request->allowMethod(['post', 'delete']);
         $truck = $this->Trucks->get($id);
+
+        $jobResourcesTable = $this->fetchTable('JobResources');
+
+        $assignedCount = $jobResourcesTable->find()
+            ->where([
+                'truck_id' => $truck->truck_id,
+            ])
+            ->count();
+
+        if ($assignedCount > 0) {
+            $this->Flash->error(__('This truck cannot be deleted because it is assigned to a job.'));
+            return $this->redirect(['action' => 'index']);
+        }
+
         if ($this->Trucks->delete($truck)) {
             $this->Flash->success(__('The truck has been deleted.'));
         } else {

@@ -106,7 +106,8 @@
 
                                 <td><?= h($job->pickup_address) ?></td>
                                 <td><?= h($job->dropoff_address) ?></td>
-                                <td><?= h($job->job_date) ?> <br> <?= h($job->job_time) ?></td>
+                                <td><?= h($job->job_time ? date('H:i', strtotime($job->job_time)) : '')?>
+                                    <p><?= h($job->job_date?->format('d/m/Y')) ?></p></td>
 
                                 <td>
                                     <span class="admin-role-badge">

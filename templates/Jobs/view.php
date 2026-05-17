@@ -38,25 +38,83 @@ $assignedStaff = $assignedStaff ?? new \Cake\Collection\Collection([]);
                             </div>
 
                             <div class="admin-action-stack">
-                                <?= $this->Html->link(
-                                    __('Allocate'),
-                                    ['action' => 'allocate', $job->job_id],
-                                    ['class' => 'admin-action-link']
-                                ) ?>
-                                <?= $this->Html->link(
-                                    __('Edit Job'),
-                                    ['action' => 'edit', $job->job_id],
-                                    ['class' => 'admin-action-link']
-                                ) ?>
+                                <?php if ($job->status === 'Pending'): ?>
+                                    <?= $this->Html->link(
+                                        __('Edit'),
+                                        ['action' => 'edit', $job->job_id],
+                                        ['class' => 'admin-action-link']
+                                    ) ?>
 
-                                <?= $this->Form->postLink(
-                                    __('Delete Job'),
-                                    ['action' => 'delete', $job->job_id],
-                                    [
-                                        'confirm' => __('Are you sure you want to delete job # {0}?', $job->job_id),
-                                        'class' => 'admin-action-link admin-action-link-danger',
-                                    ]
-                                ) ?>
+                                    <?= $this->Form->postLink(
+                                        __('Delete'),
+                                        ['action' => 'delete', $job->job_id],
+                                        [
+                                            'method' => 'delete',
+                                            'confirm' => __('Are you sure you want to delete # {0}?', $job->job_id),
+                                            'class' => 'admin-action-link admin-action-link-danger'
+                                        ]
+                                    ) ?>
+
+                                    <?= $this->Html->link(
+                                        __('Allocate'),
+                                        ['action' => 'allocate', $job->job_id],
+                                        ['class' => 'admin-action-link']
+                                    ) ?>
+                                <?php endif; ?>
+
+                                <?php if ($job->status === 'Processing'): ?>
+                                    <?= $this->Html->link(
+                                        __('Edit'),
+                                        ['action' => 'allocate', $job->job_id],
+                                        ['class' => 'admin-action-link']
+                                    ) ?>
+
+                                    <?= $this->Form->postLink(
+                                        __('Delete'),
+                                        ['action' => 'delete', $job->job_id],
+                                        [
+                                            'method' => 'delete',
+                                            'confirm' => __('Are you sure you want to delete # {0}?', $job->job_id),
+                                            'class' => 'admin-action-link admin-action-link-danger'
+                                        ]
+                                    ) ?>
+                                <?php endif; ?>
+
+                                <?php if ($job->status === 'Ready'): ?>
+                                    <?= $this->Html->link(
+                                        __('Edit'),
+                                        ['action' => 'allocate', $job->job_id],
+                                        ['class' => 'admin-action-link']
+                                    ) ?>
+
+                                    <?= $this->Form->postLink(
+                                        __('Delete'),
+                                        ['action' => 'delete', $job->job_id],
+                                        [
+                                            'method' => 'delete',
+                                            'confirm' => __('Are you sure you want to delete # {0}?', $job->job_id),
+                                            'class' => 'admin-action-link admin-action-link-danger'
+                                        ]
+                                    ) ?>
+                                <?php endif; ?>
+
+                                <?php if ($job->status === 'Done'): ?>
+                                    <?= $this->Html->link(
+                                        __('Edit'),
+                                        ['action' => 'allocate', $job->job_id],
+                                        ['class' => 'admin-action-link']
+                                    ) ?>
+
+                                    <?= $this->Form->postLink(
+                                        __('Delete'),
+                                        ['action' => 'delete', $job->job_id],
+                                        [
+                                            'method' => 'delete',
+                                            'confirm' => __('Are you sure you want to delete # {0}?', $job->job_id),
+                                            'class' => 'admin-action-link admin-action-link-danger'
+                                        ]
+                                    ) ?>
+                                <?php endif; ?>
                             </div>
                         </div>
                     <?php endif; ?>
@@ -114,7 +172,7 @@ $assignedStaff = $assignedStaff ?? new \Cake\Collection\Collection([]);
                                 <div class="mh-info-card">
                                     <div>
                                         <h3><?= __('Date') ?></h3>
-                                        <p><?= h($job->job_date) ?></p>
+                                        <p><?= h($job->job_date?->format('d/m/Y')) ?></p>
                                     </div>
                                 </div>
                             </div>
@@ -123,7 +181,7 @@ $assignedStaff = $assignedStaff ?? new \Cake\Collection\Collection([]);
                                 <div class="mh-info-card">
                                     <div>
                                         <h3><?= __('Time') ?></h3>
-                                        <p><?= h($job->job_time) ?></p>
+                                        <p><?= h($job->job_time ? date('H:i', strtotime($job->job_time)) : '') ?></p>
                                     </div>
                                 </div>
                             </div>

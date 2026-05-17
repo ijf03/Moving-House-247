@@ -247,9 +247,24 @@ class JobsController extends AppController
     public function delete($id = null)
     {
         $this->request->allowMethod(['post', 'delete']);
+
         $job = $this->Jobs->get($id);
+
+        $staffJobsTable = $this->fetchTable('StaffJob');
+        $jobResourcesTable = $this->fetchTable('JobResources');
+        $bookingsTable = $this->fetchTable('Bookings');
+
+        if (!empty($job->booking_id)) {
+            $booking = $bookingsTable->get($job->booking_id);
+            $booking->status = 'Cancelled';
+            $bookingsTable->save($booking);
+        }
+
+        $staffJobsTable->deleteAll(['job_id' => $job->job_id]);
+        $jobResourcesTable->deleteAll(['job_id' => $job->job_id]);
+
         if ($this->Jobs->delete($job)) {
-            $this->Flash->success(__('The job has been deleted.'));
+            $this->Flash->success(__('The job has been deleted. The related booking has been cancelled.'));
         } else {
             $this->Flash->error(__('The job could not be deleted. Please, try again.'));
         }
@@ -308,19 +323,19 @@ class JobsController extends AppController
                 $job->job_time->format('H:i:s')
             );
 
-            $isUnavailable = false;
+            $fitsAvailability = false;
 
             foreach ($availabilityList as $availability) {
                 $start = strtotime($availability->start_datetime->format('Y-m-d H:i:s'));
                 $end = strtotime($availability->end_datetime->format('Y-m-d H:i:s'));
 
                 if ($jobDateTime >= $start && $jobDateTime <= $end) {
-                    $isUnavailable = true;
+                    $fitsAvailability = true;
                     break;
                 }
             }
 
-            if ($isUnavailable) {
+            if (!$fitsAvailability) {
                 continue;
             }
 
@@ -460,7 +475,17 @@ class JobsController extends AppController
                 $porterCount >= (int)$job->porter_required
             ) {
                 $job->status = 'Ready';
-                $this->Jobs->save($job);
+
+                if ($this->Jobs->save($job)) {
+                    if (!empty($job->booking_id)) {
+                        $bookingsTable = $this->fetchTable('Bookings');
+
+                        $booking = $bookingsTable->get($job->booking_id);
+                        $booking->status = 'Ready';
+
+                        $bookingsTable->save($booking);
+                    }
+                }
             }
 
             $this->Flash->success(__('You have taken this job as {0}.', $role));

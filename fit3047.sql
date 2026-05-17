@@ -972,6 +972,7 @@ ALTER TABLE `staff_job`
 ALTER TABLE `users`
     ADD CONSTRAINT `users_user_type_id` FOREIGN KEY (`user_type`) REFERENCES `user_types` (`user_type_id`);
 
+ALTER TABLE jobs ADD booking_id INT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
