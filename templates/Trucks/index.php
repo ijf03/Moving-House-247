@@ -41,11 +41,9 @@
                         <thead>
                         <tr>
                             <th><?= $this->Paginator->sort('truck_id', 'ID') ?></th>
-                            <th><?= $this->Paginator->sort('name', 'Name') ?></th>
-                            <th><?= $this->Paginator->sort('rego', 'Rego') ?></th>
-                            <th><?= $this->Paginator->sort('truck_size', 'Size') ?></th>
-                            <th><?= $this->Paginator->sort('capacity_m3', 'Capacity m³') ?></th>
-                            <th><?= $this->Paginator->sort('max_payload_kg', 'Payload kg') ?></th>
+                            <th><?= $this->Paginator->sort('rego', 'Registration') ?></th>
+                            <th><?= $this->Paginator->sort('capacity_m3', 'Capacity (m³)') ?></th>
+                            <th><?= $this->Paginator->sort('max_payload_kg', 'Payload (kg)') ?></th>
                             <th><?= $this->Paginator->sort('current_location', 'Location') ?></th>
                             <th><?= $this->Paginator->sort('next_service_date', 'Next Service') ?></th>
                             <th><?= $this->Paginator->sort('is_active', 'Active') ?></th>
@@ -59,9 +57,7 @@
                         <?php foreach ($trucks as $truck): ?>
                             <tr>
                                 <td><?= $this->Number->format($truck->truck_id) ?></td>
-                                <td><?= h($truck->name) ?></td>
                                 <td><?= h($truck->rego) ?></td>
-                                <td><?= h($truck->truck_size) ?></td>
                                 <td>
                                     <?= $truck->capacity_m3 === null ? '' : $this->Number->format($truck->capacity_m3) ?>
                                 </td>

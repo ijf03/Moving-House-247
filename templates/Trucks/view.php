@@ -11,7 +11,7 @@
             <div class="admin-hero-shell">
                 <div class="admin-hero-content">
                     <span class="admin-eyebrow"><?= __('Resources') ?></span>
-                    <h1><?= h($truck->name) ?></h1>
+                    <h1><?= __('Registration: {0}', h($truck->rego)) ?></h1>
                     <p class="admin-hero-text">
                         <?= __('View truck details, capacity, location, service information, and current availability.') ?>
                     </p>
@@ -60,16 +60,8 @@
                             <table class="table admin-table">
                                 <tbody>
                                 <tr>
-                                    <th><?= __('Name') ?></th>
-                                    <td><?= h($truck->name) ?></td>
-                                </tr>
-                                <tr>
                                     <th><?= __('Registration') ?></th>
                                     <td><?= h($truck->rego) ?></td>
-                                </tr>
-                                <tr>
-                                    <th><?= __('Truck Size') ?></th>
-                                    <td><?= h($truck->truck_size) ?></td>
                                 </tr>
                                 <tr>
                                     <th><?= __('Current Location') ?></th>
@@ -80,11 +72,11 @@
                                     <td><?= $this->Number->format($truck->truck_id) ?></td>
                                 </tr>
                                 <tr>
-                                    <th><?= __('Capacity m³') ?></th>
+                                    <th><?= __('Capacity (m³)') ?></th>
                                     <td><?= $truck->capacity_m3 === null ? '' : $this->Number->format($truck->capacity_m3) ?></td>
                                 </tr>
                                 <tr>
-                                    <th><?= __('Max Payload kg') ?></th>
+                                    <th><?= __('Max Payload (kg)') ?></th>
                                     <td><?= $truck->max_payload_kg === null ? '' : $this->Number->format($truck->max_payload_kg) ?></td>
                                 </tr>
                                 <tr>
