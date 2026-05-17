@@ -14,6 +14,7 @@ use Cake\ORM\Entity;
  * @property string $email
  * @property string $phone
  * @property bool $isDriver
+ * @property string $license_number
  */
 class Staff extends Entity
 {
@@ -32,6 +33,7 @@ class Staff extends Entity
         'email' => true,
         'phone' => true,
         'isDriver' => true,
+        'license_number' => true,
     ];
 
     protected function _getIsDriverText() : string
