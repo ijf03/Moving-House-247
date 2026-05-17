@@ -51,9 +51,12 @@
                     <div class="auth-card auth-card-wide">
                         <div class="auth-header">
                             <h2 class="auth-title"><?= __('Storage Unit Details') ?></h2>
-                            <p class="auth-subtitle">
-                                <?= __('Edit the details below and save changes to update this storage unit.') ?>
-                            </p>
+
+                            <div class="d-flex justify-content-center mt-5 mb-5">
+                                <p class="auth-subtitle text-center">
+                                    <?= __('Edit the details below and save changes to update this storage unit.') ?>
+                                </p>
+                            </div>
                         </div>
 
                         <?= $this->Form->create($storageUnit, ['class' => 'auth-form']) ?>

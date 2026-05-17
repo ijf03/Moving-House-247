@@ -49,9 +49,12 @@
                     <div class="auth-card auth-card-wide">
                         <div class="auth-header">
                             <h2 class="auth-title"><?= __('Inventory Item Details') ?></h2>
-                            <p class="auth-subtitle">
-                                <?= __('Edit the details below and save changes to update this inventory item.') ?>
-                            </p>
+
+                            <div class="d-flex justify-content-center mt-5 mb-5">
+                                <p class="auth-subtitle text-center">
+                                    <?= __('Edit the details below and save changes to update this inventory item.') ?>
+                                </p>
+                            </div>
                         </div>
 
                         <?= $this->Form->create($inventoryItem, ['class' => 'auth-form']) ?>
