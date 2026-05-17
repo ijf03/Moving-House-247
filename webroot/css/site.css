@@ -1169,6 +1169,37 @@ body.mh-site {
     line-height: 1.5;
 }
 
+.admin-table th a {
+    position: relative;
+    padding-right: 1.2rem;
+    text-decoration: none;
+}
+
+/* Default unsorted state */
+.admin-table th a::after {
+    content: '⇅';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.75rem;
+    opacity: 0.45;
+}
+
+/* Active ascending */
+.admin-table th a.asc::after {
+    content: '↑';
+    opacity: 1;
+    color: var(--mh-orange);
+}
+
+/* Active descending */
+.admin-table th a.desc::after {
+    content: '↓';
+    opacity: 1;
+    color: var(--mh-orange);
+}
+
 .admin-table tbody tr:hover {
     background: #fafcff;
 }
