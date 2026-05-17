@@ -40,15 +40,12 @@
                     <table class="admin-table">
                         <thead>
                         <tr>
-                            <th><?= $this->Paginator->sort('storage_unit_id', 'ID') ?></th>
                             <th><?= $this->Paginator->sort('unit_code', 'Unit Code') ?></th>
                             <th><?= $this->Paginator->sort('facility_name', 'Facility') ?></th>
                             <th><?= $this->Paginator->sort('unit_size_m3', 'Size m³') ?></th>
                             <th><?= $this->Paginator->sort('security_level', 'Security') ?></th>
                             <th><?= $this->Paginator->sort('is_climate_controlled', 'Climate Controlled') ?></th>
                             <th><?= $this->Paginator->sort('is_active', 'Active') ?></th>
-                            <th><?= $this->Paginator->sort('created', 'Created') ?></th>
-                            <th><?= $this->Paginator->sort('modified', 'Modified') ?></th>
                             <th class="actions"><?= __('Actions') ?></th>
                         </tr>
                         </thead>
@@ -56,7 +53,6 @@
                         <tbody>
                         <?php foreach ($storageUnits as $storageUnit): ?>
                             <tr>
-                                <td><?= $this->Number->format($storageUnit->storage_unit_id) ?></td>
                                 <td><?= h($storageUnit->unit_code) ?></td>
                                 <td><?= h($storageUnit->facility_name) ?></td>
                                 <td>
@@ -69,8 +65,6 @@
                                             <?= $storageUnit->is_active ? __('Active') : __('Inactive') ?>
                                         </span>
                                 </td>
-                                <td><?= h($storageUnit->created) ?></td>
-                                <td><?= h($storageUnit->modified) ?></td>
                                 <td class="actions">
                                     <div class="admin-action-stack">
                                         <?= $this->Html->link(
