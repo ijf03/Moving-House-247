@@ -78,8 +78,10 @@
 
                             <div class="col-md-6 auth-form-group">
                                 <?= $this->Form->control('security_level', [
+                                    'type' => 'select',
                                     'label' => 'Security Level',
-                                    'placeholder' => 'Enter security level',
+                                    'options' => $securityLevelOptions,
+                                    'empty' => 'Select security level',
                                     'class' => 'auth-input',
                                 ]) ?>
                             </div>

@@ -11,7 +11,9 @@
             <div class="admin-hero-shell">
                 <div class="admin-hero-content">
                     <span class="admin-eyebrow"><?= __('Resources') ?></span>
-                    <h1><?= h($storageUnit->unit_code) ?></h1>
+                    <h1>
+                        <?= __('Storage Unit #{0} - {1} - {2}', $storageUnit->storage_unit_id, h($storageUnit->facility_name), h($storageUnit->unit_code)) ?>
+                    </h1>
                     <p class="admin-hero-text">
                         <?= __('View storage unit details, facility information, and current availability status.') ?>
                     </p>
@@ -69,7 +71,7 @@
                                 </tr>
                                 <tr>
                                     <th><?= __('Security Level') ?></th>
-                                    <td><?= h($storageUnit->security_level) ?></td>
+                                    <td><?= h(ucfirst($storageUnit->security_level)) ?></td>
                                 </tr>
                                 <tr>
                                     <th><?= __('Storage Unit ID') ?></th>

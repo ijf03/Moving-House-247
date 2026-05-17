@@ -60,6 +60,7 @@ class StorageUnitsController extends AppController
      */
     public function add()
     {
+        $securityLevelOptions = $this->getSecurityLevelOptions();
         $storageUnit = $this->StorageUnits->newEmptyEntity();
         if ($this->request->is('post')) {
             $storageUnit = $this->StorageUnits->patchEntity($storageUnit, $this->request->getData());
@@ -70,7 +71,7 @@ class StorageUnitsController extends AppController
             }
             $this->Flash->error(__('The storage unit could not be saved. Please, try again.'));
         }
-        $this->set(compact('storageUnit'));
+        $this->set(compact('storageUnit', 'securityLevelOptions'));
     }
 
     /**
@@ -82,6 +83,7 @@ class StorageUnitsController extends AppController
      */
     public function edit($id = null)
     {
+        $securityLevelOptions = $this->getSecurityLevelOptions();
         $storageUnit = $this->StorageUnits->get($id, contain: []);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $storageUnit = $this->StorageUnits->patchEntity($storageUnit, $this->request->getData());
@@ -92,7 +94,7 @@ class StorageUnitsController extends AppController
             }
             $this->Flash->error(__('The storage unit could not be saved. Please, try again.'));
         }
-        $this->set(compact('storageUnit'));
+        $this->set(compact('storageUnit', 'securityLevelOptions'));
     }
 
     /**
@@ -113,5 +115,13 @@ class StorageUnitsController extends AppController
         }
 
         return $this->redirect(['action' => 'index']);
+    }
+    private function getSecurityLevelOptions(): array
+    {
+        return [
+            'low' => 'Low',
+            'standard' => 'Standard',
+            'high' => 'High',
+        ];
     }
 }
