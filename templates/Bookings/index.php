@@ -101,20 +101,31 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <?php if ($bookings->isEmpty()): ?>
+                        <?php if ($bookings->isEmpty()) : ?>
                             <tr>
                                 <td colspan="11" style="text-align:center; color:gray;">
                                     No bookings found.
                                 </td>
                             </tr>
-                        <?php else: ?>
+                        <?php else : ?>
+                            <?php foreach ($bookings as $booking) : ?>
+                                <?php
+                                $customerName = trim(
+                                    ($booking->customer->first_name ?? '') . ' ' .
+                                    ($booking->customer->last_name ?? ''),
+                                );
 
-                        <?php foreach ($bookings as $booking): ?>
+                                if ($customerName === '') {
+                                    $customerName = 'this customer';
+                                }
+
+                                $serviceType = $booking->job_type->job_type_name ?? 'this service';
+                                ?>
 
                             <tr>
                                 <td><?= h($booking->booking_id) ?></td>
                                 <td><?= h(($booking->customer->first_name ?? '') . ' ' . ($booking->customer->last_name ?? '')) ?></td>
-                                <td><?= h($booking->customer->email ?? '').' '.($booking->customer->phone ?? '')?></td>
+                                <td><?= h($booking->customer->email ?? '') . ' ' . ($booking->customer->phone ?? '')?></td>
                                 <td><?= h($booking->job_type->job_type_name ?? '') ?></td>
 
 
@@ -131,23 +142,37 @@
                                     <div class="admin-action-stack">
                                         <?= $this->Html->link(__('View'), ['action' => 'view', $booking->booking_id], ['class' => 'admin-action-link']) ?>
 
-                                        <?php if ($booking->status === 'Pending'): ?>
+                                        <?php if ($booking->status === 'Pending') : ?>
                                             <?= $this->Form->postLink(
                                                 __('Accept'),
                                                 ['action' => 'accept', $booking->booking_id],
-                                                ['class' => 'admin-action-link admin-action-link-success']
+                                                [
+                                                    'class' => 'admin-action-link admin-action-link-success',
+                                                    'confirm' => __(
+                                                        'Are you sure you want to accept the booking for {0} ({1})?',
+                                                        $customerName,
+                                                        $serviceType,
+                                                    ),
+                                                ],
                                             ) ?>
 
                                             <?= $this->Form->postLink(
                                                 __('Reject'),
                                                 ['action' => 'reject', $booking->booking_id],
-                                                ['class' => 'admin-action-link admin-action-link-danger']
+                                                [
+                                                    'class' => 'admin-action-link admin-action-link-danger',
+                                                    'confirm' => __(
+                                                        'Are you sure you want to reject the booking for {0} ({1})?',
+                                                        $customerName,
+                                                        $serviceType,
+                                                    ),
+                                                ],
                                             ) ?>
                                         <?php endif; ?>
                                     </div>
                                 </td>
                             </tr>
-                        <?php endforeach; ?>
+                            <?php endforeach; ?>
                         <?php endif; ?>
                         </tbody>
                     </table>
