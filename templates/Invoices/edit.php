@@ -60,9 +60,12 @@
                             <h2 class="auth-title">
                                 <?= __('Invoice #{0}', $invoice->invoice_id) ?>
                             </h2>
-                            <p class="auth-subtitle">
-                                <?= __('Review invoice details before sending.') ?>
-                            </p>
+
+                            <div class="d-flex justify-content-center mt-5 mb-4">
+                                <p class="auth-subtitle text-center">
+                                    <?= __('Review invoice details before sending.') ?>
+                                </p>
+                            </div>
                         </div>
 
                         <div class="row g-3">
@@ -136,9 +139,12 @@
                     <div class="auth-card auth-card-wide mb-4">
                         <div class="auth-header">
                             <h2 class="auth-title"><?= __('Add Invoice Item') ?></h2>
-                            <p class="auth-subtitle">
-                                <?= __('Add one item at a time. Preset items automatically use their preset price.') ?>
-                            </p>
+
+                            <div class="d-flex justify-content-center mt-5 mb-4">
+                                <p class="auth-subtitle text-center">
+                                    <?= __('Add one item at a time. Preset items automatically use their preset price.') ?>
+                                </p>
+                            </div>
                         </div>
 
                         <?= $this->Form->create(null, ['class' => 'auth-form']) ?>
@@ -268,9 +274,12 @@
                     <div class="auth-card auth-card-wide mt-4">
                         <div class="auth-header">
                             <h2 class="auth-title"><?= __('Finalise Invoice') ?></h2>
-                            <p class="auth-subtitle">
-                                <?= __('Once all invoice items have been added, you can send the invoice to the customer.') ?>
-                            </p>
+
+                            <div class="d-flex justify-content-center mt-5 mb-4">
+                                <p class="auth-subtitle text-center">
+                                    <?= __('Once all invoice items have been added, you can send the invoice to the customer.') ?>
+                                </p>
+                            </div>
                         </div>
 
                         <div class="auth-form-actions">
