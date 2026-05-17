@@ -78,7 +78,8 @@ CREATE TABLE `bookings` (
                             `status` varchar(20) NOT NULL DEFAULT 'Pending',
                             `created` datetime NOT NULL DEFAULT current_timestamp(),
                             `message` text DEFAULT NULL,
-                            `accepted_notified` tinyint(1) NOT NULL DEFAULT 0
+                            `accepted_notified` tinyint(1) NOT NULL DEFAULT 0,
+                            `rejected_notified` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 --

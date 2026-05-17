@@ -41,7 +41,7 @@ $this->assign('title', 'Reset Password');
 
                         <div class="auth-form-actions">
                             <?= $this->Form->button(__('Submit'), [
-                                'class' => 'auth-btn',
+                                'class' => 'mh-btn-primary w-75',
                             ]) ?>
                         </div>
 

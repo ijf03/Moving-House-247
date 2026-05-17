@@ -4,7 +4,24 @@
  * @var \App\Model\Entity\User $user
  */
 ?>
-
+<head>
+<script>
+    window.addEventListener('load', ()=> {
+        const user_types = <?= json_encode($userTypes); ?>;
+        isDriver_checkbox = document.getElementById('isDriver');
+        isDriver_checkbox.style.display = 'none';
+        console.log(document.getElementById('isDriver'));
+        document.getElementById('user_type').addEventListener('change', () => {
+            if ((user_types[document.getElementById('user_type').value]) == 'Staff'){
+                isDriver_checkbox.style.display = 'block';
+            }
+            else{
+                isDriver_checkbox.style.display = 'none';
+            }
+        })
+    });
+</script>
+</head>
 <div class="mh-page-soft">
     <section class="admin-hero">
         <div class="container">
@@ -109,9 +126,19 @@
                                     'options' => $userTypes,
                                     'label' => 'User Role',
                                     'class' => 'auth-input',
+                                    'id' => 'user_type',
                                 ]) ?>
                             </div>
+
+                        <div class="col-md-6 auth-form-group" id="isDriver" >
+                            <?= $this->Form->control('isDiver', [
+                                'type' => 'checkbox',
+                                'value' => 1,
+                                'label' => 'Owns a Driver License',
+                                'class' => 'auth-input',
+                            ]) ?>
                         </div>
+                    </div>
 
                         <div class="auth-form-actions">
                             <?= $this->Form->button(__('Create User'), ['class' => 'mh-btn-primary']) ?>

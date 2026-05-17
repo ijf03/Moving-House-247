@@ -40,7 +40,6 @@
                     <table class="admin-table">
                         <thead>
                         <tr>
-                            <th><?= $this->Paginator->sort('truck_id', 'ID') ?></th>
                             <th><?= $this->Paginator->sort('name', 'Name') ?></th>
                             <th><?= $this->Paginator->sort('rego', 'Rego') ?></th>
                             <th><?= $this->Paginator->sort('truck_size', 'Size') ?></th>
@@ -49,8 +48,6 @@
                             <th><?= $this->Paginator->sort('current_location', 'Location') ?></th>
                             <th><?= $this->Paginator->sort('next_service_date', 'Next Service') ?></th>
                             <th><?= $this->Paginator->sort('is_active', 'Active') ?></th>
-                            <th><?= $this->Paginator->sort('created', 'Created') ?></th>
-                            <th><?= $this->Paginator->sort('modified', 'Modified') ?></th>
                             <th class="actions"><?= __('Actions') ?></th>
                         </tr>
                         </thead>
@@ -58,7 +55,6 @@
                         <tbody>
                         <?php foreach ($trucks as $truck): ?>
                             <tr>
-                                <td><?= $this->Number->format($truck->truck_id) ?></td>
                                 <td><?= h($truck->name) ?></td>
                                 <td><?= h($truck->rego) ?></td>
                                 <td><?= h($truck->truck_size) ?></td>
@@ -75,8 +71,6 @@
                                             <?= $truck->is_active ? __('Active') : __('Inactive') ?>
                                         </span>
                                 </td>
-                                <td><?= h($truck->created) ?></td>
-                                <td><?= h($truck->modified) ?></td>
                                 <td class="actions">
                                     <div class="admin-action-stack">
                                         <?= $this->Html->link(

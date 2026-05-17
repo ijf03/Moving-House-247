@@ -20,11 +20,37 @@
     <div class="container">
         <div class="admin-table-card">
             <div class="admin-table-header admin-table-header-split">
+
                 <div>
                     <h2><?= __('All Invoices') ?></h2>
                     <p><?= __('Review invoice totals, statuses, and linked customer bookings.') ?></p>
                 </div>
                 <?= $this->Html->link(__('New Invoice'), ['action' => 'add'], ['class' => 'btn']) ?>
+            </div>
+            <div class="admin-toolbar">
+                <?= $this->Form->create(null, [
+                    'type' => 'get',
+                    'class' => 'admin-search-form',
+                    'id' => 'invoiceSearchForm'
+                ]) ?>
+
+                <div class="admin-search-group">
+                    <?= $this->Form->control('search', [
+                        'label' => false,
+                        'placeholder' => 'Search invoices, customers, status...',
+                        'class' => 'admin-search-input',
+                        'id' => 'invoiceSearchInput',
+                        'autocomplete' => 'off'
+                    ]) ?>
+
+                    <?= $this->Html->link(
+                        __('Clear Filters'),
+                        ['action' => 'index'],
+                        ['class' => 'admin-action-link']
+                    ) ?>
+                </div>
+
+                <?= $this->Form->end() ?>
             </div>
 
 
@@ -32,7 +58,7 @@
                 <table class="admin-table">
                     <thead>
                     <tr>
-                        <th><?= $this->Paginator->sort('invoice_id') ?></th>
+                        <th><?= $this->Paginator->sort('ID') ?></th>
                         <th><?= $this->Paginator->sort('booking_id') ?></th>
                         <th><?= $this->Paginator->sort('customer_id') ?></th>
                         <th><?= __('Invoice URL') ?></th>
@@ -133,3 +159,21 @@
         </div>
     </div>
 </section>
+<script>
+    const searchInput = document.getElementById('invoiceSearchInput');
+    const tableRows = document.querySelectorAll('.admin-table tbody tr');
+
+    searchInput.addEventListener('input', function () {
+        const searchValue = this.value.toLowerCase().trim();
+
+        tableRows.forEach(function (row) {
+            const rowText = row.textContent.toLowerCase();
+
+            if (rowText.includes(searchValue)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+</script>
