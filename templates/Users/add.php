@@ -8,15 +8,25 @@
 <script>
     window.addEventListener('load', ()=> {
         const user_types = <?= json_encode($userTypes); ?>;
-        isDriver_checkbox = document.getElementById('isDriver');
-        isDriver_checkbox.style.display = 'none';
-        console.log(document.getElementById('isDriver'));
+        isDriver = document.getElementById('isDriver');
+        isDriver.style.display = (user_types[document.getElementById('user_type').value]) == 'Staff' ? 'block' : 'none';
+        isDriver_checkbox = document.getElementById('isDriver_checkbox');
+        license_number = document.getElementById('license_number');
+        license_number.style.display = isDriver_checkbox.checked ? 'block' : 'none';
         document.getElementById('user_type').addEventListener('change', () => {
             if ((user_types[document.getElementById('user_type').value]) == 'Staff'){
-                isDriver_checkbox.style.display = 'block';
+                isDriver.style.display = 'block';
             }
             else{
-                isDriver_checkbox.style.display = 'none';
+                isDriver.style.display = 'none';
+            }
+        })
+        isDriver_checkbox.addEventListener('change', () => {
+            if (isDriver_checkbox.checked){
+                license_number.style.display = 'block';
+            }
+            else{
+                license_number.style.display = 'none';
             }
         })
     });
@@ -130,14 +140,23 @@
                                 ]) ?>
                             </div>
 
-                        <div class="col-md-6 auth-form-group" id="isDriver" >
-                            <?= $this->Form->control('isDiver', [
-                                'type' => 'checkbox',
-                                'value' => 1,
-                                'label' => 'Owns a Driver License',
-                                'class' => 'auth-input',
-                            ]) ?>
-                        </div>
+                            <div class="col-md-6 auth-form-group" id="isDriver" >
+                                <?= $this->Form->control('isDriver', [
+                                    'id' => 'isDriver_checkbox',
+                                    'type' => 'checkbox',
+                                    'value' => 1,
+                                    'label' => 'Owns a Driver License',
+                                    'class' => 'auth-input',
+                                ]) ?>
+                            </div>
+
+                            <div class="col-md-6 auth-form-group" id="license_number" >
+                                <?= $this->Form->control('license_number', [
+                                    'placeholder' => 'Driver License Number',
+                                    'label' => 'License Number',
+                                    'class' => 'auth-input',
+                                ]) ?>
+                            </div>
                     </div>
 
                         <div class="auth-form-actions">
