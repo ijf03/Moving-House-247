@@ -21,18 +21,45 @@
         });
     </script>
 </head>
-<div class="row">
-    <aside class="column">
-        <div class="side-nav">
-            <h4 class="heading"><?= __('Actions') ?></h4>
-            <?= $this->Html->link(__('List Staff'), ['action' => 'index'], ['class' => 'side-nav-item']) ?>
+<div class="mh-page-soft">
+    <section class="admin-hero">
+        <div class="container">
+            <div class="admin-hero-shell">
+                <div class="admin-hero-content">
+                    <span class="admin-eyebrow"><?= __('Admin') ?></span>
+                    <h1><?= __('Add Staff') ?></h1>
+                    <p class="admin-hero-text">
+                        <?= __('Create a new staff account.') ?>
+                    </p>
+                </div>
+            </div>
         </div>
-    </aside>
-    <div class="column column-80">
-        <div class="staff form content">
-            <?= $this->Form->create($staffEntity) ?>
-            <fieldset>
-                <legend><?= __('Add Staff') ?></legend>
+    </section>
+
+    <section class="admin-section">
+        <div class="container">
+            <div class="row g-4 justify-content-center">
+                <div class="col-lg-3">
+                    <div class="admin-table-card">
+                        <div class="admin-table-header">
+                            <h2><?= __('Actions') ?></h2>
+                            <p><?= __('Quick links for staff management.') ?></p>
+                        </div>
+
+                        <div class="admin-action-stack">
+                            <?= $this->Html->link(__('List Staff'), ['action' => 'index'], ['class' => 'admin-action-link']) ?>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-9">
+                    <div class="auth-card auth-card-wide">
+                        <div class="auth-header">
+                            <h2 class="auth-title"><?= __('Add Staff') ?></h2>
+                            <p class="auth-subtitle">
+                                <?= __('Fill in the staff details below to create a new account.') ?>
+                            </p>
+                        </div>
                 <?= $this->Form->create($staffEntity, ['class' => 'auth-form']) ?>
 
                 <div class="row g-3">
@@ -73,10 +100,10 @@
                     </div>
                     <div class="col-md-6 auth-form-group">
                         <?= $this->Form->control('isDriver', [
+                            'label' => 'Owns a Driver License',
                             'id' => 'isDriver_checkbox',
                             'type' => 'checkbox',
                             'value' => 1,
-                            'label' => 'Owns a Driver License',
                             'class' => 'auth-input',
                         ]) ?>
                     </div>

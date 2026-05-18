@@ -5,23 +5,37 @@
  */
 ?>
 <div class="row">
-    <aside class="column">
-        <div class="side-nav">
-            <h4 class="heading"><?= __('Actions') ?></h4>
-            <?= $this->Html->link(__('Edit Staff'), ['action' => 'edit', $staffEntity->staff_id], ['class' => 'side-nav-item']) ?>
-            <?= $this->Form->postLink(__('Delete Staff'), ['action' => 'delete', $staffEntity->staff_id], ['confirm' => __('Are you sure you want to delete # {0}?', $staffEntity->staff_id), 'class' => 'side-nav-item']) ?>
-            <?= $this->Html->link(__('List Staff'), ['action' => 'index'], ['class' => 'side-nav-item']) ?>
-            <?= $this->Html->link(__('New Staff'), ['action' => 'add'], ['class' => 'side-nav-item']) ?>
-        </div>
-    </aside>
-    <div class="column column-80">
+    <section class="admin-section">
+        <div class="container">
+            <div class="row g-4 justify-content-center">
+                <div class="col-lg-3">
+                    <div class="mh-back-btn m-1">
+                        <?= $this->Html->link(__('← Back to List'), ['action' => 'index']) ?>
+                    </div>
+                    <div class="admin-table-card">
+                        <div class="admin-table-header">
+                            <h2><?= __('Actions') ?></h2>
+                            <p><?= __('Manage this user record.') ?></p>
+                        </div>
+
+                        <div class="admin-action-stack">
+                            <?= $this->Html->link(__('Edit Staff'), ['action' => 'edit', $staffEntity->staff_id], ['class' => 'admin-action-link']) ?>
+
+                            <?= $this->Form->postLink(
+                                __('Delete Staff'),
+                                ['action' => 'delete', $staffEntity->staff_id],
+                                [
+                                    'confirm' => __('Are you sure you want to delete {0}?', $staffEntity->full_name),
+                                    'class' => 'admin-action-link admin-action-link-danger'
+                                ]
+                            ) ?>
+                        </div>
+                    </div>
+                </div>
+    <div class="col-lg-9">
         <div class="staff view content">
             <h3><?= h($staffEntity->first_name) ?></h3>
             <table>
-                <tr>
-                    <th><?= __('Staff Id') ?></th>
-                    <td><?= $this->Number->format($staffEntity->staff_id) ?></td>
-                </tr>
                 <tr>
                     <th><?= __('First Name') ?></th>
                     <td><?= h($staffEntity->first_name) ?></td>
