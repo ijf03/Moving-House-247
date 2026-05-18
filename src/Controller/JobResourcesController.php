@@ -60,7 +60,6 @@ class JobResourcesController extends AppController
                     'Customers.last_name LIKE' => $like,
                     'Customers.email LIKE' => $like,
                     'JobTypes.job_type_name LIKE' => $like,
-                    'Trucks.name LIKE' => $like,
                     'Trucks.rego LIKE' => $like,
                     'Equipment.name LIKE' => $like,
                     'StorageUnits.unit_code LIKE' => $like,
