@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 16, 2026 at 08:22 PM
+-- Generation Time: May 14, 2026 at 02:01 AM
 -- Server version: 11.8.6-MariaDB
 -- PHP Version: 8.4.16
 
@@ -11,6 +11,33 @@ SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
 
+SET FOREIGN_KEY_CHECKS = 0;
+DROP TABLE IF EXISTS `content_blocks`;
+DROP TABLE IF EXISTS `content_blocks_phinxlog`;
+DROP TABLE IF EXISTS `phinxlog`;
+DROP TABLE IF EXISTS `job_resources`;
+DROP TABLE IF EXISTS `invoice_items`;
+DROP TABLE IF EXISTS `invoice_item_presets`;
+DROP TABLE IF EXISTS `invoices`;
+DROP TABLE IF EXISTS `contact_form_replies`;
+DROP TABLE IF EXISTS `contact_forms`;
+DROP TABLE IF EXISTS `jobs`;
+DROP TABLE IF EXISTS `trucks`;
+DROP TABLE IF EXISTS `storage_units`;
+DROP TABLE IF EXISTS `equipment`;
+DROP TABLE IF EXISTS `inventory_items`;
+DROP TABLE IF EXISTS `bookings`;
+DROP TABLE IF EXISTS `users`;
+DROP TABLE IF EXISTS `customers`;
+DROP TABLE IF EXISTS `job_types`;
+DROP TABLE IF EXISTS `user_types`;
+DROP TABLE IF EXISTS `phinxlog`;
+DROP TABLE IF EXISTS `staff`;
+DROP TABLE IF EXISTS `staff_job`;
+DROP TABLE IF EXISTS `availability`;
+DROP TABLE IF EXISTS `job_trucks`;
+DROP TABLE IF EXISTS `job_resources`;
+SET FOREIGN_KEY_CHECKS = 1;
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -18,7 +45,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `3047`
+-- Database: `my_app`
 --
 
 -- --------------------------------------------------------
@@ -45,7 +72,7 @@ CREATE TABLE `bookings` (
                             `customer_id` int(11) NOT NULL,
                             `job_type_id` int(1) NOT NULL,
                             `pickup_address` varchar(95) NOT NULL,
-                            `dropoff_address` varchar(95) DEFAULT NULL,
+                            `dropoff_address` varchar(95) NULL,
                             `job_date` date NOT NULL,
                             `job_time` time NOT NULL,
                             `status` varchar(20) NOT NULL DEFAULT 'Pending',
@@ -59,10 +86,8 @@ CREATE TABLE `bookings` (
 -- Dumping data for table `bookings`
 --
 
-INSERT INTO `bookings` (`booking_id`, `customer_id`, `job_type_id`, `pickup_address`, `dropoff_address`, `job_date`, `job_time`, `status`, `created`, `message`, `accepted_notified`, `rejected_notified`) VALUES
-                                                                                                                                                                                                               (1, 11, 3, 'CH109, 21 Sports Walk, Clayton, VIC, Clayton, 3168', 'a24rgvv, Monash, 3168', '2026-05-28', '16:03:00', 'Pending', '2026-05-13 15:01:18', NULL, 0, 0),
-                                                                                                                                                                                                               (2, 11, 1, '12 Joan Avenue, Ferntree Gully, 3156', NULL, '2026-05-16', '16:22:00', 'Pending', '2026-05-16 06:20:01', NULL, 0, 0),
-                                                                                                                                                                                                               (3, 11, 1, '12, 1, 4000', NULL, '2026-05-29', '18:52:00', 'Pending', '2026-05-16 08:50:10', NULL, 0, 0);
+INSERT INTO `bookings` (`booking_id`, `customer_id`, `job_type_id`, `pickup_address`, `dropoff_address`, `job_date`, `job_time`, `status`, `created`, `message`, `accepted_notified`) VALUES
+    (1, 11, 3, 'CH109, 21 Sports Walk, Clayton, VIC, Clayton, 3168', 'a24rgvv, Monash, 3168', '2026-05-28', '16:03:00', 'Pending', '2026-05-13 15:01:18', NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -386,7 +411,7 @@ INSERT INTO `jobs` (`job_id`, `job_type_id`, `description`, `pickup_address`, `d
                                                                                                                                                                                                                             (1, 1, 'Move 2-bedroom apartment including fridge, sofa, washing machine, and boxes.', '12 King Street, Clayton VIC 3168', '88 Collins Street, Melbourne VIC 3000', '2026-05-01', '09:00:00', 1, '2026-05-13 11:33:05', NULL, 'Processing', 2, 2),
                                                                                                                                                                                                                             (2, 1, 'Store household furniture and personal boxes during apartment renovation.', '5 Princes Highway, Dandenong VIC 3175', 'Unit 4, Storage Hub, Springvale VIC 3171', '2026-05-02', '13:30:00', 2, '2026-05-13 15:39:22', NULL, 'Processing', 2, 3),
                                                                                                                                                                                                                             (3, 1, 'Office equipment relocation including desks, monitors, and chairs.', '21 Wellington Road, Mulgrave VIC 3170', '9 Queen Street, Melbourne VIC 3000', '2026-05-03', '08:15:00', 3, NULL, NULL, 'Pending', 0, 0),
-                                                                                                                                                                                                                            (4, 3, 'Transfer packed boxes between rental properties.', '44 Chapel Street, South Yarra VIC 3141', '72 Lygon Street, Carlton VIC 3053', '2026-05-04', '10:30:00', 4, '2026-05-13 15:39:36', NULL, 'Completed', 1, 1),
+                                                                                                                                                                                                                            (4, 3, 'Transfer packed boxes between rental properties.', '44 Chapel Street, South Yarra VIC 3141', '72 Lygon Street, Carlton VIC 3053', '2026-05-04', '10:30:00', 4, '2026-05-13 15:39:36', NULL, 'Processing', 1, 1),
                                                                                                                                                                                                                             (5, 1, 'Move 2-bedroom unit with lift access and fragile items.', '18 High Street, Glen Iris VIC 3146', '120 Burke Road, Camberwell VIC 3124', '2026-05-05', '11:00:00', 5, NULL, NULL, 'Pending', 0, 0),
                                                                                                                                                                                                                             (6, 2, 'Store boxes and small appliances from a studio apartment.', '7 Sydney Road, Brunswick VIC 3056', 'Storage King, Preston VIC 3072', '2026-05-06', '14:00:00', 6, '2026-05-13 15:57:49', NULL, 'Processing', 2, 1),
                                                                                                                                                                                                                             (7, 1, 'Move apartment furniture and provide wardrobe boxes.', '33 Bay Street, Port Melbourne VIC 3207', '54 Smith Street, Collingwood VIC 3066', '2026-05-07', '09:45:00', 7, NULL, NULL, 'Pending', 0, 0),
@@ -492,18 +517,10 @@ CREATE TABLE `staff_job` (
                              `job_id` int(11) NOT NULL,
                              `status` enum('Waiting','Confirmed','Rejected') NOT NULL DEFAULT 'Waiting',
                              `role` varchar(10) DEFAULT NULL,
+                             `report_outcome` enum('Completed','Incomplete') DEFAULT NULL,
                              `report_notes` text DEFAULT NULL,
-                             `report_photo` varchar(255) DEFAULT NULL,
                              `report_submitted_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
-
---
--- Dumping data for table `staff_job`
---
-
-INSERT INTO `staff_job` (`allocation_id`, `staff_id`, `job_id`, `status`, `role`, `report_notes`, `report_photo`, `report_submitted_at`) VALUES
-                                                                                                                                             (1, 1, 4, 'Confirmed', 'Porter', '\' OR \'1\'=\'1', 'job_4_staff_1_3994a0d8b4a02123.jpg', '2026-05-14 01:47:52'),
-                                                                                                                                             (2, 2, 4, 'Confirmed', 'Driver', '<script>alert(\'XSS\')</script>', 'job_4_staff_2_63a9f3362c24d501.png', '2026-05-14 01:46:32');
 
 -- --------------------------------------------------------
 
@@ -540,9 +557,7 @@ INSERT INTO `storage_units` (`storage_unit_id`, `unit_code`, `facility_name`, `u
 
 CREATE TABLE `trucks` (
                           `truck_id` int(11) NOT NULL,
-                          `name` varchar(100) NOT NULL,
                           `rego` varchar(20) NOT NULL,
-                          `truck_size` varchar(50) DEFAULT NULL,
                           `capacity_m3` decimal(10,2) DEFAULT NULL,
                           `max_payload_kg` decimal(10,2) DEFAULT NULL,
                           `status` varchar(30) NOT NULL DEFAULT 'available',
@@ -557,9 +572,9 @@ CREATE TABLE `trucks` (
 -- Dumping data for table `trucks`
 --
 
-INSERT INTO `trucks` (`truck_id`, `name`, `rego`, `truck_size`, `capacity_m3`, `max_payload_kg`, `status`, `current_location`, `next_service_date`, `is_active`, `created`, `modified`) VALUES
-                                                                                                                                                                                            (1, 'Truck 1', '1ABC123', 'Small', 20.00, 2000.00, 'available', 'Clayton Depot', NULL, 1, '2026-05-13 11:28:29', '2026-05-13 11:28:29'),
-                                                                                                                                                                                            (2, 'Truck 2', '1DEF456', 'Large', 35.00, 4000.00, 'available', 'Springvale Depot', NULL, 1, '2026-05-13 11:28:29', '2026-05-13 11:28:29');
+INSERT INTO `trucks` (`truck_id`, `rego`, `capacity_m3`, `max_payload_kg`, `status`, `current_location`, `next_service_date`, `is_active`, `created`, `modified`) VALUES
+                                                                                                                                                                      (1, '1ABC123', 20.00, 2000.00, 'available', 'Clayton Depot', NULL, 1, '2026-05-13 11:28:29', '2026-05-13 11:28:29'),
+                                                                                                                                                                      (2,  '1DEF456', 35.00, 4000.00, 'available', 'Springvale Depot', NULL, 1, '2026-05-13 11:28:29', '2026-05-13 11:28:29');
 
 -- --------------------------------------------------------
 
@@ -784,7 +799,7 @@ ALTER TABLE `availability`
 -- AUTO_INCREMENT for table `bookings`
 --
 ALTER TABLE `bookings`
-    MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+    MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `contact_forms`
@@ -868,7 +883,7 @@ ALTER TABLE `staff`
 -- AUTO_INCREMENT for table `staff_job`
 --
 ALTER TABLE `staff_job`
-    MODIFY `allocation_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+    MODIFY `allocation_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `storage_units`
@@ -956,6 +971,8 @@ ALTER TABLE `staff_job`
 --
 ALTER TABLE `users`
     ADD CONSTRAINT `users_user_type_id` FOREIGN KEY (`user_type`) REFERENCES `user_types` (`user_type_id`);
+
+ALTER TABLE jobs ADD booking_id INT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
