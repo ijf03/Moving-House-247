@@ -34,16 +34,49 @@ class UsersController extends AppController
     {
         $user = $this->Authentication->getIdentity();
         $userId = $user->user_id;
+
         $roleQuery = $this->Users->find()
             ->where(['user_id' => $userId])
             ->contain(['UserTypes'])
             ->first();
+
         $isAdmin = $roleQuery->user_type_name == 'Admin';
+
         $query = $this->Users->find()
             ->contain(['UserTypes']);
+
+        $search = trim((string)$this->request->getQuery('search'));
+        $userTypeId = $this->request->getQuery('user_type');
+
+        $userTypes = $this->Users->UserTypes->find('list', [
+            'keyField' => 'user_type_id',
+            'valueField' => 'name',
+        ])->all();
+
+        if (!$isAdmin) {
+            $query->where(['Users.user_id' => $userId]);
+        }
+
+        if ($search !== '') {
+            $like = '%' . $search . '%';
+            $query->where(function ($exp) use ($like) {
+                return $exp->or([
+                    'Users.email LIKE' => $like,
+                    'Users.phone LIKE' => $like,
+                    'Users.first_name LIKE' => $like,
+                    'Users.last_name LIKE' => $like,
+                    'UserTypes.name LIKE' => $like,
+                ]);
+            });
+        }
+
+        if (!empty($userTypeId)) {
+            $query->where(['Users.user_type' => $userTypeId]);
+        }
+
         $users = $this->paginate($query);
 
-        $this->set(compact('users', 'isAdmin'));
+        $this->set(compact('users', 'isAdmin', 'search', 'userTypeId', 'userTypes'));
     }
 
     /**
@@ -162,6 +195,7 @@ class UsersController extends AppController
         if ($this->request->is('post')) {
             $data = $this->request->getData();
             $data['isDriver'] = null;
+            $data['license_number'] = null;
             $user = $this->Users->patchEntity($user, $data);
             if ($this->Users->save($user)) {
                 $roleQuery = $this->Users->find()
@@ -173,20 +207,33 @@ class UsersController extends AppController
                 {
                     $staffTable = $this->fetchTable('Staff');
                     $staffData = $this->request->getData();
-
+                    if ($staffData['isDriver'] == '1') {
+                        if (strlen((string)$staffData['license_number']) != 9 || strlen((string)((int)$staffData['license_number'])) != 9) {
+                            $this->Flash->error('Invalid License Number');
+                            $this->Users->delete($user);
+                            $this->set(compact('user','userTypes'));
+                            return;
+                        }
+                        $staffData['license_number'] = hash('sha256', $staffData['license_number']);
+                    }
+                    else{
+                        $staffData['license_number'] = null;
+                    }
                     $staff = $staffTable->newEntity([
-                        'first_name' => $data['first_name'],
-                        'last_name' => $data['last_name'],
-                        'email' => $data['email'],
-                        'phone' => $data['phone'],
-                        'isDriver' => 0,
+                        'first_name' => $staffData['first_name'],
+                        'last_name' => $staffData['last_name'],
+                        'email' => $staffData['email'],
+                        'phone' => $staffData['phone'],
+                        'isDriver' => $staffData['isDriver'],
+                        'license_number' => $staffData['license_number'],
                     ]);
                     if (!$staffTable->save($staff)) {
-                        $this->Flash->error('Staff account cannot be created, Please try again');
+                        $this->Flash->error('Staff account cannot be created, corresponding user account is deleted. Please try again');
+                        $this->Users->delete($user);
                         $this->set(compact('user','userTypes'));
                         return;
                     }
-                    $this->Flash->success('Staff account created, Please manually configure if the staff holds a driving license.');
+                    $this->Flash->success('Staff account created');
                 }
                 elseif ($roleQuery->user_type_name == 'Customer')
                 {
@@ -201,6 +248,7 @@ class UsersController extends AppController
 
                     if (!$customersTable->save($customer)) {
                         $this->Flash->error('User account created, but customer profile could not be created.');
+                        $this->Users->delete($user);
                         $this->set(compact('user','userTypes'));
                         return;
                     }

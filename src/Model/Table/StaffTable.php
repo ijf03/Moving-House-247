@@ -82,6 +82,15 @@ class StaffTable extends Table
             ->requirePresence('isDriver', 'create')
             ->notEmptyString('isDriver');
 
+        $validator
+            ->scalar('license_number')
+            ->requirePresence('license_number', function($context){
+            return isset($context['data']['isDriver']) && $context['data']['isDriver'] == '1';
+        })
+            ->notEmptyString('license_number', 'License Number must not be empty for drivers', function($context){
+                return isset($context['data']['isDriver']) && $context['data']['isDriver'] == '1';
+            });
+
         return $validator;
     }
 }

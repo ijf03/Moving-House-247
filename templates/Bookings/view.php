@@ -146,7 +146,7 @@
                                 <div class="mh-info-card">
                                     <div>
                                         <h3><?= __('Date') ?></h3>
-                                        <p><?= h($booking->job_date) ?></p>
+                                        <p><?= h($booking->job_date?->format('d/m/Y')) ?></p>
                                     </div>
                                 </div>
                             </div>
@@ -155,7 +155,7 @@
                                 <div class="mh-info-card">
                                     <div>
                                         <h3><?= __('Time') ?></h3>
-                                        <p><?= h($booking->job_time) ?></p>
+                                        <p><?= h($booking->job_time?->format('H:i')) ?></p>
                                     </div>
                                 </div>
                             </div>

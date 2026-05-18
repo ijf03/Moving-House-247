@@ -40,9 +40,12 @@
                     <div class="auth-card auth-card-wide">
                         <div class="auth-header">
                             <h2 class="auth-title"><?= __('Inventory Item Details') ?></h2>
-                            <p class="auth-subtitle">
-                                <?= __('Fill in the details below to add a new inventory item to the system.') ?>
-                            </p>
+
+                            <div class="d-flex justify-content-center mt-5 mb-5">
+                                <p class="auth-subtitle text-center">
+                                    <?= __('Fill in the details below to add a new inventory item to the system.') ?>
+                                </p>
+                            </div>
                         </div>
 
                         <?= $this->Form->create($inventoryItem, ['class' => 'auth-form']) ?>
@@ -58,8 +61,10 @@
 
                             <div class="col-md-6 auth-form-group">
                                 <?= $this->Form->control('category', [
+                                    'type' => 'select',
                                     'label' => 'Category',
-                                    'placeholder' => 'Enter category',
+                                    'options' => $categoryOptions,
+                                    'empty' => 'Select category',
                                     'class' => 'auth-input',
                                 ]) ?>
                             </div>
@@ -96,8 +101,10 @@
 
                             <div class="col-md-6 auth-form-group">
                                 <?= $this->Form->control('storage_location', [
+                                    'type' => 'select',
                                     'label' => 'Storage Location',
-                                    'placeholder' => 'Enter storage location',
+                                    'options' => $storageLocationOptions,
+                                    'empty' => 'Select storage location',
                                     'class' => 'auth-input',
                                 ]) ?>
                             </div>

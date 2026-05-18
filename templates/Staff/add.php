@@ -4,6 +4,23 @@
  * @var \App\Model\Entity\Staff $staffEntity
  */
 ?>
+<head>
+    <script>
+        window.addEventListener('load', ()=> {
+            isDriver_checkbox = document.getElementById('isDriver_checkbox');
+            license_number = document.getElementById('license_number');
+            license_number.style.display = isDriver_checkbox.checked ? 'block' : 'none';
+            isDriver_checkbox.addEventListener('change', () => {
+                if (isDriver_checkbox.checked){
+                    license_number.style.display = 'block';
+                }
+                else{
+                    license_number.style.display = 'none';
+                }
+            })
+        });
+    </script>
+</head>
 <div class="row">
     <aside class="column">
         <div class="side-nav">
@@ -56,9 +73,18 @@
                     </div>
                     <div class="col-md-6 auth-form-group">
                         <?= $this->Form->control('isDriver', [
-                            'label' => 'Owns a valid driving license?',
+                            'id' => 'isDriver_checkbox',
                             'type' => 'checkbox',
                             'value' => 1,
+                            'label' => 'Owns a Driver License',
+                            'class' => 'auth-input',
+                        ]) ?>
+                    </div>
+
+                    <div class="col-md-6 auth-form-group" id="license_number" >
+                        <?= $this->Form->control('license_number', [
+                            'placeholder' => 'Driver License Number',
+                            'label' => 'License Number',
                             'class' => 'auth-input',
                         ]) ?>
                     </div>

@@ -35,6 +35,12 @@
                         </div>
 
                         <div class="admin-action-stack">
+                            <?= $this->Html->link(
+                                __('View'),
+                                ['action' => 'view', $job->job_id],
+                                ['class' => 'admin-action-link']
+                            ) ?>
+
                            <?= $this->Form->postLink(
                                 __('Delete'),
                                 ['action' => 'delete', $job->job_id],

@@ -53,19 +53,47 @@
                 <?= $this->Form->end() ?>
             </div>
 
+            <div class="admin-filter-card">
+                <?= $this->Form->create(null, ['type' => 'get', 'class' => 'admin-filter-form mh-form']) ?>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <?= $this->Form->control('search', [
+                            'label' => 'Search',
+                            'placeholder' => 'Customer, email, Stripe invoice ID, status...',
+                            'value' => $search ?? '',
+                        ]) ?>
+                    </div>
+
+                    <div class="col-md-6">
+                        <?= $this->Form->control('status', [
+                            'type' => 'select',
+                            'label' => 'Invoice Status',
+                            'empty' => 'All Statuses',
+                            'options' => $statusOptions ?? [],
+                            'default' => $status ?? null,
+                        ]) ?>
+                    </div>
+                </div>
+
+                <div class="admin-filter-actions">
+                    <?= $this->Form->button(__('Apply Filters'), ['class' => 'admin-primary-link admin-primary-button']) ?>
+                    <?= $this->Html->link(__('Reset'), ['action' => 'index'], ['class' => 'admin-action-link']) ?>
+                </div>
+                <?= $this->Form->end() ?>
+            </div>
 
             <div class="admin-table-wrap">
                 <table class="admin-table">
                     <thead>
                     <tr>
-                        <th><?= $this->Paginator->sort('ID') ?></th>
-                        <th><?= $this->Paginator->sort('booking_id') ?></th>
-                        <th><?= $this->Paginator->sort('customer_id') ?></th>
+                        <th><?= $this->Paginator->sort('invoice_id', 'ID') ?></th>
+                        <th><?= $this->Paginator->sort('booking_id', 'Booking') ?></th>
+                        <th><?= $this->Paginator->sort('Customers.first_name', 'Customer') ?></th>
                         <th><?= __('Invoice URL') ?></th>
-                        <th><?= $this->Paginator->sort('status') ?></th>
-                        <th><?= __('Total ($)') ?></th>
-                        <th><?= $this->Paginator->sort('sent_at') ?></th>
-                        <th><?= $this->Paginator->sort('paid_at') ?></th>
+                        <th><?= $this->Paginator->sort('status', 'Status') ?></th>
+                        <th><?= $this->Paginator->sort('total_cents', 'Total ($)') ?></th>
+                        <th><?= $this->Paginator->sort('sent_at', 'Sent') ?></th>
+                        <th><?= $this->Paginator->sort('paid_at', 'Paid') ?></th>
                         <th class="actions"><?= __('Actions') ?></th>
                     </tr>
                     </thead>

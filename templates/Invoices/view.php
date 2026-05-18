@@ -50,7 +50,12 @@
                     <div class="auth-card auth-card-wide">
                         <div class="auth-header">
                             <h2 class="auth-title"><?= __('Invoice Details') ?></h2>
-                            <p class="auth-subtitle"><?= __('Summary of the invoice, customer, booking, and payment status.') ?></p>
+
+                            <div class="d-flex justify-content-center mt-5 mb-5">
+                                <p class="auth-subtitle text-center">
+                                    <?= __('Summary of the invoice, customer, booking, and payment status.') ?>
+                                </p>
+                            </div>
                         </div>
 
                         <table class="table table-striped">
