@@ -42,14 +42,11 @@ $slugify = function ($text) {
 
                     <div class="p-3">
                         <div class="d-flex gap-2 flex-wrap">
-                            <?php foreach (array_keys($contentBlocksGrouped) as $parent) : ?>
-                                <a
-                                    href="#<?= h($slugify($parent)) ?>"
-                                    class="btn btn-outline-primary btn-sm"
-                                >
-                                    <?= h($parent) ?>
-                                </a>
-                            <?php endforeach; ?>
+                            <?= $this->Html->link(
+                                'Home',
+                                ['controller' => 'Pages', 'action' => 'display', 'home', 'plugin' => false],
+                                ['class' => 'nav-link mh-nav-link btn'],
+                            ) ?>
                         </div>
                     </div>
                 </div>

@@ -69,43 +69,9 @@ $isUser = ($identity && (int)$role === 3);
                     ) ?>
 
                     <?php if ($isAdmin) : ?>
+                        <?= $this->Html->link('Dashboard', ['plugin' => false, 'controller' => 'Admin', 'action' => 'index'], ['class' => 'nav-link mh-nav-link']) ?>
                         <?= $this->Html->link(
-                            'Users',
-                            ['plugin' => false, 'controller' => 'Users', 'action' => 'index'],
-                            ['class' => 'nav-link mh-nav-link'],
-                        ) ?>
-
-                        <?= $this->Html->link(
-                            'Contact Forms',
-                            ['plugin' => false, 'controller' => 'ContactForms', 'action' => 'index'],
-                            ['class' => 'nav-link mh-nav-link'],
-                        ) ?>
-
-                        <?= $this->Html->link(
-                            'Manage Bookings',
-                            ['plugin' => false, 'controller' => 'Bookings', 'action' => 'index'],
-                            ['class' => 'nav-link mh-nav-link'],
-                        ) ?>
-
-                        <?= $this->Html->link(
-                            'Manage Invoices',
-                            ['plugin' => false, 'controller' => 'Invoices', 'action' => 'index'],
-                            ['class' => 'nav-link mh-nav-link'],
-                        ) ?>
-
-                        <?= $this->Html->link(
-                            'Resource Management',
-                            ['plugin' => false, 'controller' => 'Resources', 'action' => 'index'],
-                            ['class' => 'nav-link mh-nav-link'],
-                        ) ?>
-
-                        <?= $this->Html->link(
-                            'Job Allocation',
-                            ['plugin' => false, 'controller' => 'Jobs', 'action' => 'index'],
-                            ['class' => 'nav-link mh-nav-link'],
-                        ) ?>
-                        <?= $this->Html->link(
-                            'Content Management',
+                            'Website Content',
                             ['plugin' => 'ContentBlocks', 'controller' => 'ContentBlocks', 'action' => 'index'],
                             ['class' => 'nav-link mh-nav-link'],
                         ) ?>
@@ -153,7 +119,7 @@ $isUser = ($identity && (int)$role === 3);
                         <?= $this->Html->link(
                             'Services',
                             ['controller' => 'Pages', 'action' => 'display', 'home', '#' => 'services'],
-                            ['class' => 'nav-link mh-nav-link'],
+                            ['class' => 'nav-link mh-nav-link '],
                         ) ?>
 
                         <?= $this->Html->link(
