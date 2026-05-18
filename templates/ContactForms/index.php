@@ -2,6 +2,8 @@
 /**
  * @var \App\View\AppView $this
  * @var iterable<\App\Model\Entity\ContactForm> $contactForms
+ * @var string|null $search
+ * @var string|null $status
  */
 ?>
 
@@ -30,17 +32,49 @@
                     </div>
                 </div>
 
+                <div class="admin-filter-card">
+                    <?= $this->Form->create(null, ['type' => 'get', 'class' => 'admin-filter-form mh-form']) ?>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <?= $this->Form->control('search', [
+                                'label' => 'Search',
+                                'placeholder' => 'Customer, email, phone, subject, message...',
+                                'value' => $search ?? '',
+                            ]) ?>
+                        </div>
+
+                        <div class="col-md-6">
+                            <?= $this->Form->control('status', [
+                                'type' => 'select',
+                                'label' => 'Inquiry Status',
+                                'empty' => 'All Statuses',
+                                'options' => [
+                                    'new' => 'New',
+                                    'replied' => 'Replied',
+                                ],
+                                'default' => $status ?? null,
+                            ]) ?>
+                        </div>
+                    </div>
+
+                    <div class="admin-filter-actions">
+                        <?= $this->Form->button(__('Apply Filters'), ['class' => 'admin-primary-link admin-primary-button']) ?>
+                        <?= $this->Html->link(__('Reset'), ['action' => 'index'], ['class' => 'admin-action-link']) ?>
+                    </div>
+                    <?= $this->Form->end() ?>
+                </div>
+
                 <div class="admin-table-wrap">
                     <table class="admin-table">
                         <thead>
                         <tr>
-                            <th><?= __('Contact Form') ?></th>
-                            <th><?= __('Customer') ?></th>
-                            <th><?= __('Email') ?></th>
-                            <th><?= __('Phone') ?></th>
-                            <th><?= __('Subject') ?></th>
-                            <th><?= __('Created') ?></th>
-                            <th><?= __('Status') ?></th>
+                            <th><?= $this->Paginator->sort('contact_form_id', 'ID') ?></th>
+                            <th><?= $this->Paginator->sort('Customers.first_name', 'Customer') ?></th>
+                            <th><?= $this->Paginator->sort('Customers.email', 'Email') ?></th>
+                            <th><?= $this->Paginator->sort('Customers.phone', 'Phone') ?></th>
+                            <th><?= $this->Paginator->sort('subject', 'Subject') ?></th>
+                            <th><?= $this->Paginator->sort('created', 'Created') ?></th>
+                            <th><?= $this->Paginator->sort('status', 'Status') ?></th>
                             <th class="actions"><?= __('Actions') ?></th>
                         </tr>
                         </thead>

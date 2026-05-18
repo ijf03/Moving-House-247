@@ -44,15 +44,51 @@ class JobResourcesController extends AppController
                 'Equipment',
                 'StorageUnits',
                 'InventoryItems',
-            ])
-            ->orderBy([
+            ]);
+
+        $search = trim((string)$this->request->getQuery('search'));
+        $resourceType = $this->request->getQuery('resource_type');
+
+        if ($search !== '') {
+            $like = '%' . $search . '%';
+            $query->where(function ($exp) use ($like) {
+                return $exp->or([
+                    'Jobs.description LIKE' => $like,
+                    'Jobs.pickup_address LIKE' => $like,
+                    'Jobs.dropoff_address LIKE' => $like,
+                    'Customers.first_name LIKE' => $like,
+                    'Customers.last_name LIKE' => $like,
+                    'Customers.email LIKE' => $like,
+                    'JobTypes.job_type_name LIKE' => $like,
+                    'Trucks.name LIKE' => $like,
+                    'Trucks.rego LIKE' => $like,
+                    'Equipment.name LIKE' => $like,
+                    'StorageUnits.unit_code LIKE' => $like,
+                    'InventoryItems.name LIKE' => $like,
+                ]);
+            });
+        }
+
+        if ($resourceType === 'truck') {
+            $query->where(['JobResources.truck_id IS NOT' => null]);
+        } elseif ($resourceType === 'equipment') {
+            $query->where(['JobResources.equipment_id IS NOT' => null]);
+        } elseif ($resourceType === 'storage_unit') {
+            $query->where(['JobResources.storage_unit_id IS NOT' => null]);
+        } elseif ($resourceType === 'inventory') {
+            $query->where(['JobResources.inventory_id IS NOT' => null]);
+        }
+
+        if (!$this->request->getQuery('sort')) {
+            $query->orderBy([
                 'JobResources.job_id' => 'ASC',
                 'JobResources.job_resource_id' => 'ASC',
             ]);
+        }
 
         $jobResources = $this->paginate($query);
 
-        $this->set(compact('jobResources'));
+        $this->set(compact('jobResources', 'search', 'resourceType'));
     }
 
     /**

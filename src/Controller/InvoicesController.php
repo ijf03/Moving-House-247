@@ -17,15 +17,20 @@ class InvoicesController extends AppController
     public function beforeFilter(\Cake\Event\EventInterface $event)
     {
         parent::beforeFilter($event);
+
         if ($this->Authentication->getIdentity()) {
             $user = $this->Authentication->getIdentity();
             $userId = $user->user_id;
+
             $users = $this->fetchTable('Users');
+
             $roleQuery = $users->find()
                 ->where(['user_id' => $userId])
                 ->contain(['UserTypes'])
                 ->first();
+
             $isAdmin = $roleQuery->user_type_name == 'Admin';
+
             if (!$isAdmin) {
                 return $this->redirect('/');
             }
@@ -41,9 +46,39 @@ class InvoicesController extends AppController
     {
         $query = $this->Invoices->find()
             ->contain(['Bookings', 'Customers']);
+
+        $search = trim((string)$this->request->getQuery('search'));
+        $status = $this->request->getQuery('status');
+
+        $statusOptions = $this->Invoices->find('list', [
+            'keyField' => 'status',
+            'valueField' => 'status',
+        ])
+            ->distinct(['status'])
+            ->orderBy(['status' => 'ASC'])
+            ->toArray();
+
+        if ($search !== '') {
+            $like = '%' . $search . '%';
+
+            $query->where(function ($exp) use ($like) {
+                return $exp->or([
+                    'Invoices.stripe_invoice_id LIKE' => $like,
+                    'Invoices.status LIKE' => $like,
+                    'Customers.first_name LIKE' => $like,
+                    'Customers.last_name LIKE' => $like,
+                    'Customers.email LIKE' => $like,
+                ]);
+            });
+        }
+
+        if (!empty($status)) {
+            $query->where(['Invoices.status' => $status]);
+        }
+
         $invoices = $this->paginate($query);
 
-        $this->set(compact('invoices'));
+        $this->set(compact('invoices', 'search', 'status', 'statusOptions'));
     }
 
     /**
@@ -56,6 +91,7 @@ class InvoicesController extends AppController
     public function view($id = null)
     {
         $invoice = $this->Invoices->get($id, contain: ['Bookings', 'Customers']);
+
         $this->set(compact('invoice'));
     }
 
@@ -70,12 +106,20 @@ class InvoicesController extends AppController
 
         if (!$identity || $identity->get('user_type') != 1) {
             $this->Flash->error(__('You are not authorized to access this page.'));
+
             return $this->redirect(['controller' => 'Pages', 'action' => 'display', 'home']);
         }
 
         $bookingsTable = $this->fetchTable('Bookings');
+        $invoices = $this->fetchTable('Invoices');
+
+        $allowedBookingStatuses = ['processing', 'done'];
+
         $bookings = $bookingsTable->find()
             ->contain(['Customers'])
+            ->where([
+                'Bookings.status IN' => $allowedBookingStatuses,
+            ])
             ->all()
             ->combine(
                 'booking_id',
@@ -98,21 +142,32 @@ class InvoicesController extends AppController
             )
             ->toArray();
 
-        $invoices = $this->fetchTable('Invoices');
-        $invoice = $this->fetchTable('Invoices')->newEmptyEntity();
+        $invoice = $invoices->newEmptyEntity();
 
         if ($this->request->is('post')) {
-
             $bookingId = $this->request->getData('booking_id');
             $dueDate = $this->request->getData('due_date');
 
             if (empty($bookingId)) {
                 $this->Flash->error(__('Please select a booking.'));
-                $this->set(compact( 'invoice', 'bookings'));
+                $this->set(compact('invoice', 'bookings'));
+
                 return;
             }
 
-            $booking = $bookingsTable->get($bookingId);
+            $booking = $bookingsTable->find()
+                ->where([
+                    'Bookings.booking_id' => $bookingId,
+                    'Bookings.status IN' => $allowedBookingStatuses,
+                ])
+                ->first();
+
+            if (!$booking) {
+                $this->Flash->error(__('Only bookings that are processing or done can be invoiced.'));
+                $this->set(compact('invoice', 'bookings'));
+
+                return;
+            }
 
             $invoiceData = [
                 'booking_id' => $booking->booking_id,
@@ -123,17 +178,18 @@ class InvoicesController extends AppController
                 'due_date' => $dueDate,
             ];
 
-            $invoice = $this->fetchTable('Invoices')->patchEntity($invoice, $invoiceData);
+            $invoice = $invoices->patchEntity($invoice, $invoiceData);
 
             if ($invoices->save($invoice)) {
                 $this->Flash->success(__('Invoice created. You can now add invoice items.'));
-                return $this->redirect(['action' => 'edit',$invoice->invoice_id]);
-            } else {
-                $this->Flash->error(__('Invoice validation failed.'));
-                $this->set(compact('bookings', 'invoice'));
-                return;
+
+                return $this->redirect(['action' => 'edit', $invoice->invoice_id]);
             }
 
+            $this->Flash->error(__('Invoice validation failed.'));
+            $this->set(compact('bookings', 'invoice'));
+
+            return;
         }
 
         $this->set(compact('bookings', 'invoice'));
@@ -148,11 +204,11 @@ class InvoicesController extends AppController
      */
     public function edit($id = null)
     {
-
         $identity = $this->request->getAttribute('identity');
 
         if (!$identity || $identity->get('user_type') != 1) {
             $this->Flash->error(__('You are not authorized to access this page.'));
+
             return $this->redirect(['controller' => 'Pages', 'action' => 'display', 'home']);
         }
 
@@ -160,30 +216,33 @@ class InvoicesController extends AppController
         $invoiceItemsTable = $this->fetchTable('InvoiceItems');
         $bookingsTable = $this->fetchTable('Bookings');
         $customersTable = $this->fetchTable('Customers');
+        $presetsTable = $this->fetchTable('InvoiceItemPresets');
 
         $invoice = $invoicesTable->get($id, [
-            'contain' => ['InvoiceItems']
+            'contain' => ['InvoiceItems'],
         ]);
 
         $booking = $bookingsTable->get($invoice->booking_id);
         $customer = $customersTable->get($invoice->customer_id);
-        $presetsTable = $this->fetchTable('InvoiceItemPresets');
 
         $presets = $presetsTable->find()
             ->where(['is_active' => 1])
             ->orderBy(['sort_order' => 'ASC', 'name' => 'ASC'])
             ->all();
 
-        $presetOptions = ['' => 'Custom item'];
+        $presetOptions = $presetsTable->find('list', [
+            'keyField' => $presetsTable->getPrimaryKey(),
+            'valueField' => function ($preset) {
+                return $preset->description . ' ($' .
+                    number_format($preset->unit_price_cents / 100, 2) . ')';
+            },
+        ])
+            ->where(['is_active' => 1])
+            ->orderBy(['sort_order' => 'ASC', 'name' => 'ASC'])
+            ->toArray();
 
-        foreach ($presets as $key => $preset) {
-            if ($key === '' || !is_array($preset)) {
-                continue;
-            }
+        $presetOptions = ['' => 'Custom item'] + $presetOptions;
 
-            $presetOptions[$key] = $preset['description'] . ' ($' .
-                number_format($preset['unit_price_cents'] / 100, 2) . ')';
-        }
         if ($this->request->is(['patch', 'post', 'put'])) {
             $action = $this->request->getData('action');
 
@@ -194,7 +253,19 @@ class InvoicesController extends AppController
                 $unitPriceDollars = (float)$this->request->getData('unit_price');
 
                 if ($presetId > 0) {
-                    $preset = $presetsTable->get($presetId);
+                    $preset = $presetsTable->find()
+                        ->where([
+                            $presetsTable->getPrimaryKey() => $presetId,
+                            'is_active' => 1,
+                        ])
+                        ->first();
+
+                    if (!$preset) {
+                        $this->Flash->error(__('Please select a valid active preset item.'));
+
+                        return $this->redirect(['action' => 'edit', $invoice->invoice_id]);
+                    }
+
                     $description = $preset->description;
                     $unitPriceCents = (int)$preset->unit_price_cents;
                 } else {
@@ -203,6 +274,7 @@ class InvoicesController extends AppController
 
                 if ($description === '' || $quantity <= 0 || $unitPriceCents < 0) {
                     $this->Flash->error(__('Please enter a valid invoice item.'));
+
                     return $this->redirect(['action' => 'edit', $invoice->invoice_id]);
                 }
 
@@ -227,12 +299,14 @@ class InvoicesController extends AppController
 
                 if (!$invoiceItemsTable->save($item)) {
                     $this->Flash->error(__('The invoice item could not be saved.'));
+
                     return $this->redirect(['action' => 'edit', $invoice->invoice_id]);
                 }
 
                 $this->recalculateInvoiceTotals($invoice->invoice_id);
 
                 $this->Flash->success(__('Invoice item added.'));
+
                 return $this->redirect(['action' => 'edit', $invoice->invoice_id]);
             }
 
@@ -243,6 +317,7 @@ class InvoicesController extends AppController
 
                 if ($invoicesTable->save($invoice)) {
                     $this->Flash->success(__('Invoice details updated.'));
+
                     return $this->redirect(['action' => 'edit', $invoice->invoice_id]);
                 }
 
@@ -250,13 +325,12 @@ class InvoicesController extends AppController
             }
         }
 
-
         $invoice = $invoicesTable->get($id, [
             'contain' => [
                 'InvoiceItems' => [
-                    'sort' => ['InvoiceItems.sort_order' => 'ASC']
-                ]
-            ]
+                    'sort' => ['InvoiceItems.sort_order' => 'ASC'],
+                ],
+            ],
         ]);
 
         $this->set(compact(
@@ -278,8 +352,9 @@ class InvoicesController extends AppController
         $invoiceItemsTable = $this->fetchTable('InvoiceItems');
 
         $invoice = $invoicesTable->get($id, [
-            'contain' => ['InvoiceItems']
+            'contain' => ['InvoiceItems'],
         ]);
+
         $customer = $customersTable->get($invoice->customer_id);
 
         try {
@@ -348,9 +423,9 @@ class InvoicesController extends AppController
             $invoice->status = $sentInvoice->status ?? 'open';
             $invoice->sent_at = date('Y-m-d H:i:s');
 
-
             $mailer = new Mailer('default');
-            $body = "Hi " . ($customer->first_name !== '' ? $customer : 'there') . ",\n\n"
+
+            $body = "Hi " . (($customer->first_name ?? '') !== '' ? $customer->first_name : 'there') . ",\n\n"
                 . "Your invoice is ready.\n\n"
                 . "You can view and pay it here:\n"
                 . $finalizedInvoice->hosted_invoice_url . "\n\n"
@@ -363,21 +438,49 @@ class InvoicesController extends AppController
                 ->setSubject('Your invoice is ready')
                 ->deliver($body);
 
-
             $invoicesTable->saveOrFail($invoice);
 
             $connection->commit();
 
             $this->Flash->success(__('Invoice generated and sent successfully.'));
-            return $this->redirect(['action' => 'index']);
 
+            return $this->redirect(['action' => 'index']);
         } catch (\Throwable $e) {
             $connection->rollback();
 
             $this->Flash->error(__('Invoice could not be sent: {0}', $e->getMessage()));
+
             return $this->redirect(['action' => 'edit', $invoice->invoice_id]);
         }
     }
+
+    public function removeItem($invoiceItemId = null)
+    {
+        $this->request->allowMethod(['post', 'delete']);
+
+        $identity = $this->request->getAttribute('identity');
+
+        if (!$identity || $identity->get('user_type') != 1) {
+            $this->Flash->error(__('You are not authorized to access this page.'));
+
+            return $this->redirect(['controller' => 'Pages', 'action' => 'display', 'home']);
+        }
+
+        $invoiceItemsTable = $this->fetchTable('InvoiceItems');
+
+        $item = $invoiceItemsTable->get($invoiceItemId);
+        $invoiceId = $item->invoice_id;
+
+        if ($invoiceItemsTable->delete($item)) {
+            $this->recalculateInvoiceTotals($invoiceId);
+            $this->Flash->success(__('Invoice item removed.'));
+        } else {
+            $this->Flash->error(__('The invoice item could not be removed.'));
+        }
+
+        return $this->redirect(['action' => 'edit', $invoiceId]);
+    }
+
     private function recalculateInvoiceTotals($invoiceId)
     {
         $invoicesTable = $this->fetchTable('Invoices');
@@ -411,7 +514,9 @@ class InvoicesController extends AppController
     public function delete($id = null)
     {
         $this->request->allowMethod(['post', 'delete']);
+
         $invoice = $this->Invoices->get($id);
+
         if ($this->Invoices->delete($invoice)) {
             $this->Flash->success(__('The invoice has been deleted.'));
         } else {

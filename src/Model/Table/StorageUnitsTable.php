@@ -78,8 +78,13 @@ class StorageUnitsTable extends Table
 
         $validator
             ->scalar('security_level')
-            ->maxLength('security_level', 50)
-            ->allowEmptyString('security_level');
+            ->requirePresence('security_level', 'create')
+            ->notEmptyString('security_level', 'Please select a security level.')
+            ->inList('security_level', [
+                'low',
+                'standard',
+                'high',
+            ], 'Please select a valid security level.');
 
         $validator
             ->boolean('is_climate_controlled')

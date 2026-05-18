@@ -9,9 +9,7 @@ use Cake\ORM\Entity;
  * Truck Entity
  *
  * @property int $truck_id
- * @property string $name
  * @property string $rego
- * @property string|null $truck_size
  * @property string|null $capacity_m3
  * @property string|null $max_payload_kg
  * @property string|null $current_location
@@ -32,9 +30,7 @@ class Truck extends Entity
      * @var array<string, bool>
      */
     protected array $_accessible = [
-        'name' => true,
         'rego' => true,
-        'truck_size' => true,
         'capacity_m3' => true,
         'max_payload_kg' => true,
         'current_location' => true,
@@ -43,4 +39,9 @@ class Truck extends Entity
         'created' => true,
         'modified' => true,
     ];
+
+    protected function _setRego($value)
+    {
+        return strtoupper(trim((string)$value));
+    }
 }

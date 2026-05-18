@@ -58,7 +58,57 @@ $isUser = ($identity && (int)$role === 3);
             <?= $this->Html->link('Manage Bookings', ['plugin' => false, 'controller' => 'Bookings', 'action' => 'index'], ['class' => 'admin-sidebar-link']) ?>
             <?= $this->Html->link('Manage Inquiries', ['plugin' => false, 'controller' => 'ContactForms', 'action' => 'index'], ['class' => 'admin-sidebar-link']) ?>
             <?= $this->Html->link('Manage Invoices', ['plugin' => false, 'controller' => 'Invoices', 'action' => 'index'], ['class' => 'admin-sidebar-link']) ?>
-            <?= $this->Html->link('Resource Management', ['plugin' => false, 'controller' => 'Resources', 'action' => 'index'], ['class' => 'admin-sidebar-link']) ?>
+            <div class="admin-sidebar-group">
+                <button
+                    type="button"
+                    class="admin-sidebar-link admin-sidebar-dropdown-toggle"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#resourceManagementMenu"
+                    aria-expanded="false"
+                    aria-controls="resourceManagementMenu"
+                >
+                    <?= __('Resource Management') ?>
+                    <span class="admin-sidebar-chevron">▾</span>
+                </button>
+
+                <div class="collapse admin-sidebar-submenu" id="resourceManagementMenu">
+                    <?= $this->Html->link(
+                        __('Overview'),
+                        ['plugin' => false, 'controller' => 'Resources', 'action' => 'index'],
+                        ['class' => 'admin-sidebar-sublink']
+                    ) ?>
+
+                    <?= $this->Html->link(
+                        __('Job Requirements'),
+                        ['plugin' => false, 'controller' => 'JobResources', 'action' => 'index'],
+                        ['class' => 'admin-sidebar-sublink']
+                    ) ?>
+
+                    <?= $this->Html->link(
+                        __('Trucks'),
+                        ['plugin' => false, 'controller' => 'Trucks', 'action' => 'index'],
+                        ['class' => 'admin-sidebar-sublink']
+                    ) ?>
+
+                    <?= $this->Html->link(
+                        __('Storage Units'),
+                        ['plugin' => false, 'controller' => 'StorageUnits', 'action' => 'index'],
+                        ['class' => 'admin-sidebar-sublink']
+                    ) ?>
+
+                    <?= $this->Html->link(
+                        __('Equipment'),
+                        ['plugin' => false, 'controller' => 'Equipment', 'action' => 'index'],
+                        ['class' => 'admin-sidebar-sublink']
+                    ) ?>
+
+                    <?= $this->Html->link(
+                        __('Inventory'),
+                        ['plugin' => false, 'controller' => 'InventoryItems', 'action' => 'index'],
+                        ['class' => 'admin-sidebar-sublink']
+                    ) ?>
+                </div>
+            </div>
             <?= $this->Html->link('Job Allocation', ['plugin' => false, 'controller' => 'Jobs', 'action' => 'index'], ['class' => 'admin-sidebar-link']) ?>
             <?= $this->Html->link('Manage Users', ['plugin' => false, 'controller' => 'Users', 'action' => 'index'], ['class' => 'admin-sidebar-link']) ?>
             <?= $this->Html->link(

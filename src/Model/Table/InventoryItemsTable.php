@@ -62,9 +62,16 @@ class InventoryItemsTable extends Table
 
         $validator
             ->scalar('category')
-            ->maxLength('category', 50)
             ->requirePresence('category', 'create')
-            ->notEmptyString('category');
+            ->notEmptyString('category', 'Please select an inventory category.')
+            ->inList('category', [
+                'Boxes',
+                'Packing',
+                'Cleaning',
+                'Protective',
+                'Tools',
+                'Other',
+            ], 'Please select a valid inventory category.');
 
         $validator
             ->integer('quantity_on_hand')
@@ -81,10 +88,21 @@ class InventoryItemsTable extends Table
             ->maxLength('unit', 20)
             ->notEmptyString('unit');
 
+
         $validator
             ->scalar('storage_location')
-            ->maxLength('storage_location', 100)
-            ->allowEmptyString('storage_location');
+            ->requirePresence('storage_location', 'create')
+            ->notEmptyString('storage_location', 'Please select a storage location.')
+            ->inList('storage_location', [
+                'Warehouse Shelf A',
+                'Warehouse Shelf B',
+                'Warehouse Shelf C',
+                'Warehouse Shelf D',
+                'Clayton Depot',
+                'Springvale Depot',
+                'Moorabbin Depot',
+                'Other',
+            ], 'Please select a valid storage location.');
 
         $validator
             ->boolean('is_active')

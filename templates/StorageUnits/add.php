@@ -40,26 +40,30 @@
                     <div class="auth-card auth-card-wide">
                         <div class="auth-header">
                             <h2 class="auth-title"><?= __('Storage Unit Details') ?></h2>
-                            <p class="auth-subtitle">
-                                <?= __('Fill in the details below to add a new storage unit to the system.') ?>
-                            </p>
+
+                            <div class="d-flex justify-content-center mt-5 mb-5">
+                                <p class="auth-subtitle text-center">
+                                    <?= __('Fill in the details below to add a new storage unit to the system.') ?>
+                                </p>
+                            </div>
                         </div>
 
                         <?= $this->Form->create($storageUnit, ['class' => 'auth-form']) ?>
 
                         <div class="row g-3">
-                            <div class="col-md-6 auth-form-group">
-                                <?= $this->Form->control('unit_code', [
-                                    'label' => 'Unit Code',
-                                    'placeholder' => 'Enter unit code',
-                                    'class' => 'auth-input',
-                                ]) ?>
-                            </div>
 
                             <div class="col-md-6 auth-form-group">
                                 <?= $this->Form->control('facility_name', [
                                     'label' => 'Facility Name',
                                     'placeholder' => 'Enter facility name',
+                                    'class' => 'auth-input',
+                                ]) ?>
+                            </div>
+
+                            <div class="col-md-6 auth-form-group">
+                                <?= $this->Form->control('unit_code', [
+                                    'label' => 'Unit Code',
+                                    'placeholder' => 'Enter unit code',
                                     'class' => 'auth-input',
                                 ]) ?>
                             </div>
@@ -77,8 +81,10 @@
 
                             <div class="col-md-6 auth-form-group">
                                 <?= $this->Form->control('security_level', [
+                                    'type' => 'select',
                                     'label' => 'Security Level',
-                                    'placeholder' => 'Enter security level',
+                                    'options' => $securityLevelOptions,
+                                    'empty' => 'Select security level',
                                     'class' => 'auth-input',
                                 ]) ?>
                             </div>
