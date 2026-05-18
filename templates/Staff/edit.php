@@ -4,27 +4,64 @@
  * @var \App\Model\Entity\Staff $staff
  */
 ?>
-<div class="row">
-    <aside class="column">
-        <div class="side-nav">
-            <h4 class="heading"><?= __('Actions') ?></h4>
-            <?= $this->Form->postLink(
-                __('Delete'),
-                ['action' => 'delete', $staff->staff_id],
-                ['confirm' => __('Are you sure you want to delete {0}?', $staff->full_name), 'class' => 'side-nav-item']
-            ) ?>
-            <?= $this->Html->link(__('List Staff'), ['action' => 'index'], ['class' => 'side-nav-item']) ?>
+<div class="mh-page-soft">
+    <section class="admin-hero">
+        <div class="container">
+            <div class="admin-hero-shell">
+                <div class="admin-hero-content">
+                    <span class="admin-eyebrow"><?= __('Admin') ?></span>
+                    <h1><?= __('Edit User') ?></h1>
+                    <p class="admin-hero-text">
+                        <?= __('Update account details, credentials, and role information for this user.') ?>
+                    </p>
+                </div>
+            </div>
         </div>
-    </aside>
-    <div class="column column-80">
-        <div class="staff form content">
-            <?= $this->Form->create($staff) ?>
-            <fieldset>
-                <legend><?= __('Edit Staff') ?></legend>
-                <?= $this->Form->create($staff, ['class' => 'auth-form']) ?>
+    </section>
 
-                <div class="row g-3">
-                    <div class="col-md-6 auth-form-group">
+    <section class="admin-section">
+        <div class="container">
+            <div class="row g-4 justify-content-center">
+                <div class="col-lg-3">
+                    <div class="mh-back-btn m-1">
+                        <?= $this->Html->link(
+                            __('← Back to List'),
+                            ['action' => 'index']
+                        ) ?>
+                    </div>
+
+                    <div class="admin-table-card mt-3">
+                        <div class="admin-table-header">
+                            <h2><?= __('Actions') ?></h2>
+                            <p><?= __('Manage this user account.') ?></p>
+                        </div>
+
+                        <div class="admin-action-stack">
+                            <?= $this->Form->postLink(
+                                __('Delete Staff'),
+                                ['action' => 'delete', $staff->staff_id],
+                                [
+                                    'confirm' => __('Are you sure you want to delete {0}?', $staff->full_name),
+                                    'class' => 'admin-action-link admin-action-link-danger',
+                                ],
+                            ) ?>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-9">
+                    <div class="auth-card auth-card-wide">
+                        <div class="auth-header">
+                            <h2 class="auth-title"><?= __('Edit Staff') ?></h2>
+                            <p class="auth-subtitle">
+                                <?= __('Make changes below and save when you are done.') ?>
+                            </p>
+                        </div>
+
+                        <?= $this->Form->create($staff, ['class' => 'auth-form']) ?>
+
+                        <div class="row g-3">
+                            <div class="col-md-6 auth-form-group">
                         <?= $this->Form->control('first_name', [
                             'label' => 'First Name*',
                             'placeholder' => 'Enter first name',
@@ -64,8 +101,9 @@
                         <?= $this->Form->control('isDriver', [
                             'label' => 'Owns a valid driving license?',
                             'type' => 'checkbox',
-                            'value' => 0,
+                            'value' => 1,
                             'class' => 'auth-input',
+                            'checked' => $staff->isDriver == 1,
                         ]) ?>
                     </div>
                     <?php } ?>

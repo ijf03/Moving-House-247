@@ -53,10 +53,10 @@
             });
             window.calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: window.innerWidth < 800 ? 'timeGrid' : 'timeGridWeek',
-                duration: {days: window.innerWidth < 400 ? 1 : 3},
+                duration: {days: window.innerWidth < 600 ? 1 : 3},
                 windowResize: function (){
-                    calendar.changeView(window.innerWidth < 800 ? 'timeGrid' : 'timeGridWeek');
-                    calendar.setOption('duration', { days: window.innerWidth < 400 ? 1 : 3 });
+                    calendar.changeView(window.innerWidth < 900 ? 'timeGrid' : 'timeGridWeek');
+                    calendar.setOption('duration', { days: window.innerWidth < 600 ? 1 : 3 });
                 },
                 height: 'auto',
                 editable: true,

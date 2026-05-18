@@ -56,14 +56,6 @@
                         </div>
 
                         <div class="row g-3">
-                            <div class="col-md-6">
-                                <div class="mh-info-card">
-                                    <div>
-                                        <h3><?= __('User ID') ?></h3>
-                                        <p><?= $this->Number->format($user->user_id) ?></p>
-                                    </div>
-                                </div>
-                            </div>
 
                             <div class="col-md-6">
                                 <div class="mh-info-card">

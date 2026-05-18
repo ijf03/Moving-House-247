@@ -116,6 +116,7 @@ $isUser = ($identity && (int)$role === 3);
                 ['plugin' => 'ContentBlocks', 'controller' => 'ContentBlocks', 'action' => 'index'],
                 ['class' => 'admin-sidebar-link'],
             ) ?>
+            <?= $this->Html->link('Manage Staff', ['plugin' => false, 'controller' => 'Staff', 'action' => 'index'], ['class' => 'admin-sidebar-link']) ?>
         </nav>
 
         <div class="admin-sidebar-footer">

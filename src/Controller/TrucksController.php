@@ -37,34 +37,34 @@ class TrucksController extends AppController
         $query = $this->Trucks->find();
 
         $search = trim((string)$this->request->getQuery('search'));
-        $truckSize = $this->request->getQuery('truck_size');
+        $capacity = $this->request->getQuery('capacity_m3');
+        $status = $this->request->getQuery('status');
         $isActive = $this->request->getQuery('is_active');
 
-        $truckSizeOptions = $this->Trucks->find('list', [
-            'keyField' => 'truck_size',
+        $capacityOptions = $this->Trucks->find('list', [
+            'keyField' => 'capacity_m3',
             'valueField' => function ($truck) {
-                return ucfirst((string)$truck->truck_size);
+                return $truck->capacity_m3 . ' m³';
             },
         ])
-            ->where(['truck_size IS NOT' => null])
-            ->distinct(['truck_size'])
-            ->orderBy(['truck_size' => 'ASC'])
+            ->where(['Trucks.capacity_m3 IS NOT' => null])
+            ->distinct(['Trucks.capacity_m3'])
+            ->orderBy(['Trucks.capacity_m3' => 'ASC'])
             ->toArray();
 
         if ($search !== '') {
             $like = '%' . $search . '%';
             $query->where(function ($exp) use ($like) {
                 return $exp->or([
-                    'Trucks.name LIKE' => $like,
                     'Trucks.rego LIKE' => $like,
-                    'Trucks.truck_size LIKE' => $like,
+                    'Trucks.status LIKE' => $like,
                     'Trucks.current_location LIKE' => $like,
                 ]);
             });
         }
 
-        if (!empty($truckSize)) {
-            $query->where(['Trucks.truck_size' => $truckSize]);
+        if ($capacity !== null && $capacity !== '') {
+            $query->where(['Trucks.capacity_m3' => $capacity]);
         }
 
         if (!empty($status)) {
@@ -77,7 +77,7 @@ class TrucksController extends AppController
 
         $trucks = $this->paginate($query);
 
-        $this->set(compact('trucks', 'search', 'truckSize', 'isActive', 'truckSizeOptions'));
+        $this->set(compact('trucks', 'search', 'capacity', 'status', 'isActive', 'capacityOptions'));
     }
 
     /**
