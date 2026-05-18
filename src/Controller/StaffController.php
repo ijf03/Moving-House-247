@@ -49,10 +49,36 @@ class StaffController extends AppController
             ->contain(['UserTypes'])
             ->first();
         $isAdmin = $roleQuery->user_type_name == 'Admin';
+        if (!$isAdmin) {
+            return $this->redirect('/');
+        }
         $query = $this->Staff->find();
+        $search = trim((string)$this->request->getQuery('search'));
+        $driver = $this->request->getQuery('driver');
+
+        if (!$isAdmin) {
+            $query->where(['Users.user_id' => $userId]);
+        }
+
+        if ($search !== '') {
+            $like = '%' . $search . '%';
+            $query->where(function ($exp) use ($like) {
+                return $exp->or([
+                    'Staff.email LIKE' => $like,
+                    'Staff.phone LIKE' => $like,
+                    'Staff.first_name LIKE' => $like,
+                    'Staff.last_name LIKE' => $like,
+                ]);
+            });
+        }
+
+        if (!is_null($driver)) {
+            $query->where(['Staff.isDriver' => $driver == '1']);
+        }
+
         $staff = $this->paginate($query);
 
-        $this->set(compact('staff','isAdmin', 'userEmail'));
+        $this->set(compact('staff','isAdmin', 'userEmail', 'search', 'driver'));
     }
 
     /**
