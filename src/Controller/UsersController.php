@@ -524,6 +524,7 @@ class UsersController extends AppController
 
                 if (!$customersTable->save($customer)) {
                     $this->Flash->error('User account created, but customer profile could not be created.');
+                    $this->Users->delete($user);
                     return;
                 }
 
