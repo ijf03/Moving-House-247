@@ -94,12 +94,15 @@ class ContentBlocksTable extends Table
 
         $validator
             ->scalar('value')
-            ->allowEmptyString('value');
+            ->notEmptyString('value')
+            ->maxLength('value', 32);
+
 
         $validator
             ->scalar('previous_value')
-            ->allowEmptyString('previous_value');
+            ->notEmptyString('previous_value');
 
         return $validator;
     }
 }
+

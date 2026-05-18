@@ -197,11 +197,12 @@ $isUser = ($identity && (int)$role === 3);
                      🚚
                  <?php endif;?>
                         </span>
-                        <h3 class="mh-footer-brand mb-0">Moving House 24/7</h3>
+
+                        <h3> <?= $this ->ContentBlock->html('company-name-footer')?> </h3>
                     </div>
-                    <p class="mh-footer-text mb-0">
-                        Reliable removals &amp; storage across Victoria, any time of day.
-                    </p>
+
+                    <?= $this ->ContentBlock->html('company-description-footer')?>
+
                 </div>
 
                 <div class="col-6 col-lg-2">
@@ -248,10 +249,9 @@ $isUser = ($identity && (int)$role === 3);
                 </div>
 
                 <div class="col-lg-3">
-                    <h4 class="mh-footer-heading">Trust</h4>
-                    <p class="mh-footer-text mb-0">
-                        Fully insured, professionally trained crews. Transparent quotes, no hidden fees.
-                    </p>
+                    <?= $this->ContentBlock->text('title-footer'); ?>
+
+                    <?= $this->ContentBlock->html('description-footer'); ?>
                 </div>
             </div>
         </div>
