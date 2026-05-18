@@ -20,26 +20,80 @@
     <div class="container">
         <div class="admin-table-card">
             <div class="admin-table-header admin-table-header-split">
+
                 <div>
                     <h2><?= __('All Invoices') ?></h2>
                     <p><?= __('Review invoice totals, statuses, and linked customer bookings.') ?></p>
                 </div>
                 <?= $this->Html->link(__('New Invoice'), ['action' => 'add'], ['class' => 'btn']) ?>
             </div>
+            <div class="admin-toolbar">
+                <?= $this->Form->create(null, [
+                    'type' => 'get',
+                    'class' => 'admin-search-form',
+                    'id' => 'invoiceSearchForm'
+                ]) ?>
 
+                <div class="admin-search-group">
+                    <?= $this->Form->control('search', [
+                        'label' => false,
+                        'placeholder' => 'Search invoices, customers, status...',
+                        'class' => 'admin-search-input',
+                        'id' => 'invoiceSearchInput',
+                        'autocomplete' => 'off'
+                    ]) ?>
+
+                    <?= $this->Html->link(
+                        __('Clear Filters'),
+                        ['action' => 'index'],
+                        ['class' => 'admin-action-link']
+                    ) ?>
+                </div>
+
+                <?= $this->Form->end() ?>
+            </div>
+
+            <div class="admin-filter-card">
+                <?= $this->Form->create(null, ['type' => 'get', 'class' => 'admin-filter-form mh-form']) ?>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <?= $this->Form->control('search', [
+                            'label' => 'Search',
+                            'placeholder' => 'Customer, email, Stripe invoice ID, status...',
+                            'value' => $search ?? '',
+                        ]) ?>
+                    </div>
+
+                    <div class="col-md-6">
+                        <?= $this->Form->control('status', [
+                            'type' => 'select',
+                            'label' => 'Invoice Status',
+                            'empty' => 'All Statuses',
+                            'options' => $statusOptions ?? [],
+                            'default' => $status ?? null,
+                        ]) ?>
+                    </div>
+                </div>
+
+                <div class="admin-filter-actions">
+                    <?= $this->Form->button(__('Apply Filters'), ['class' => 'admin-primary-link admin-primary-button']) ?>
+                    <?= $this->Html->link(__('Reset'), ['action' => 'index'], ['class' => 'admin-action-link']) ?>
+                </div>
+                <?= $this->Form->end() ?>
+            </div>
 
             <div class="admin-table-wrap">
                 <table class="admin-table">
                     <thead>
                     <tr>
-                        <th><?= $this->Paginator->sort('invoice_id') ?></th>
-                        <th><?= $this->Paginator->sort('booking_id') ?></th>
-                        <th><?= $this->Paginator->sort('customer_id') ?></th>
+                        <th><?= $this->Paginator->sort('invoice_id', 'ID') ?></th>
+                        <th><?= $this->Paginator->sort('booking_id', 'Booking') ?></th>
+                        <th><?= $this->Paginator->sort('Customers.first_name', 'Customer') ?></th>
                         <th><?= __('Invoice URL') ?></th>
-                        <th><?= $this->Paginator->sort('status') ?></th>
-                        <th><?= __('Total ($)') ?></th>
-                        <th><?= $this->Paginator->sort('sent_at') ?></th>
-                        <th><?= $this->Paginator->sort('paid_at') ?></th>
+                        <th><?= $this->Paginator->sort('status', 'Status') ?></th>
+                        <th><?= $this->Paginator->sort('total_cents', 'Total ($)') ?></th>
+                        <th><?= $this->Paginator->sort('sent_at', 'Sent') ?></th>
+                        <th><?= $this->Paginator->sort('paid_at', 'Paid') ?></th>
                         <th class="actions"><?= __('Actions') ?></th>
                     </tr>
                     </thead>
@@ -133,3 +187,21 @@
         </div>
     </div>
 </section>
+<script>
+    const searchInput = document.getElementById('invoiceSearchInput');
+    const tableRows = document.querySelectorAll('.admin-table tbody tr');
+
+    searchInput.addEventListener('input', function () {
+        const searchValue = this.value.toLowerCase().trim();
+
+        tableRows.forEach(function (row) {
+            const rowText = row.textContent.toLowerCase();
+
+            if (rowText.includes(searchValue)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+</script>

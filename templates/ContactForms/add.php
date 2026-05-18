@@ -2,7 +2,7 @@
 /**
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\ContactForm $contactForm
- * @var \Cake\Collection\CollectionInterface|string[] $customers
+ * @var \Cake\Collection\CollectionInterface|array<string> $customers
  */
 
 $this->assign('title', 'Contact Us');
@@ -51,7 +51,13 @@ $identity = $this->request->getAttribute('identity');
                             <div class="mh-info-icon">📞</div>
                             <div>
                                 <h3>Call Us</h3>
-                                <p>Speak with our team for quick moving support.</p>
+                                <p>
+                                    Speak with us by calling
+                                    <?= $this->Html->link(
+                                        $this->ContentBlock->text('phone-contact-footer'),
+                                        'tel:' . str_replace(' ', '', $this->ContentBlock->text('phone-contact-footer')),
+                                    ) ?>
+                                </p>
                             </div>
                         </div>
 
@@ -59,7 +65,13 @@ $identity = $this->request->getAttribute('identity');
                             <div class="mh-info-icon">✉️</div>
                             <div>
                                 <h3>Email Us</h3>
-                                <p>Send us your enquiry and we will get back to you soon.</p>
+                                <p>Send us your enquiry through
+                                    <?= $this->Html->link(
+                                        $this->ContentBlock->text('email-contact-footer'),
+                                        'mailto:' . $this->ContentBlock->text('email-contact-footer'),
+                                        ['target' => '_blank'],
+                                    ) ?>
+                                </p>
                             </div>
                         </div>
 

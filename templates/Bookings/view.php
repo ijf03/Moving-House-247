@@ -14,26 +14,41 @@
                     <div class="mh-back-btn m-1">
                         <?= $this->Html->link(__('← Back to List'), ['action' => 'index']) ?>
                     </div>
-                    <div class="admin-table-card">
-                        <div class="admin-table-header">
-                            <h2><?= __('Actions') ?></h2>
-                        </div>
-                        <div class="admin-action-stack">
-                            <?php if ($booking->status === 'Pending'): ?>
-                                <?= $this->Form->postLink(
-                                    __('Accept'),
-                                    ['action' => 'accept', $booking->booking_id],
-                                    ['class' => 'admin-action-link admin-action-link-success']
-                                ) ?>
+                    <?php if ($booking->status === 'Pending' || ($booking->status === 'Processing' && !empty($relatedJob))) : ?>
+                        <div class="admin-table-card">
+                            <div class="admin-table-header">
+                                <h2><?= __('Actions') ?></h2>
+                            </div>
 
-                                <?= $this->Form->postLink(
-                                    __('Reject'),
-                                    ['action' => 'reject', $booking->booking_id],
-                                    ['class' => 'admin-action-link admin-action-link-danger']
-                                ) ?>
-                            <?php endif; ?>
+                            <div class="admin-action-stack">
+                                <?php if ($booking->status === 'Pending') : ?>
+                                    <?= $this->Form->postLink(
+                                        __('Accept'),
+                                        ['action' => 'accept', $booking->booking_id],
+                                        [
+                                            'class' => 'admin-action-link admin-action-link-success',
+                                            'confirm' => __('Are you sure you want to accept this booking?'),
+                                        ],
+                                    ) ?>
+
+                                    <?= $this->Form->postLink(
+                                        __('Reject'),
+                                        ['action' => 'reject', $booking->booking_id],
+                                        [
+                                            'class' => 'admin-action-link admin-action-link-danger',
+                                            'confirm' => __('Are you sure you want to reject this booking?'),
+                                        ],
+                                    ) ?>
+                                <?php elseif ($booking->status === 'Processing' && !empty($relatedJob)) : ?>
+                                    <?= $this->Html->link(
+                                        __('Go to Job Order'),
+                                        ['controller' => 'Jobs', 'action' => 'view', $relatedJob->job_id],
+                                        ['class' => 'admin-action-link'],
+                                    ) ?>
+                                <?php endif; ?>
+                            </div>
                         </div>
-                    </div>
+                    <?php endif; ?>
                 </div>
 
                 <div class="col-lg-9">
@@ -131,7 +146,7 @@
                                 <div class="mh-info-card">
                                     <div>
                                         <h3><?= __('Date') ?></h3>
-                                        <p><?= h($booking->job_date) ?></p>
+                                        <p><?= h($booking->job_date?->format('d/m/Y')) ?></p>
                                     </div>
                                 </div>
                             </div>
@@ -140,14 +155,14 @@
                                 <div class="mh-info-card">
                                     <div>
                                         <h3><?= __('Time') ?></h3>
-                                        <p><?= h($booking->job_time) ?></p>
+                                        <p><?= h($booking->job_time?->format('H:i')) ?></p>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
 
-                        <?php if (!empty($booking->message)): ?>
+                        <?php if (!empty($booking->message)) : ?>
                             <div class="admin-table-header" style="margin-top: 2rem;">
                                 <h2><?= __('Customer Message') ?></h2>
                                 <p><?= __('Additional notes submitted with the booking') ?></p>

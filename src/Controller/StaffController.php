@@ -119,7 +119,19 @@ class StaffController extends AppController
         }
         $staffEntity = $this->Staff->newEmptyEntity();
         if ($this->request->is('post')) {
-            $staffEntity = $this->Staff->patchEntity($staffEntity, $this->request->getData());
+            $staffData = $this->request->getData();
+            if ($staffData['isDriver'] == '1') {
+                if (strlen((string)$staffData['license_number']) != 9 || strlen((string)((int)$staffData['license_number'])) != 9) {
+                    $this->Flash->error('Invalid License Number');
+                    $this->set(compact('staffEntity'));
+                    return;
+                }
+                $staffData['license_number'] = hash('sha256', (string)$staffData['license_number']);
+            }
+            else{
+                $staffData['license_number'] = null;
+            }
+            $staffEntity = $this->Staff->patchEntity($staffEntity, $staffData);
             if ($this->Staff->save($staffEntity)) {
                 $this->Flash->success(__('The staff has been saved.'));
                 $usersTable = $this->fetchTable('Users');
@@ -153,9 +165,15 @@ class StaffController extends AppController
                         ->deliver('Welcome to MovingHouse24/7! \nYour credentials are: \n    '
                     .$user->email.'\n    '.$randomPwd.'\nPlease go to '. Configure::read('App.fullBaseUrl')
                             . ' to start taking jobs. You are strongly recommended to change your password after first login.');
+                    $this->redirect(['action' => 'index']);
                 }
-
-                return $this->redirect(['action' => 'index']);
+                else
+                {
+                    $this->Flash->error(__('Email already in use!'));
+                    $this->set(compact('staffEntity'));
+                    $this->Staff->delete($staffEntity);
+                    return;
+                }
             }
             $this->Flash->error(__('The staff could not be saved. Please, try again.'));
         }
@@ -313,6 +331,7 @@ class StaffController extends AppController
                 $updated_event['staff_id'] = $id;
                 $updated_event['start_datetime'] = new \DateTime($updated_event['start_datetime']);
                 $updated_event['end_datetime'] = new \DateTime($updated_event['end_datetime']);
+                $updated_event['id'] = $updated_event['id'] == 'null' ? -1 : $updated_event['id'];
                 $entry = $availabilityTable->find()
                     ->where(['availability_id'=>$updated_event['id']])
                 ->first();
@@ -343,7 +362,7 @@ class StaffController extends AppController
                 }
             }
             $this->Flash->success(__('The availability has been saved.'));
-            return $this->redirect($this->request->getRequestTarget());
+            return $this->redirect(['action' => 'availability', $id]);
         }
         $this->set(compact('staff', 'events', 'availabilityList'));
     }

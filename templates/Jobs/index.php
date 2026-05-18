@@ -30,17 +30,61 @@
                     </div>
                 </div>
 
+                <div class="admin-filter-card">
+                    <?= $this->Form->create(null, ['type' => 'get', 'class' => 'admin-filter-form mh-form']) ?>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <?= $this->Form->control('search', [
+                                'label' => 'Search',
+                                'placeholder' => 'Customer, email, address, description...',
+                                'value' => $search ?? '',
+                            ]) ?>
+                        </div>
+
+                        <div class="col-md-4">
+                            <?= $this->Form->control('status', [
+                                'type' => 'select',
+                                'label' => 'Job Status',
+                                'empty' => 'All Statuses',
+                                'options' => [
+                                    'Pending' => 'Pending',
+                                    'Processing' => 'Processing',
+                                    'Ready' => 'Ready',
+                                    'Cancelled' => 'Cancelled',
+                                    'Completed' => 'Completed',
+                                ],
+                                'default' => $status ?? null,
+                            ]) ?>
+                        </div>
+
+                        <div class="col-md-4">
+                            <?= $this->Form->control('job_type_id', [
+                                'type' => 'select',
+                                'label' => 'Service Type',
+                                'empty' => 'All Job Types',
+                                'options' => $jobTypes ?? [],
+                                'default' => $jobTypeId ?? null,
+                            ]) ?>
+                        </div>
+                    </div>
+
+                    <div class="admin-filter-actions">
+                        <?= $this->Form->button(__('Apply Filters'), ['class' => 'admin-primary-link admin-primary-button']) ?>
+                        <?= $this->Html->link(__('Reset'), ['action' => 'index'], ['class' => 'admin-action-link']) ?>
+                    </div>
+                    <?= $this->Form->end() ?>
+                </div>
+
                 <div class="admin-table-wrap">
                     <table class="admin-table">
                         <thead>
                         <tr>
-                            <th><?= $this->Paginator->sort('job_id') ?></th>
-                            <th><?= $this->Paginator->sort('job_type_id') ?></th>
-                            <th><?= $this->Paginator->sort('pickup') ?></th>
-                            <th><?= $this->Paginator->sort('dropoff') ?></th>
-                            <th><?= $this->Paginator->sort('Details') ?></th>
-                            <th><?= $this->Paginator->sort('customer') ?></th>
-                            <th><?= $this->Paginator->sort('status') ?></th>
+                            <th><?= $this->Paginator->sort('Customers.first_name', 'Customer') ?></th>
+                            <th><?= $this->Paginator->sort('JobTypes.job_type_name', 'Service Type') ?></th>
+                            <th><?= $this->Paginator->sort('pickup_address', 'Pickup') ?></th>
+                            <th><?= $this->Paginator->sort('dropoff_address', 'Dropoff') ?></th>
+                            <th><?= $this->Paginator->sort('job_date', 'Details') ?></th>
+                            <th><?= $this->Paginator->sort('status', 'Status') ?></th>
                             <th><?= __('Staff') ?></th>
                             <th class="actions"><?= __('Actions') ?></th>
                         </tr>
@@ -49,8 +93,11 @@
                         <tbody>
                         <?php foreach ($jobs as $job): ?>
                             <tr>
-                                <td><?= $this->Number->format($job->job_id) ?></td>
-
+                                <td>
+                                    <?= $job->hasValue('customer')
+                                        ? h($job->customer->first_name. ' ' . $job->customer->last_name)
+                                        : '' ?>
+                                </td>
                                 <td>
                                     <?= $job->hasValue('job_type')
                                         ? h($job->job_type->job_type_name)
@@ -59,14 +106,8 @@
 
                                 <td><?= h($job->pickup_address) ?></td>
                                 <td><?= h($job->dropoff_address) ?></td>
-                                <td><?= h($job->job_date) ?> <br> <?= h($job->job_time) ?></td>
-
-
-                                <td>
-                                    <?= $job->hasValue('customer')
-                                        ? h($job->customer->first_name. ' ' . $job->customer->last_name)
-                                        : '' ?>
-                                </td>
+                                <td><?= h($job->job_time ? date('H:i', strtotime($job->job_time)) : '')?>
+                                    <p><?= h($job->job_date?->format('d/m/Y')) ?></p></td>
 
                                 <td>
                                     <span class="admin-role-badge">

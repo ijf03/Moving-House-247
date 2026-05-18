@@ -74,6 +74,7 @@ class AppController extends Controller
             'StorageUnits',
             'Trucks',
             'InventoryItems',
+            'Staff'
         ];
 
         if (

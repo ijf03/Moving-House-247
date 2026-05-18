@@ -41,9 +41,12 @@
                     <div class="auth-card auth-card-wide">
                         <div class="auth-header">
                             <h2 class="auth-title"><?= __('New Invoice') ?></h2>
-                            <p class="auth-subtitle">
-                                <?= __('Fill in the details to generate an invoice.') ?>
-                            </p>
+
+                            <div class="d-flex justify-content-center mt-5 mb-5">
+                                <p class="auth-subtitle text-center">
+                                    <?= __('Fill in the details to generate an invoice.') ?>
+                                </p>
+                            </div>
                         </div>
 
                         <?= $this->Form->create($invoice, ['class' => 'auth-form']) ?>

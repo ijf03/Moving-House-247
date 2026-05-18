@@ -212,7 +212,7 @@ $isUser = ($identity && (int)$role === 3);
                     <?= $this->Html->link(
                         'Start Your Quote →',
                         ['controller' => 'ContactForms', 'action' => 'add'],
-                        ['class' => 'btn mh-footer-cta-btn'],
+                        ['class' => 'btn-primary-custom'],
                     ) ?>
                 </div>
             </div>

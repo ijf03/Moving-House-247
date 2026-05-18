@@ -13,20 +13,36 @@ class BookingsController extends AppController
 
         if (!$identity || $identity->get('user_type') != 1) {
             $this->Flash->error(__('You are not authorized to access this page.'));
+
             return $this->redirect(['controller' => 'Pages', 'action' => 'display', 'home']);
         }
 
         $query = $this->Bookings->find()->contain(['Customers', 'JobTypes']);
 
+        $search = trim((string)$this->request->getQuery('search'));
         $status = $this->request->getQuery('status');
         $jobTypeId = $this->request->getQuery('job_type_id');
-        $sort = $this->request->getQuery('sort');
-        $direction = $this->request->getQuery('direction');
-        $booking = $this->Bookings->newEmptyEntity();
+
         $job_types = $this->Bookings->JobTypes->find('list', [
             'keyField' => 'job_type_id',
-            'valueField' => 'job_type_name'
+            'valueField' => 'job_type_name',
         ])->all();
+
+        if ($search !== '') {
+            $like = '%' . $search . '%';
+            $query->where(function ($exp) use ($like) {
+                return $exp->or([
+                    'Bookings.pickup_address LIKE' => $like,
+                    'Bookings.dropoff_address LIKE' => $like,
+                    'Bookings.status LIKE' => $like,
+                    'Customers.first_name LIKE' => $like,
+                    'Customers.last_name LIKE' => $like,
+                    'Customers.email LIKE' => $like,
+                    'Customers.phone LIKE' => $like,
+                    'JobTypes.job_type_name LIKE' => $like,
+                ]);
+            });
+        }
 
         if (!empty($status)) {
             $query->where(['Bookings.status' => $status]);
@@ -36,13 +52,8 @@ class BookingsController extends AppController
             $query->where(['Bookings.job_type_id' => $jobTypeId]);
         }
 
-        if (!empty($sort) && in_array($sort, ['job_date'])) {
-            $direction = strtolower((string)$direction) === 'desc' ? 'DESC' : 'ASC';
-            $query->order(["Bookings.$sort" => $direction]);
-        }
-
         $bookings = $this->paginate($query);
-        $this->set(compact('bookings', 'job_types', 'status', 'jobTypeId', 'sort', 'direction'));
+        $this->set(compact('bookings', 'job_types', 'search', 'status', 'jobTypeId'));
     }
 
     public function view($id = null)
@@ -51,6 +62,7 @@ class BookingsController extends AppController
 
         if (!$identity) {
             $this->Flash->error(__('You must be logged in.'));
+
             return $this->redirect(['controller' => 'Users', 'action' => 'login']);
         }
 
@@ -65,11 +77,26 @@ class BookingsController extends AppController
 
             if (!$customer || $booking->customer_id !== $customer->customer_id) {
                 $this->Flash->error(__('You are not authorized to view this booking.'));
+
                 return $this->redirect(['action' => 'myBookings']);
             }
         }
 
-        $this->set(compact('booking'));
+        $relatedJob = null;
+
+        if ($this->isAdmin() && $booking->status === 'Processing') {
+            $jobsTable = $this->fetchTable('Jobs');
+
+            $relatedJob = $jobsTable->find()
+                ->where([
+                    'customer_id' => $booking->customer_id,
+                    'job_type_id' => $booking->job_type_id,
+                    'description' => 'Booking accepted from request #' . $booking->booking_id,
+                ])
+                ->first();
+        }
+
+        $this->set(compact('booking', 'relatedJob'));
     }
 
     public function chooseType()
@@ -87,6 +114,7 @@ class BookingsController extends AppController
 
         if (!isset($bookingTypes[$selectedJobTypeId])) {
             $this->Flash->error(__('Please select a booking type first.'));
+
             return $this->redirect(['action' => 'chooseType']);
         }
 
@@ -98,6 +126,7 @@ class BookingsController extends AppController
 
             if (!$identity) {
                 $this->Flash->error(__('You must be logged in to make a booking.'));
+
                 return $this->redirect(['controller' => 'Users', 'action' => 'login']);
             }
 
@@ -124,6 +153,7 @@ class BookingsController extends AppController
                     $this->Flash->error(__('The customer profile could not be created.'));
                     $geoapifyApiKey = Configure::read('Geoapify.apiKey');
                     $this->set(compact('booking', 'bookingTypes', 'selectedJobTypeId', 'selectedJobType', 'requiresDropoff', 'geoapifyApiKey'));
+
                     return;
                 }
             }
@@ -165,13 +195,14 @@ class BookingsController extends AppController
 
                 $geoapifyApiKey = Configure::read('Geoapify.apiKey');
                 $this->set(compact('booking', 'bookingTypes', 'selectedJobTypeId', 'selectedJobType', 'requiresDropoff', 'geoapifyApiKey'));
+
                 return;
             }
 
             $pickupAddress = $this->buildAddress(
                 (string)($data['pickup_street_address'] ?? ''),
                 (string)($data['pickup_suburb'] ?? ''),
-                (string)($data['pickup_postcode'] ?? '')
+                (string)($data['pickup_postcode'] ?? ''),
             );
 
             $dropoffAddress = null;
@@ -179,7 +210,7 @@ class BookingsController extends AppController
                 $dropoffAddress = $this->buildAddress(
                     (string)($data['dropoff_street_address'] ?? ''),
                     (string)($data['dropoff_suburb'] ?? ''),
-                    (string)($data['dropoff_postcode'] ?? '')
+                    (string)($data['dropoff_postcode'] ?? ''),
                 );
             }
 
@@ -198,6 +229,7 @@ class BookingsController extends AppController
 
             if ($this->Bookings->save($booking)) {
                 $this->Flash->success(__('The booking has been submitted.'));
+
                 return $this->redirect(['controller' => 'Pages', 'action' => 'display', 'home']);
             }
 
@@ -212,7 +244,7 @@ class BookingsController extends AppController
             'selectedJobTypeId',
             'selectedJobType',
             'requiresDropoff',
-            'geoapifyApiKey'
+            'geoapifyApiKey',
         ));
     }
 
@@ -222,6 +254,7 @@ class BookingsController extends AppController
 
         if (!$identity || $identity->get('user_type') != 1) {
             $this->Flash->error(__('You are not authorized to perform this action.'));
+
             return $this->redirect(['controller' => 'Pages', 'action' => 'display', 'home']);
         }
 
@@ -229,12 +262,14 @@ class BookingsController extends AppController
 
         if ($booking->status !== 'Pending') {
             $this->Flash->error(__('Only pending bookings can be accepted.'));
+
             return $this->redirect(['action' => 'index']);
         }
 
         $jobsTable = $this->fetchTable('Jobs');
 
         $job = $jobsTable->newEntity([
+            'booking_id' => $booking->booking_id,
             'job_type_id' => $booking->job_type_id,
             'description' => 'Booking accepted from request #' . $booking->booking_id,
             'pickup_address' => $booking->pickup_address,
@@ -250,6 +285,7 @@ class BookingsController extends AppController
             $this->Bookings->save($booking);
 
             $this->Flash->success(__('The booking has been accepted and converted to a job.'));
+
             return $this->redirect(['action' => 'index']);
         }
 
@@ -274,6 +310,7 @@ class BookingsController extends AppController
 
         if (!$identity || $identity->get('user_type') != 1) {
             $this->Flash->error(__('You are not authorized to perform this action.'));
+
             return $this->redirect(['controller' => 'Pages', 'action' => 'display', 'home']);
         }
 
@@ -281,6 +318,7 @@ class BookingsController extends AppController
 
         if ($booking->status !== 'Pending') {
             $this->Flash->error(__('Only pending bookings can be rejected.'));
+
             return $this->redirect(['action' => 'index']);
         }
 
@@ -289,7 +327,7 @@ class BookingsController extends AppController
 
         if ($this->Bookings->save($booking)) {
             $this->Flash->success(__('The booking has been rejected.'));
-        }else {
+        } else {
             $this->Flash->error(__('The booking could not be rejected.'));
         }
 
@@ -312,6 +350,7 @@ class BookingsController extends AppController
 
         if (!$customer) {
             $this->Flash->error(__('Customer profile not found.'));
+
             return $this->redirect(['controller' => 'Pages', 'action' => 'display', 'home']);
         }
 
@@ -319,7 +358,7 @@ class BookingsController extends AppController
             ->contain(['JobTypes'])
             ->where([
                 'customer_id' => $customer->customer_id,
-                'status IN' => ['Processing', 'Done']
+                'status IN' => ['Pending','Processing', 'Ready', 'Done', 'Cancelled'],
             ])
             ->all();
 
@@ -355,6 +394,7 @@ class BookingsController extends AppController
     private function isAdmin(): bool
     {
         $identity = $this->request->getAttribute('identity');
+
         return $identity && (int)$identity->get('user_type') === 1;
     }
 

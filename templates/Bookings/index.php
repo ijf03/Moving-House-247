@@ -34,8 +34,15 @@
                     <?= $this->Form->create(null, ['type' => 'get', 'class' => 'admin-filter-form mh-form']) ?>
                     <div class="row g-3">
                         <div class="col-md-4">
-                            <?=
-                            $this->Form->control('status', [
+                            <?= $this->Form->control('search', [
+                                'label' => 'Search',
+                                'placeholder' => 'Customer, email, phone, address, status...',
+                                'value' => $search ?? '',
+                            ]) ?>
+                        </div>
+
+                        <div class="col-md-4">
+                            <?= $this->Form->control('status', [
                                 'type' => 'select',
                                 'label' => 'Booking Status',
                                 'empty' => 'All Status',
@@ -46,40 +53,23 @@
                                     'Rejected' => 'Rejected',
                                 ],
                                 'default' => $status ?? null,
-                            ])
-                            ?>
+                            ]) ?>
                         </div>
 
                         <div class="col-md-4">
-                            <?=
-                            $this->Form->control('job_type_id', [
+                            <?= $this->Form->control('job_type_id', [
                                 'type' => 'select',
                                 'label' => 'Service Type',
                                 'empty' => 'All Job Types',
-                                'options' => $job_types,
+                                'options' => $job_types ?? [],
                                 'default' => $jobTypeId ?? null,
-                            ])
-                            ?>
-                        </div>
-
-                        <div class="col-md-4">
-                            <?=
-                            $this->Form->control('direction', [
-                                'type' => 'select',
-                                'label' => 'Sort by Date',
-                                'options' => [
-                                    'asc' => 'Ascending',
-                                    'desc' => 'Descending',
-                                ],
-                                'default' => $direction ?? 'asc',
-                            ])
-                            ?>
-                            <?= $this->Form->hidden('sort', ['value' => 'job_date']) ?>
+                            ]) ?>
                         </div>
                     </div>
 
                     <div class="admin-filter-actions">
                         <?= $this->Form->button(__('Apply Filters'), ['class' => 'admin-primary-link admin-primary-button']) ?>
+                        <?= $this->Html->link(__('Reset'), ['action' => 'index'], ['class' => 'admin-action-link']) ?>
                     </div>
                     <?= $this->Form->end() ?>
                 </div>
@@ -88,33 +78,44 @@
                     <table class="admin-table">
                         <thead>
                         <tr>
-                            <th><?= __('Booking ID') ?></th>
-                            <th><?= __('Customer') ?></th>
+                            <th><?= $this->Paginator->sort('booking_id', 'ID') ?></th>
+                            <th><?= $this->Paginator->sort('Customers.first_name', 'Customer') ?></th>
                             <th><?= __('Contact') ?></th>
-                            <th><?= __('Service') ?></th>
-                            <th><?= __('Pickup') ?></th>
-                            <th><?= __('Dropoff') ?></th>
-                            <th><?= __('Date') ?></th>
-                            <th><?= __('Time') ?></th>
-                            <th><?= __('Status') ?></th>
+                            <th><?= $this->Paginator->sort('JobTypes.job_type_name', 'Service') ?></th>
+                            <th><?= $this->Paginator->sort('pickup_address', 'Pickup') ?></th>
+                            <th><?= $this->Paginator->sort('dropoff_address', 'Dropoff') ?></th>
+                            <th><?= $this->Paginator->sort('job_date', 'Date') ?></th>
+                            <th><?= $this->Paginator->sort('job_time', 'Time') ?></th>
+                            <th><?= $this->Paginator->sort('status', 'Status') ?></th>
                             <th class="actions"><?= __('Actions') ?></th>
                         </tr>
                         </thead>
                         <tbody>
-                        <?php if ($bookings->isEmpty()): ?>
+                        <?php if ($bookings->isEmpty()) : ?>
                             <tr>
                                 <td colspan="11" style="text-align:center; color:gray;">
                                     No bookings found.
                                 </td>
                             </tr>
-                        <?php else: ?>
+                        <?php else : ?>
+                            <?php foreach ($bookings as $booking) : ?>
+                                <?php
+                                $customerName = trim(
+                                    ($booking->customer->first_name ?? '') . ' ' .
+                                    ($booking->customer->last_name ?? ''),
+                                );
 
-                        <?php foreach ($bookings as $booking): ?>
+                                if ($customerName === '') {
+                                    $customerName = 'this customer';
+                                }
+
+                                $serviceType = $booking->job_type->job_type_name ?? 'this service';
+                                ?>
 
                             <tr>
                                 <td><?= h($booking->booking_id) ?></td>
                                 <td><?= h(($booking->customer->first_name ?? '') . ' ' . ($booking->customer->last_name ?? '')) ?></td>
-                                <td><?= h($booking->customer->email ?? '').' '.($booking->customer->phone ?? '')?></td>
+                                <td><?= h($booking->customer->email ?? '') . ' ' . ($booking->customer->phone ?? '')?></td>
                                 <td><?= h($booking->job_type->job_type_name ?? '') ?></td>
 
 
@@ -131,23 +132,37 @@
                                     <div class="admin-action-stack">
                                         <?= $this->Html->link(__('View'), ['action' => 'view', $booking->booking_id], ['class' => 'admin-action-link']) ?>
 
-                                        <?php if ($booking->status === 'Pending'): ?>
+                                        <?php if ($booking->status === 'Pending') : ?>
                                             <?= $this->Form->postLink(
                                                 __('Accept'),
                                                 ['action' => 'accept', $booking->booking_id],
-                                                ['class' => 'admin-action-link admin-action-link-success']
+                                                [
+                                                    'class' => 'admin-action-link admin-action-link-success',
+                                                    'confirm' => __(
+                                                        'Are you sure you want to accept the booking for {0} ({1})?',
+                                                        $customerName,
+                                                        $serviceType,
+                                                    ),
+                                                ],
                                             ) ?>
 
                                             <?= $this->Form->postLink(
                                                 __('Reject'),
                                                 ['action' => 'reject', $booking->booking_id],
-                                                ['class' => 'admin-action-link admin-action-link-danger']
+                                                [
+                                                    'class' => 'admin-action-link admin-action-link-danger',
+                                                    'confirm' => __(
+                                                        'Are you sure you want to reject the booking for {0} ({1})?',
+                                                        $customerName,
+                                                        $serviceType,
+                                                    ),
+                                                ],
                                             ) ?>
                                         <?php endif; ?>
                                     </div>
                                 </td>
                             </tr>
-                        <?php endforeach; ?>
+                            <?php endforeach; ?>
                         <?php endif; ?>
                         </tbody>
                     </table>

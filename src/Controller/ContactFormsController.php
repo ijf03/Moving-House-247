@@ -49,12 +49,38 @@ class ContactFormsController extends AppController
         $this->requireAdmin();
 
         $query = $this->ContactForms->find()
-            ->contain(['Customers'])
-            ->orderBy(['ContactForms.created' => 'DESC']);
+            ->contain(['Customers']);
+
+        $search = trim((string)$this->request->getQuery('search'));
+        $status = $this->request->getQuery('status');
+
+        if ($search !== '') {
+            $like = '%' . $search . '%';
+
+            $query->where(function ($exp) use ($like) {
+                return $exp->or([
+                    'ContactForms.subject LIKE' => $like,
+                    'ContactForms.message LIKE' => $like,
+                    'ContactForms.status LIKE' => $like,
+                    'Customers.first_name LIKE' => $like,
+                    'Customers.last_name LIKE' => $like,
+                    'Customers.email LIKE' => $like,
+                    'Customers.phone LIKE' => $like,
+                ]);
+            });
+        }
+
+        if (!empty($status)) {
+            $query->where(['ContactForms.status' => $status]);
+        }
+
+        if (!$this->request->getQuery('sort')) {
+            $query->orderBy(['ContactForms.created' => 'DESC']);
+        }
 
         $contactForms = $this->paginate($query);
 
-        $this->set(compact('contactForms'));
+        $this->set(compact('contactForms', 'search', 'status'));
     }
 
     public function view($id = null)

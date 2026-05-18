@@ -36,21 +36,46 @@
                     ) ?>
                 </div>
 
+                <div class="admin-filter-card">
+                    <?= $this->Form->create(null, ['type' => 'get', 'class' => 'admin-filter-form mh-form']) ?>
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <?= $this->Form->control('search', [
+                                'label' => 'Search',
+                                'placeholder' => 'Name, rego, location...',
+                                'value' => $search ?? '',
+                            ]) ?>
+                        </div>
+
+                        <div class="col-md-3">
+                            <?= $this->Form->control('is_active', [
+                                'type' => 'select',
+                                'label' => 'Active',
+                                'empty' => 'All',
+                                'options' => [1 => 'Active', 0 => 'Inactive'],
+                                'default' => $isActive ?? null,
+                            ]) ?>
+                        </div>
+                    </div>
+
+                    <div class="admin-filter-actions">
+                        <?= $this->Form->button(__('Apply Filters'), ['class' => 'admin-primary-link admin-primary-button']) ?>
+                        <?= $this->Html->link(__('Reset'), ['action' => 'index'], ['class' => 'admin-action-link']) ?>
+                    </div>
+                    <?= $this->Form->end() ?>
+                </div>
+
                 <div class="admin-table-wrap">
                     <table class="admin-table">
                         <thead>
                         <tr>
                             <th><?= $this->Paginator->sort('truck_id', 'ID') ?></th>
-                            <th><?= $this->Paginator->sort('name', 'Name') ?></th>
-                            <th><?= $this->Paginator->sort('rego', 'Rego') ?></th>
-                            <th><?= $this->Paginator->sort('truck_size', 'Size') ?></th>
-                            <th><?= $this->Paginator->sort('capacity_m3', 'Capacity m³') ?></th>
-                            <th><?= $this->Paginator->sort('max_payload_kg', 'Payload kg') ?></th>
+                            <th><?= $this->Paginator->sort('rego', 'Registration') ?></th>
+                            <th><?= $this->Paginator->sort('capacity_m3', 'Capacity (m³)') ?></th>
+                            <th><?= $this->Paginator->sort('max_payload_kg', 'Payload (kg)') ?></th>
                             <th><?= $this->Paginator->sort('current_location', 'Location') ?></th>
                             <th><?= $this->Paginator->sort('next_service_date', 'Next Service') ?></th>
                             <th><?= $this->Paginator->sort('is_active', 'Active') ?></th>
-                            <th><?= $this->Paginator->sort('created', 'Created') ?></th>
-                            <th><?= $this->Paginator->sort('modified', 'Modified') ?></th>
                             <th class="actions"><?= __('Actions') ?></th>
                         </tr>
                         </thead>
@@ -59,9 +84,7 @@
                         <?php foreach ($trucks as $truck): ?>
                             <tr>
                                 <td><?= $this->Number->format($truck->truck_id) ?></td>
-                                <td><?= h($truck->name) ?></td>
                                 <td><?= h($truck->rego) ?></td>
-                                <td><?= h($truck->truck_size) ?></td>
                                 <td>
                                     <?= $truck->capacity_m3 === null ? '' : $this->Number->format($truck->capacity_m3) ?>
                                 </td>
@@ -75,8 +98,6 @@
                                             <?= $truck->is_active ? __('Active') : __('Inactive') ?>
                                         </span>
                                 </td>
-                                <td><?= h($truck->created) ?></td>
-                                <td><?= h($truck->modified) ?></td>
                                 <td class="actions">
                                     <div class="admin-action-stack">
                                         <?= $this->Html->link(

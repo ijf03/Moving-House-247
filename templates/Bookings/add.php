@@ -15,8 +15,8 @@
                 <div class="booking-hero-shell">
                     <div class="booking-hero-content">
                         <p class="booking-eyebrow">Moving House 24/7</p>
-                        <h1><?= __('Book a {0}', h($selectedJobType['name'])) ?></h1>
-                        <p class="booking-hero-text">
+                        <h1 id="booking-title"><?= __('Book a {0}', h($selectedJobType['name'])) ?></h1>
+                        <p id="booking-description" class="booking-hero-text">
                             <?= h($selectedJobType['description']) ?>
                         </p>
                     </div>
@@ -32,8 +32,8 @@
                             <div class="mh-info-card">
                                 <div class="mh-info-icon">📦</div>
                                 <div>
-                                    <h3><?= h($selectedJobType['name']) ?></h3>
-                                    <p><?= h($selectedJobType['description']) ?></p>
+                                    <h3 id="selected-service-name"><?= h($selectedJobType['name']) ?></h3>
+                                    <p id="selected-service-description"><?= h($selectedJobType['description']) ?></p>
                                 </div>
                             </div>
 
@@ -41,12 +41,20 @@
                                 <div class="mh-info-icon">↩️</div>
                                 <div>
                                     <h3><?= __('Need a different service?') ?></h3>
-                                    <p>
-                                        <?= $this->Html->link(
-                                            __('Go back and choose another booking type'),
-                                            ['action' => 'chooseType']
-                                        ) ?>
-                                    </p>
+
+                                    <div class="booking-service-switcher">
+                                        <?php foreach ($bookingTypes as $typeId => $type): ?>
+                                            <p>
+                                                <a
+                                                    href="#"
+                                                    class="booking-service-btn"
+                                                    data-job-type-id="<?= h($typeId) ?>"
+                                                >
+                                                    <?= __('Switch to {0}', h($type['name'])) ?>
+                                                </a>
+                                            </p>
+                                        <?php endforeach; ?>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -59,8 +67,14 @@
                                 <p><?= __('Complete the form below to submit your booking request.') ?></p>
                             </div>
 
-                            <?= $this->Form->create($booking, ['class' => 'booking-form']) ?>
-                            <?= $this->Form->hidden('job_type_id', ['value' => $selectedJobTypeId]) ?>
+                            <?= $this->Form->create($booking, [
+                                'class' => 'booking-form',
+                                'novalidate' => true
+                            ]) ?>
+                            <?= $this->Form->hidden('job_type_id', [
+                                'id' => 'job-type-id',
+                                'value' => $selectedJobTypeId
+                            ]) ?>
 
                             <div class="row g-3">
                                 <div class="col-md-6">
@@ -122,44 +136,42 @@
                                     ]) ?>
                                 </div>
 
-                                <?php if ($requiresDropoff): ?>
-                                    <div class="col-12">
-                                        <?= $this->Form->control('dropoff_street_address', [
-                                            'id' => 'dropoff-street-address',
-                                            'autocomplete' => 'off',
-                                            'label' => $selectedJobType['dropoff_label'] . ' - Street Address',
-                                            'placeholder' => 'e.g. 456 Collins Street',
-                                            'class' => 'booking-input',
-                                            'templates' => [
-                                                'inputContainer' => '<div class="input booking-form-group {{type}}{{required}}">{{content}}</div>',
-                                            ],
-                                        ]) ?>
-                                    </div>
+                                <div class="col-12 dropoff-field">
+                                    <?= $this->Form->control('dropoff_street_address', [
+                                        'id' => 'dropoff-street-address',
+                                        'autocomplete' => 'off',
+                                        'label' => $selectedJobType['dropoff_label'] . ' - Street Address',
+                                        'placeholder' => 'e.g. 456 Collins Street',
+                                        'class' => 'booking-input',
+                                        'templates' => [
+                                            'inputContainer' => '<div class="input booking-form-group {{type}}{{required}}">{{content}}</div>',
+                                        ],
+                                    ]) ?>
+                                </div>
 
-                                    <div class="col-md-6">
-                                        <?= $this->Form->control('dropoff_suburb', [
-                                            'label' => $selectedJobType['dropoff_label'] . ' - Suburb',
-                                            'placeholder' => 'e.g. Richmond',
-                                            'class' => 'booking-input',
-                                            'templates' => [
-                                                'inputContainer' => '<div class="input booking-form-group {{type}}{{required}}">{{content}}</div>',
-                                            ],
-                                        ]) ?>
-                                    </div>
+                                <div class="col-md-6 dropoff-field">
+                                    <?= $this->Form->control('dropoff_suburb', [
+                                        'label' => $selectedJobType['dropoff_label'] . ' - Suburb',
+                                        'placeholder' => 'e.g. Richmond',
+                                        'class' => 'booking-input',
+                                        'templates' => [
+                                            'inputContainer' => '<div class="input booking-form-group {{type}}{{required}}">{{content}}</div>',
+                                        ],
+                                    ]) ?>
+                                </div>
 
-                                    <div class="col-md-6">
-                                        <?= $this->Form->control('dropoff_postcode', [
-                                            'label' => $selectedJobType['dropoff_label'] . ' - Postcode',
-                                            'placeholder' => 'e.g. 3121',
-                                            'pattern' => '[0-9]{4}',
-                                            'inputmode' => 'numeric',
-                                            'class' => 'booking-input',
-                                            'templates' => [
-                                                'inputContainer' => '<div class="input booking-form-group {{type}}{{required}}">{{content}}</div>',
-                                            ],
-                                        ]) ?>
-                                    </div>
-                                <?php endif; ?>
+                                <div class="col-md-6 dropoff-field">
+                                    <?= $this->Form->control('dropoff_postcode', [
+                                        'label' => $selectedJobType['dropoff_label'] . ' - Postcode',
+                                        'placeholder' => 'e.g. 3121',
+                                        'pattern' => '[0-9]{4}',
+                                        'inputmode' => 'numeric',
+                                        'class' => 'booking-input',
+                                        'templates' => [
+                                            'inputContainer' => '<div class="input booking-form-group {{type}}{{required}}">{{content}}</div>',
+                                        ],
+                                    ]) ?>
+                                </div>
 
                                 <div class="col-12">
                                     <?= $this->Form->control('message', [
@@ -185,28 +197,19 @@
         </section>
     </div>
 
+<script>
+    window.bookingFormConfig = {
+        selectedJobTypeId: <?= json_encode($selectedJobTypeId) ?>,
+        bookingTypes: <?= json_encode($bookingTypes) ?>
+    };
+</script>
+
+<?= $this->Html->script('booking-form-switcher', ['block' => true]) ?>
+<?= $this->Html->script('booking-form-validation', ['block' => true]) ?>
+
 <?php if (!empty($geoapifyApiKey)): ?>
     <style>
-        .address-suggestions {
-            position: relative;
-            z-index: 1000;
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            margin-top: 4px;
-            max-height: 220px;
-            overflow-y: auto;
-        }
 
-        .address-suggestion-item {
-            padding: 10px;
-            cursor: pointer;
-            border-bottom: 1px solid #eee;
-        }
-
-        .address-suggestion-item:hover {
-            background: #f5f5f5;
-        }
     </style>
 
     <script>
@@ -280,12 +283,20 @@
                                             result.district ||
                                             '';
 
+                                        streetInput.value = result.address_line1 || result.formatted;
+                                        streetInput.dispatchEvent(new Event('input', { bubbles: true }));
+                                        streetInput.dispatchEvent(new Event('change', { bubbles: true }));
+
                                         if (suburbInput) {
                                             suburbInput.value = suburb;
+                                            suburbInput.dispatchEvent(new Event('input', { bubbles: true }));
+                                            suburbInput.dispatchEvent(new Event('change', { bubbles: true }));
                                         }
 
                                         if (postcodeInput) {
                                             postcodeInput.value = result.postcode || '';
+                                            postcodeInput.dispatchEvent(new Event('input', { bubbles: true }));
+                                            postcodeInput.dispatchEvent(new Event('change', { bubbles: true }));
                                         }
 
                                         suggestionsBox.innerHTML = '';

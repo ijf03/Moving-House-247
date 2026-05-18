@@ -68,7 +68,7 @@
                                     <td><?= h($booking->job_type?->job_type_name ?? '') ?></td>
                                     <td><?= h($booking->pickup_address) ?></td>
                                     <td><?= h($booking->dropoff_address) ?></td>
-                                    <td><?= h($booking->job_date?->format('Y-m-d')) ?></td>
+                                    <td><?= h($booking->job_date?->format('d-m-Y')) ?></td>
                                     <td><?= h($booking->job_time?->format('H:i')) ?></td>
                                     <td>
                                         <span class="admin-status-badge admin-status-replied">
@@ -82,6 +82,7 @@
                                                 ['action' => 'view', $booking->booking_id],
                                                 ['class' => 'admin-action-link'],
                                             ) ?>
+
                                         </div>
                                     </td>
                                 </tr>
