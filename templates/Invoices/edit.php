@@ -120,7 +120,8 @@
                                     'type' => 'date',
                                     'label' => 'Due Date',
                                     'class' => 'auth-input',
-                                    'min' => date('Y-m-d'),
+                                    'min' => date('d-m-Y'),
+                                    'value' => $invoice->due_date,
                                 ]) ?>
                             </div>
                         </div>

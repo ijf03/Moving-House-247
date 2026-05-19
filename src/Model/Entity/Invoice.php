@@ -20,6 +20,7 @@ use Cake\ORM\Entity;
  * @property \Cake\I18n\DateTime|null $paid_at
  * @property \Cake\I18n\DateTime $created
  * @property \Cake\I18n\DateTime $modified
+ * @property \Cake\I18n\Date $due_date
  *
  * @property \App\Model\Entity\Booking $booking
  * @property \App\Model\Entity\Customer $customer
@@ -50,5 +51,6 @@ class Invoice extends Entity
         'booking' => true,
         'customer' => true,
         'invoice_items' => true,
+        'due_date' => true,
     ];
 }
