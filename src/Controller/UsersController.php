@@ -140,10 +140,12 @@ class UsersController extends AppController
             if ($result->isValid()) {
                 $user = $result->getData();
                 $redirect = $this->Authentication->getLoginRedirect();
+                $user = $this->Users->get($user['user_id'],contain: ['UserTypes']);
 
-                // Admin
-                if ((int)$user->user_type === 1) {
+                if ($user->user_type_name === "Admin") {
                     return $this->redirect($redirect ?: ['controller' => 'Admin', 'action' => 'index']);
+                }elseif ($user->user_type_name === "Staff") {
+                    return $this->redirect($redirect ?: ['controller' => 'Jobs', 'action' => 'available']);
                 }
 
                 return $this->redirect($redirect ?: '/');
