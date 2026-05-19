@@ -31,7 +31,7 @@
                         <div class="admin-action-stack">
                             <?= $this->Html->link(__('Back to Invoices'), ['action' => 'index'], ['class' => 'admin-action-link']) ?>
                             <?= $this->Html->link(
-                                __('Back to Booking'),
+                                __('View Booking'),
                                 ['controller' => 'Bookings', 'action' => 'view', $invoice->booking_id],
                                 ['class' => 'admin-action-link']
                             ) ?>

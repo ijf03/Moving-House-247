@@ -24,6 +24,9 @@
         <div class="container">
             <div class="row g-4 align-items-start">
                 <div class="col-lg-3">
+                    <div class="mh-back-btn m-1">
+                        <?= $this->Html->link(__('← Back to List'), ['action' => 'index']) ?>
+                    </div>
                     <div class="mh-form-card">
                         <div class="admin-table-header">
                             <h2><?= __('Actions') ?></h2>
@@ -37,12 +40,6 @@
                                     'confirm' => __('Are you sure you want to delete # {0}?', $contactForm->contact_form_id),
                                     'class' => 'admin-action-link admin-action-link-danger'
                                 ]
-                            ) ?>
-
-                            <?= $this->Html->link(
-                                __('List Contact Forms'),
-                                ['action' => 'index'],
-                                ['class' => 'admin-action-link']
                             ) ?>
                         </div>
                     </div>
