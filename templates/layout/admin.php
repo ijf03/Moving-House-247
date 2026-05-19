@@ -41,7 +41,7 @@ $isUser = ($identity && (int)$role === 3);
         <div class="admin-sidebar-top">
             <div class="admin-sidebar-brand-row">
                 <a class="admin-sidebar-brand"
-                   href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'index']) ?>">
+                   href="<?= $this->Url->build(['plugin' => false,'controller' => 'Users', 'action' => 'index']) ?>">
                     <span class="admin-sidebar-brand-text">
                         Moving House <span class="mh-accent">24/7</span>
                     </span>
