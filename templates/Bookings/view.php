@@ -12,9 +12,9 @@
 
                 <div class="col-lg-3">
                     <div class="mh-back-btn m-1">
-                        <?= $this->Html->link(__('← Back to List'), ['action' => 'index']) ?>
+                        <?= $this->Html->link(__('← Back to List'), ['action' => $isAdmin? 'index' : 'myBookings']) ?>
                     </div>
-                    <?php if ($booking->status === 'Pending' || ($booking->status === 'Processing' && !empty($relatedJob))) : ?>
+                    <?php if ($isAdmin && ($booking->status === 'Pending' || ($booking->status === 'Processing' && !empty($relatedJob)))) : ?>
                         <div class="admin-table-card">
                             <div class="admin-table-header">
                                 <h2><?= __('Actions') ?></h2>

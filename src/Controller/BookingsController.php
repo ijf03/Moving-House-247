@@ -59,6 +59,7 @@ class BookingsController extends AppController
     public function view($id = null)
     {
         $identity = $this->request->getAttribute('identity');
+        $isAdmin = $this->isAdmin();
 
         if (!$identity) {
             $this->Flash->error(__('You must be logged in.'));
@@ -96,7 +97,7 @@ class BookingsController extends AppController
                 ->first();
         }
 
-        $this->set(compact('booking', 'relatedJob'));
+        $this->set(compact('booking', 'relatedJob', 'isAdmin'));
     }
 
     public function chooseType()
@@ -394,8 +395,10 @@ class BookingsController extends AppController
     private function isAdmin(): bool
     {
         $identity = $this->request->getAttribute('identity');
+        $userTable = $this->fetchTable('Users');
+        $user = $userTable->get($identity->get('user_id'), contain:['UserTypes']);
 
-        return $identity && (int)$identity->get('user_type') === 1;
+        return $identity && $user->user_type_name == "Admin";
     }
 
     private function bookingTypeConfig(): array
