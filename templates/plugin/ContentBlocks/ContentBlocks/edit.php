@@ -190,28 +190,77 @@ $this->Html->css('ContentBlocks.content-blocks', ['block' => true]);
                         </div>
                         <div id="cmsConfirmModal" class="cms-modal-overlay" style="display: none;">
                             <div class="cms-modal-box">
-                                <h3><?= __('Confirm Content Block Update') ?></h3>
+                                <div id="cmsConfirmContent">
+                                    <h3><?= __('Confirm Content Block Update') ?></h3>
 
-                                <p>
-                                    <?= __('Are you sure you want to update this content block?') ?>
-                                </p>
+                                    <p>
+                                        <?= __('Are you sure you want to update this content block?') ?>
+                                    </p>
 
-                                <div class="cms-modal-actions">
-                                    <button
-                                        type="button"
-                                        class="btn btn-outline-primary"
-                                        onclick="closeCmsConfirmModal()"
-                                    >
-                                        <?= __('Dismiss') ?>
-                                    </button>
+                                    <div class="cms-modal-actions">
+                                        <button
+                                            type="button"
+                                            class="btn btn-outline-primary"
+                                            onclick="closeCmsConfirmModal()"
+                                        >
+                                            <?= __('Dismiss') ?>
+                                        </button>
 
-                                    <button
-                                        type="button"
-                                        class="btn btn-primary"
-                                        onclick="submitCmsForm()"
-                                    >
-                                        <?= __('Confirm') ?>
-                                    </button>
+                                        <button
+                                            type="button"
+                                            class="btn btn-primary"
+                                            onclick="submitCmsForm()"
+                                        >
+                                            <?= __('Confirm') ?>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div id="cmsSuccessContent" style="display: none;">
+                                    <div class="cms-success-icon">✓</div>
+
+                                    <h3><?= __('Your changes have been saved!') ?></h3>
+
+                                    <p>
+                                        <?= __('Changes have been made in') ?>
+                                        <strong><?= h($contentBlock->label) ?></strong>.
+                                        <br>
+                                        <?= __('Go view them now!') ?>
+                                    </p>
+
+                                    <div class="cms-modal-actions">
+                                        <?= $this->Html->link(
+                                            __('Back to Manager'),
+                                            ['action' => 'index'],
+                                            ['class' => 'btn btn-outline-primary']
+                                        ) ?>
+
+                                        <?php
+                                        $viewPageLink = '/';
+
+                                        if (
+                                            str_contains(strtolower($contentBlock->slug), 'contact') ||
+                                            str_contains(strtolower($contentBlock->parent), 'contact')
+                                        ) {
+                                            $viewPageLink = '/contact-forms/add';
+                                        }
+
+                                        if (
+                                            str_contains(strtolower($contentBlock->slug), 'home') ||
+                                            str_contains(strtolower($contentBlock->parent), 'home')
+                                        ) {
+                                            $viewPageLink = '/';
+                                        }
+                                        ?>
+
+                                        <a
+                                            href="<?= $viewPageLink ?>"
+                                            class="btn btn-primary"
+                                            id="viewUpdatedPageBtn"
+                                        >
+                                            <?= __('View Page') ?>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -219,14 +268,41 @@ $this->Html->css('ContentBlocks.content-blocks', ['block' => true]);
                         <script>
                             function openCmsConfirmModal() {
                                 document.getElementById('cmsConfirmModal').style.display = 'flex';
+
+                                document.getElementById('cmsConfirmContent').style.display = 'block';
+                                document.getElementById('cmsSuccessContent').style.display = 'none';
                             }
 
                             function closeCmsConfirmModal() {
                                 document.getElementById('cmsConfirmModal').style.display = 'none';
                             }
 
-                            function submitCmsForm() {
-                                document.getElementById('cmsEditForm').requestSubmit();
+                            async function submitCmsForm() {
+
+                                const form = document.getElementById('cmsEditForm');
+
+                                const formData = new FormData(form);
+
+                                try {
+
+                                    const response = await fetch(form.action, {
+                                        method: 'POST',
+                                        body: formData
+                                    });
+
+                                    if (response.ok) {
+
+                                        document.getElementById('cmsConfirmContent').style.display = 'none';
+
+                                        document.getElementById('cmsSuccessContent').style.display = 'block';
+
+                                    } else {
+                                        alert('Failed to save content block.');
+                                    }
+
+                                } catch (error) {
+                                    alert('An error occurred while saving.');
+                                }
                             }
                         </script>
                         <?= $this->Form->end() ?>
