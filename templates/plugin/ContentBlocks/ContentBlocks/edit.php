@@ -121,10 +121,10 @@ $this->Html->css('ContentBlocks.content-blocks', ['block' => true]);
                                 $maxLength = 128;
                             } elseif ($contentBlock->slug === 'service-description-footer') {
                                 $maxLength = 128;
-                            } elseif ($contentBlock->slug === 'phone-contact-footer') {
+                            } elseif ($contentBlock->slug === 'phone-contact') {
                                 $isPhone = true;
                                 $maxLength = 10;
-                            } elseif ($contentBlock->slug === 'email-contact-footer') {
+                            } elseif ($contentBlock->slug === 'email-contact') {
                                 $isEmail = true;
                                 $maxLength = 100;
                             }

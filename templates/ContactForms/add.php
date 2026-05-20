@@ -54,8 +54,8 @@ $identity = $this->request->getAttribute('identity');
                                 <p>
                                     Speak with us by calling
                                     <?= $this->Html->link(
-                                        $this->ContentBlock->text('phone-contact-footer'),
-                                        'tel:' . str_replace(' ', '', $this->ContentBlock->text('phone-contact-footer')),
+                                        $this->ContentBlock->text('phone-contact'),
+                                        'tel:' . str_replace(' ', '', $this->ContentBlock->text('phone-contact')),
                                     ) ?>
                                 </p>
                             </div>
@@ -67,8 +67,8 @@ $identity = $this->request->getAttribute('identity');
                                 <h3>Email Us</h3>
                                 <p>Send us your enquiry through
                                     <?= $this->Html->link(
-                                        $this->ContentBlock->text('email-contact-footer'),
-                                        'mailto:' . $this->ContentBlock->text('email-contact-footer'),
+                                        $this->ContentBlock->text('email-contact'),
+                                        'mailto:' . $this->ContentBlock->text('email-contact'),
                                         ['target' => '_blank'],
                                     ) ?>
                                 </p>

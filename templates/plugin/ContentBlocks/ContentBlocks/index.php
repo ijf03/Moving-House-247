@@ -35,16 +35,12 @@ $slugify = function ($text) {
                 <div class="admin-table-card mb-4">
                     <div class="admin-table-header">
                         <h2><?= __('Quick Links') ?></h2>
-                        <p><?= __('Jump to the home page and a content block category.') ?></p>
+                        <p><?= __('Jumps to a content block category.') ?></p>
                     </div>
 
+
                     <div class="p-3">
-                        <div class="d-flex gap-2 flex-wrap">
-                            <?= $this->Html->link(
-                                'Home',
-                                ['controller' => 'Pages', 'action' => 'display', 'home', 'plugin' => false],
-                                ['class' => 'nav-link mh-nav-link btn'],
-                            ) ?>
+                        <div class="d-flex gap-5 flex-wrap">
                             <?php foreach ($contentBlocksGrouped as $parent => $blocks) : ?>
 
                                 <?= $this->Html->link(
