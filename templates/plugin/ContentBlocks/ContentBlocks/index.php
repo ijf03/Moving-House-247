@@ -108,9 +108,9 @@ $slugify = function ($text) {
                                                     <td class="actions">
                                                         <div class="admin-action-stack">
                                                             <?= $this->Html->link(
-                                                                __('Edit'),
+                                                                ' &nbsp;'.__('Edit'),
                                                                 ['action' => 'edit', $contentBlock->id],
-                                                                ['class' => 'admin-action-link']
+                                                                ['class' => 'admin-action-link', 'escape'=>false]
                                                             ) ?>
 
                                                             <?php if (!empty($contentBlock->previous_value)) : ?>

@@ -128,9 +128,9 @@
                                 <td class="actions">
                                     <div class="admin-action-stack">
                                         <?= $this->Html->link(
-                                            __('View'),
+                                            ' &nbsp;'.__('View'),
                                             ['action' => 'view', $job->job_id],
-                                            ['class' => 'admin-action-link']
+                                            ['class' => 'admin-action-link','escape'=>false]
                                         ) ?>
 
                                         <?php if ($job->status === 'Pending'): ?>
