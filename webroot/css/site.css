@@ -2013,3 +2013,40 @@ body.mh-site {
         gap: 0.4rem;
     }
 }
+
+.cms-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.cms-modal-box {
+    width: 100%;
+    max-width: 460px;
+    background: #fff;
+    border-radius: 24px;
+    padding: 2rem;
+    text-align: center;
+    box-shadow: 0 20px 45px rgba(0,0,0,0.18);
+}
+
+.cms-modal-box h3 {
+    margin-bottom: 0.75rem;
+}
+
+.cms-modal-box p {
+    margin-bottom: 1.5rem;
+    color: #4e637d;
+}
+
+.cms-modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}

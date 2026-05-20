@@ -57,7 +57,10 @@ $this->Html->css('ContentBlocks.content-blocks', ['block' => true]);
                     </div>
 
                     <div class="p-3">
-                        <?= $this->Form->create($contentBlock, ['type' => 'file']) ?>
+                        <?= $this->Form->create($contentBlock, [
+                            'type' => 'file',
+                            'id' => 'cmsEditForm'
+                        ]) ?>
 
                         <?php
                         if ($contentBlock->type === 'text') {
@@ -174,7 +177,9 @@ $this->Html->css('ContentBlocks.content-blocks', ['block' => true]);
 
                         <div class="d-flex gap-2 flex-wrap mt-4">
                             <?= $this->Form->button(__('Save'), [
-                                'class' => 'btn btn-primary'
+                                'type' => 'button',
+                                'class' => 'btn btn-primary',
+                                'onclick' => 'openCmsConfirmModal()'
                             ]) ?>
 
                             <?= $this->Html->link(
@@ -183,7 +188,47 @@ $this->Html->css('ContentBlocks.content-blocks', ['block' => true]);
                                 ['class' => 'btn btn-outline-primary']
                             ) ?>
                         </div>
+                        <div id="cmsConfirmModal" class="cms-modal-overlay" style="display: none;">
+                            <div class="cms-modal-box">
+                                <h3><?= __('Confirm Content Block Update') ?></h3>
 
+                                <p>
+                                    <?= __('Are you sure you want to update this content block?') ?>
+                                </p>
+
+                                <div class="cms-modal-actions">
+                                    <button
+                                        type="button"
+                                        class="btn btn-outline-primary"
+                                        onclick="closeCmsConfirmModal()"
+                                    >
+                                        <?= __('Dismiss') ?>
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        class="btn btn-primary"
+                                        onclick="submitCmsForm()"
+                                    >
+                                        <?= __('Confirm') ?>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <script>
+                            function openCmsConfirmModal() {
+                                document.getElementById('cmsConfirmModal').style.display = 'flex';
+                            }
+
+                            function closeCmsConfirmModal() {
+                                document.getElementById('cmsConfirmModal').style.display = 'none';
+                            }
+
+                            function submitCmsForm() {
+                                document.getElementById('cmsEditForm').requestSubmit();
+                            }
+                        </script>
                         <?= $this->Form->end() ?>
                     </div>
                 </div>
