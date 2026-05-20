@@ -17,6 +17,42 @@ $identity = $this->request->getAttribute('identity');
 $role = $identity ? $identity->get('user_type') : null;
 $isAdmin = ($identity && (int)$role === 1);
 $isUser = ($identity && (int)$role === 3);
+
+$currentPlugin = $this->request->getParam('plugin');
+$currentController = $this->request->getParam('controller');
+$currentAction = $this->request->getParam('action');
+
+$isActive = function (
+    ?string $plugin,
+    array|string $controllers,
+    ?array $actions = null
+) use ($currentPlugin, $currentController, $currentAction) {
+
+    $controllers = (array)$controllers;
+
+    $controllerMatch = in_array($currentController, $controllers, true);
+
+    $pluginMatch = $currentPlugin === $plugin;
+
+    $actionMatch = $actions === null
+        || in_array($currentAction, $actions, true);
+
+    return ($pluginMatch && $controllerMatch && $actionMatch)
+        ? ' admin-sidebar-link-active'
+        : '';
+};
+
+$isResourceActive = $isActive(
+    null,
+    [
+        'Resources',
+        'JobResources',
+        'StorageUnits',
+        'Trucks',
+        'Equipment',
+        'InventoryItems'
+    ]
+);
 ?>
 <!DOCTYPE html>
 <html>
@@ -54,69 +90,69 @@ $isUser = ($identity && (int)$role === 3);
         </div>
 
         <nav class="admin-sidebar-nav">
-            <?= $this->Html->link('Dashboard', ['plugin' => false, 'controller' => 'Admin', 'action' => 'index'], ['class' => 'admin-sidebar-link']) ?>
-            <?= $this->Html->link('Manage Bookings', ['plugin' => false, 'controller' => 'Bookings', 'action' => 'index'], ['class' => 'admin-sidebar-link']) ?>
-            <?= $this->Html->link('Manage Inquiries', ['plugin' => false, 'controller' => 'ContactForms', 'action' => 'index'], ['class' => 'admin-sidebar-link']) ?>
-            <?= $this->Html->link('Manage Invoices', ['plugin' => false, 'controller' => 'Invoices', 'action' => 'index'], ['class' => 'admin-sidebar-link']) ?>
+            <?= $this->Html->link('Dashboard', ['plugin' => false, 'controller' => 'Admin', 'action' => 'index'], ['class' => 'admin-sidebar-link' . $isActive(null, 'Admin')]) ?>
+            <?= $this->Html->link('Manage Bookings', ['plugin' => false, 'controller' => 'Bookings', 'action' => 'index'], ['class' => 'admin-sidebar-link' . $isActive(null, 'Bookings')]) ?>
+            <?= $this->Html->link('Manage Inquiries', ['plugin' => false, 'controller' => 'ContactForms', 'action' => 'index'], ['class' => 'admin-sidebar-link' . $isActive(null, 'ContactForms')]) ?>
+            <?= $this->Html->link('Manage Invoices', ['plugin' => false, 'controller' => 'Invoices', 'action' => 'index'], ['class' => 'admin-sidebar-link' . $isActive(null, 'Invoices')]) ?>
             <div class="admin-sidebar-group">
                 <button
                     type="button"
-                    class="admin-sidebar-link admin-sidebar-dropdown-toggle"
+                    class="admin-sidebar-link admin-sidebar-dropdown-toggle<?= $isResourceActive ? ' admin-sidebar-link-active' : '' ?>"
                     data-bs-toggle="collapse"
                     data-bs-target="#resourceManagementMenu"
-                    aria-expanded="false"
+                    aria-expanded="<?= $isResourceActive ? 'true' : 'false' ?>"
                     aria-controls="resourceManagementMenu"
                 >
                     <?= __('Resource Management') ?>
                     <span class="admin-sidebar-chevron">▾</span>
                 </button>
 
-                <div class="collapse admin-sidebar-submenu" id="resourceManagementMenu">
+                <div class="collapse admin-sidebar-submenu<?= $isResourceActive ? ' show' : '' ?>" id="resourceManagementMenu">
                     <?= $this->Html->link(
                         __('Overview'),
                         ['plugin' => false, 'controller' => 'Resources', 'action' => 'index'],
-                        ['class' => 'admin-sidebar-sublink']
+                        ['class' => 'admin-sidebar-sublink' . $isActive(null, 'Resources')]
                     ) ?>
 
                     <?= $this->Html->link(
                         __('Job Requirements'),
                         ['plugin' => false, 'controller' => 'JobResources', 'action' => 'index'],
-                        ['class' => 'admin-sidebar-sublink']
+                        ['class' => 'admin-sidebar-sublink' . $isActive(null, 'JobResources')]
                     ) ?>
 
                     <?= $this->Html->link(
                         __('Trucks'),
                         ['plugin' => false, 'controller' => 'Trucks', 'action' => 'index'],
-                        ['class' => 'admin-sidebar-sublink']
+                        ['class' => 'admin-sidebar-sublink' . $isActive(null, 'Trucks')]
                     ) ?>
 
                     <?= $this->Html->link(
                         __('Storage Units'),
                         ['plugin' => false, 'controller' => 'StorageUnits', 'action' => 'index'],
-                        ['class' => 'admin-sidebar-sublink']
+                        ['class' => 'admin-sidebar-sublink' . $isActive(null, 'StorageUnits')]
                     ) ?>
 
                     <?= $this->Html->link(
                         __('Equipment'),
                         ['plugin' => false, 'controller' => 'Equipment', 'action' => 'index'],
-                        ['class' => 'admin-sidebar-sublink']
+                        ['class' => 'admin-sidebar-sublink' . $isActive(null, 'Equipment')]
                     ) ?>
 
                     <?= $this->Html->link(
                         __('Inventory'),
                         ['plugin' => false, 'controller' => 'InventoryItems', 'action' => 'index'],
-                        ['class' => 'admin-sidebar-sublink']
+                        ['class' => 'admin-sidebar-sublink' . $isActive(null, 'InventoryItems')]
                     ) ?>
                 </div>
             </div>
-            <?= $this->Html->link('Job Allocation', ['plugin' => false, 'controller' => 'Jobs', 'action' => 'index'], ['class' => 'admin-sidebar-link']) ?>
-            <?= $this->Html->link('Manage Users', ['plugin' => false, 'controller' => 'Users', 'action' => 'index'], ['class' => 'admin-sidebar-link']) ?>
+            <?= $this->Html->link('Job Allocation', ['plugin' => false, 'controller' => 'Jobs', 'action' => 'index'], ['class' => 'admin-sidebar-link' . $isActive(null, 'Jobs')]) ?>
+            <?= $this->Html->link('Manage Users', ['plugin' => false, 'controller' => 'Users', 'action' => 'index'], ['class' => 'admin-sidebar-link' . $isActive(null, 'Users')]) ?>
             <?= $this->Html->link(
                 'Website Content',
                 ['plugin' => 'ContentBlocks', 'controller' => 'ContentBlocks', 'action' => 'index'],
-                ['class' => 'admin-sidebar-link'],
+                ['class' => 'admin-sidebar-link' . $isActive('ContentBlocks', 'ContentBlocks')],
             ) ?>
-            <?= $this->Html->link('Manage Staff', ['plugin' => false, 'controller' => 'Staff', 'action' => 'index'], ['class' => 'admin-sidebar-link']) ?>
+            <?= $this->Html->link('Manage Staff', ['plugin' => false, 'controller' => 'Staff', 'action' => 'index'], ['class' => 'admin-sidebar-link' . $isActive(null, 'Staff')]) ?>
         </nav>
 
         <div class="admin-sidebar-footer">
