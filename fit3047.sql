@@ -207,7 +207,7 @@ VALUES
     (42, 'Footer', 'title-service-description-footer', 'Title service description (Footer)', 'Shown in the footer of every pages for staff and customer.', 'text', 'Trust', NULL, NOW()),
     (43, 'Footer', 'service-description-footer', 'Service Description (Footer)', 'Shown in the footer of every pages for staff and customer.', 'text', 'Fully insured, professionally trained crews. Transparent quotes, no hidden fees.', NULL, NOW()),
     (44, 'Contact', 'phone-contact', 'Phone Number', 'Shown in the footer of every pages for staff and customer.', 'text', '0412 345 678', NULL, NOW()),
-    (45, 'Contact', 'email-contact-footer', 'Email', 'Shown in the footer of every pages for staff and customer.', 'text', 'hello@movinghouse247.com.au', NULL, NOW()),
+    (45, 'Contact', 'email-contact', 'Email', 'Shown in the footer of every pages for staff and customer.', 'text', 'hello@movinghouse247.com.au', NULL, NOW()),
     (46, 'Footer', 'address-footer', 'Address (Footer)', 'Shown in the footer of every pages for staff and customer.', 'text', 'Victoria, Australia', NULL, NOW()),
     (47, 'Footer', 'logo-footer', 'Logo (Footer)', 'Shown in the footer of every pages for staff and customer.', 'image', 'company-logo.png', NULL, NOW());
 
