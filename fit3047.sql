@@ -1014,6 +1014,16 @@ ALTER TABLE `jobs`
   ADD CONSTRAINT `jobs_job_type_id` FOREIGN KEY (`job_type_id`) REFERENCES `job_types` (`job_type_id`);
 
 --
+-- Constraints for table `job_resources`
+--
+ALTER TABLE `job_resources`
+    ADD CONSTRAINT `job_resources_job_id` FOREIGN KEY (`job_id`) REFERENCES `jobs` (`job_id`),
+  ADD CONSTRAINT `job_resources_truck_id` FOREIGN KEY (`truck_id`) REFERENCES `trucks` (`truck_id`),
+  ADD CONSTRAINT `job_resources_equipment_id` FOREIGN KEY (`equipment_id`) REFERENCES `equipment` (`equipment_id`),
+  ADD CONSTRAINT `job_resources_storage_unit_id` FOREIGN KEY (`storage_unit_id`) REFERENCES `storage_units` (`storage_unit_id`),
+  ADD CONSTRAINT `job_resources_inventory_id` FOREIGN KEY (`inventory_id`) REFERENCES `inventory_items` (`inventory_item_id`);
+
+--
 -- Constraints for table `staff_job`
 --
 ALTER TABLE `staff_job`
