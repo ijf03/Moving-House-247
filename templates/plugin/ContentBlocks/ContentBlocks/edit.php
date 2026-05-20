@@ -277,31 +277,23 @@ $this->Html->css('ContentBlocks.content-blocks', ['block' => true]);
                                 document.getElementById('cmsConfirmModal').style.display = 'none';
                             }
 
-                            async function submitCmsForm() {
-
+                            function submitCmsForm() {
                                 const form = document.getElementById('cmsEditForm');
 
-                                const formData = new FormData(form);
+                                if (!form) {
+                                    alert('Form not found.');
+                                    return;
+                                }
 
-                                try {
+                                const submitEvent = new Event('submit', {
+                                    bubbles: true,
+                                    cancelable: true
+                                });
 
-                                    const response = await fetch(form.action, {
-                                        method: 'POST',
-                                        body: formData
-                                    });
+                                const canSubmit = form.dispatchEvent(submitEvent);
 
-                                    if (response.ok) {
-
-                                        document.getElementById('cmsConfirmContent').style.display = 'none';
-
-                                        document.getElementById('cmsSuccessContent').style.display = 'block';
-
-                                    } else {
-                                        alert('Failed to save content block.');
-                                    }
-
-                                } catch (error) {
-                                    alert('An error occurred while saving.');
+                                if (canSubmit) {
+                                    form.requestSubmit();
                                 }
                             }
                         </script>
