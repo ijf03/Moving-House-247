@@ -35,7 +35,6 @@ DROP TABLE IF EXISTS `phinxlog`;
 DROP TABLE IF EXISTS `staff`;
 DROP TABLE IF EXISTS `staff_job`;
 DROP TABLE IF EXISTS `availability`;
-DROP TABLE IF EXISTS `job_trucks`;
 DROP TABLE IF EXISTS `job_resources`;
 SET FOREIGN_KEY_CHECKS = 1;
 
