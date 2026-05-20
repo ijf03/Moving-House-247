@@ -37,7 +37,7 @@ $slugify = function ($text) {
                 <div class="admin-table-card mb-4">
                     <div class="admin-table-header">
                         <h2><?= __('Quick Links') ?></h2>
-                        <p><?= __('Jump to a content block category.') ?></p>
+                        <p><?= __('Jump to the home page and a content block category.') ?></p>
                     </div>
 
                     <div class="p-3">
@@ -47,6 +47,15 @@ $slugify = function ($text) {
                                 ['controller' => 'Pages', 'action' => 'display', 'home', 'plugin' => false],
                                 ['class' => 'nav-link mh-nav-link btn'],
                             ) ?>
+                            <?php foreach ($contentBlocksGrouped as $parent => $blocks) : ?>
+
+                                <?= $this->Html->link(
+                                    h($parent),
+                                    '#' . $slugify($parent),
+                                    ['class' => 'nav-link mh-nav-link btn']
+                                ) ?>
+
+                            <?php endforeach; ?>
                         </div>
                     </div>
                 </div>

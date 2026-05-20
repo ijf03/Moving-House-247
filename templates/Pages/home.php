@@ -39,9 +39,8 @@ $this->assign('title', 'Moving House 24/7');
                             </div>
 
                             <h1>
-                                <h1>
-                                    <?= $this->ContentBlock->html('website-title-main'); ?>
-                                </h1>
+                                    <?= $this->ContentBlock->text('website-title-main'); ?>
+                                    <br><span class="accent"> <?= $this->ContentBlock->text('website-title-main-coloured'); ?></span>
                             </h1>
 
                             <p>
@@ -73,16 +72,17 @@ $this->assign('title', 'Moving House 24/7');
                     <div class="col-lg-5">
                         <div class="hero-stats-panel">
                             <div class="hero-stat-card">
-                                <?= $this->ContentBlock->html('hero-stat-ontime'); ?>
-
+                                <span><?= $this->ContentBlock->text('hero-label-first'); ?></span>
+                                <strong><?= $this->ContentBlock->text('hero-stat-first'); ?></strong>
                             </div>
 
                             <div class="hero-stat-card">
-                                <?= $this->ContentBlock->html('hero-stat-reviews'); ?>
+                                <span><?= $this->ContentBlock->text('hero-label-second'); ?></span>
+                                <strong><?= $this->ContentBlock->text('hero-stat-second'); ?></strong>
                             </div>
-
                             <div class="hero-stat-card">
-                                <?= $this->ContentBlock->html('hero-stat-moves'); ?>
+                                <span><?= $this->ContentBlock->text('hero-label-third'); ?></span>
+                                <strong><?= $this->ContentBlock->text('hero-stat-third'); ?></strong>
 
                             </div>
                         </div>
@@ -100,19 +100,27 @@ $this->assign('title', 'Moving House 24/7');
 
                 <div class="services-grid">
                     <div class="service-card">
-                        <?= $this->ContentBlock->html('removal'); ?>
+                        <span class="service-tag"><?= $this->ContentBlock->text('removal-tag'); ?></span>
+                        <h3><?= $this->ContentBlock->text('removal-name'); ?></h3>
+                        <p><?= $this->ContentBlock->text('removal-description'); ?></p>
                     </div>
 
                     <div class="service-card">
-                        <?= $this->ContentBlock->html('transport'); ?>
+                        <span class="service-tag"><?= $this->ContentBlock->text('transport-tag'); ?></span>
+                        <h3><?= $this->ContentBlock->text('transport-name'); ?></h3>
+                        <p><?= $this->ContentBlock->text('transport-description'); ?></p>
                     </div>
 
                     <div class="service-card">
-                        <?= $this->ContentBlock->html('storage'); ?>
+                        <span class="service-tag"><?= $this->ContentBlock->text('storage-tag'); ?></span>
+                        <h3><?= $this->ContentBlock->text('storage-name'); ?></h3>
+                        <p><?= $this->ContentBlock->text('storage-description'); ?></p>
                     </div>
 
                     <div class="service-card">
-                        <?= $this->ContentBlock->html('furniture'); ?>
+                        <span class="service-tag"><?= $this->ContentBlock->text('furniture-tag'); ?></span>
+                        <h3><?= $this->ContentBlock->text('furniture-name'); ?></h3>
+                        <p><?= $this->ContentBlock->text('furniture-description'); ?></p>
                     </div>
                 </div>
             </div>
@@ -132,7 +140,8 @@ $this->assign('title', 'Moving House 24/7');
                             <div class="step-number">01</div>
                             <div class="step-line"></div>
                         </div>
-                        <?= $this->ContentBlock->html('first-booking-card'); ?>
+                        <h3><?= $this->ContentBlock->text('first-booking-title-card'); ?></h3>
+                        <p><?= $this->ContentBlock->text('first-booking-description-card'); ?> </p>
                     </div>
 
                     <div class="step-card">
@@ -140,7 +149,8 @@ $this->assign('title', 'Moving House 24/7');
                             <div class="step-number">02</div>
                             <div class="step-line"></div>
                         </div>
-                        <?= $this->ContentBlock->html('second-booking-card'); ?>
+                        <h3><?= $this->ContentBlock->text('second-booking-title-card'); ?></h3>
+                        <p><?= $this->ContentBlock->text('second-booking-description-card'); ?> </p>
                     </div>
 
                     <div class="step-card">
@@ -148,8 +158,8 @@ $this->assign('title', 'Moving House 24/7');
                             <div class="step-number">03</div>
                             <div class="step-line"></div>
                         </div>
-                        <?= $this->ContentBlock->html('third-booking-card'); ?>
-
+                        <h3><?= $this->ContentBlock->text('third-booking-title-card'); ?></h3>
+                        <p><?= $this->ContentBlock->text('third-booking-description-card'); ?> </p>
                     </div>
                 </div>
             </div>

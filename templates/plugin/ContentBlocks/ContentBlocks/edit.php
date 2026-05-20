@@ -61,12 +61,60 @@ $this->Html->css('ContentBlocks.content-blocks', ['block' => true]);
 
                         <?php
                         if ($contentBlock->type === 'text') {
+                            $maxLength = 64;
+                            $isEmail = false;
+                            $isPhone = false;
+
+                            if ($contentBlock->slug === 'main-page-description') {
+                                $maxLength = 256;
+                            } elseif ($contentBlock->slug === 'services-title') {
+                                $maxLength = 16;
+                            } elseif ($contentBlock->slug === 'services-title') {
+                                $maxLength = 16;
+                            } elseif ($contentBlock->slug === 'services-subtitle') {
+                                $maxLength = 64;
+                            } elseif ($contentBlock->slug === 'main-page-description') {
+                                $maxLength = 256;
+                            } elseif ($contentBlock->slug === 'services-title') {
+                                $maxLength = 16;
+                            } elseif ($contentBlock->slug === 'booking-title') {
+                                $maxLength = 16;
+                            } elseif ($contentBlock->slug === 'booking-subtitle') {
+                                $maxLength = 64;
+                            } elseif ($contentBlock->slug === 'title-footer') {
+                                $maxLength = 16;
+                            } elseif ($contentBlock->slug === 'subtitle-footer') {
+                                $maxLength = 64;
+                            } elseif ($contentBlock->slug === 'phone-contact-footer') {
+                                $isPhone = true;
+                                $maxLength = 10;
+                            } elseif ($contentBlock->slug === 'email-contact-footer') {
+                                $isEmail = true;
+                                $maxLength = 100;
+                            }
                             echo $this->Form->control('value', [
                                 'type' => 'text',
+                                'id' => 'content-block-value',
+                                'data-maxlength' => $maxLength,
+                                'isEmail' => $isEmail ? 'true' : 'false',
+                                'isPhone' => $isPhone ? 'true' : 'false',
+                                'isHTML' => 'false',
                                 'value' => html_entity_decode($contentBlock->value),
                                 'label' => __('Content'),
                                 'class' => 'form-control',
+
                             ]);
+
+                            echo '<div id="char-counter" style="font-size: 13px; margin-top: 5px; color: #666;">0 / 32 characters</div>';
+                            echo '<div id="html-tag-error" style="font-size: 13px; margin-top: 5px; color: red; display: none;">HTML code tags are not permitted in plain text fields.</div>';
+                            if ($isEmail) {
+                                echo '<div id="email-error" style="font-size: 13px; margin-top: 5px; color: red; display: none;">Please enter a valid email address (must include @ and a domain extension).</div>';
+                            }
+                            if ($isPhone) {
+                                echo '<div id="phone-error" style="font-size: 13px; margin-top: 5px; color: red; display: none;">Phone number must be exactly 10 digits.</div>';
+                            }
+
+
                         } elseif ($contentBlock->type === 'html') {
                             echo $this->Form->control('value', [
                                 'type' => 'textarea',
@@ -141,3 +189,4 @@ $this->Html->css('ContentBlocks.content-blocks', ['block' => true]);
         });
     </script>
 <?php endif; ?>
+<?= $this->Html->script('content-blocks-validation', ['block' => true]); ?>
