@@ -22,6 +22,7 @@
 
         window.addEventListener('load', ()=>{
             var current = new Date().toISOString().split(".")[0];
+            current = datetimeFormat(current);
             var start_datetime = document.getElementById('start_datetime');
             var end_datetime = document.getElementById('end_datetime');
             var new_start = document.getElementById('new_start');
@@ -313,12 +314,12 @@
             <div class="modal-body px-0 mh-form">
                 <div class="mb-3">
                     <label for="new_start" class="form-label fw-bold"><?= __('Start time') ?></label>
-                    <input type="datetime-local" id="new_start" required step="60"/>
+                    <input type="datetime-local" id="new_start" step="60" required/>
                 </div>
 
                 <div class="mb-3">
                     <label for="new_end" class="form-label fw-bold"><?= __('End time') ?></label>
-                    <input type="datetime-local" id="new_end" required step="60"/>
+                    <input type="datetime-local" id="new_end" step="60" required/>
                 </div>
             </div>
 

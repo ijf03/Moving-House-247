@@ -216,20 +216,16 @@ class StaffController extends AppController
      */
     public function edit($id = null)
     {
-        $target = $this->Staff->get($id, contain: []);
         $staff = $this->Staff->get($id, contain: []);
         $usersTable = $this->fetchTable('Users');
-        $user = $usersTable->find()
-            ->where(['email' => $target->email])
-            ->first();
         $userId = $this->request->getAttribute('identity')->get('user_id');
         $roleQuery = $usersTable->find()
             ->where(['user_id' => $userId])
             ->contain(['UserTypes'])
             ->first();
         $isAdmin = $roleQuery->user_type_name == 'Admin';
-        if ($user->user_id !== $userId && !$isAdmin){
-            $this->Flash->error(__('You are not allowed to edit this user'));
+        if (!$isAdmin){
+            $this->Flash->error(__('Please ask the admin to edit your profile.'));
             return $this->redirect(['action' => 'index']);
         }
         if ($this->request->is(['patch', 'post', 'put'])) {
@@ -251,7 +247,6 @@ class StaffController extends AppController
 
                 return $this->redirect(['action' => 'index']);
             }
-            debug($staff);
             $this->Flash->error(__('The staff could not be saved. Please, try again.'));
         }
         $this->set(compact('staff','isAdmin'));
@@ -330,8 +325,11 @@ class StaffController extends AppController
                 $this->Flash->error(__('Staff not found.'));
                 return $this->redirect(['controller' => 'Pages', 'action' => 'display', 'home']);
             }
+            if ($isAdmin){
+                return $this->redirect(['action'=>'index']);
+            }
 
-            $id = $staff->staff_id;
+            return $this->redirect(['action'=>'availability',$staff->staff_id]);
         } else {
             $staff = $staffTable->get($id);
         }
