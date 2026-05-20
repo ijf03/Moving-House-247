@@ -191,6 +191,27 @@ $this->assign('title', 'Admin Dashboard');
                     ) ?>
                 </div>
 
+                <div class="col-md-6 col-xl-4">
+                    <?= $this->Html->link(
+                        '
+                        <div class="mh-info-card h-100">
+                            <div>
+                                <h3>Manage Staff</h3>
+
+                                <p>
+                                    View, edit and manage staff account
+                                </p>
+                            </div>
+                        </div>
+                        ',
+                        ['plugin' => false, 'controller' => 'Staff', 'action' => 'index'],
+                        [
+                            'class' => 'admin-dashboard-card',
+                            'escape' => false
+                        ],
+                    ) ?>
+                </div>
+
             </div>
 
         </div>

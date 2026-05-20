@@ -444,10 +444,11 @@ class UsersController extends AppController
                 $user->reset_id = $reset_id;
                 $user->time_limit = DateTime::now()->modify('+30 minutes');
                 $this->Users->save($user);
-                $this->Flash->error('Email with password reset link sent to ' . $user->email);
+                $this->Flash->error('Email with password reset link sent to ' . $user->email . ' if registered');
                 return $this->redirect(['action' => 'login']);
             } else {
-                $this->Flash->error('Email is not registered');
+                $this->Flash->error('Email with password reset link sent to ' . $user->email . ' if registered');
+                return $this->redirect(['action' => 'login']);
             }
         }
     }
