@@ -13,18 +13,16 @@ $slugify = function ($text) {
 };
 ?>
 
-<div class="contentBlocks index content mh-page-soft">
+<div class="mh-page-soft">
 
-    <section class="admin-hero">
-        <div class="container">
-            <div class="admin-hero-shell">
-                <div class="admin-hero-content">
-                    <span class="admin-eyebrow"><?= __('Admin') ?></span>
-                    <h1><?= __('Content Blocks') ?></h1>
-                    <p class="admin-hero-text">
-                        <?= __('Manage editable website text, page sections, and reusable content blocks.') ?>
-                    </p>
-                </div>
+    <section class="admin-hero " >
+        <div class="container admin-hero-shell">
+            <div class="admin-hero-content">
+                <span class="admin-eyebrow"><?= __('Admin') ?></span>
+                <h1><?= __('Content Blocks') ?></h1>
+                <p class="admin-hero-text">
+                    <?= __('Manage editable website text, page sections, and reusable content blocks.') ?>
+                </p>
             </div>
         </div>
     </section>
@@ -37,7 +35,7 @@ $slugify = function ($text) {
                 <div class="admin-table-card mb-4">
                     <div class="admin-table-header">
                         <h2><?= __('Quick Links') ?></h2>
-                        <p><?= __('Jump to a content block category.') ?></p>
+                        <p><?= __('Jump to the home page and a content block category.') ?></p>
                     </div>
 
                     <div class="p-3">
@@ -47,6 +45,15 @@ $slugify = function ($text) {
                                 ['controller' => 'Pages', 'action' => 'display', 'home', 'plugin' => false],
                                 ['class' => 'nav-link mh-nav-link btn'],
                             ) ?>
+                            <?php foreach ($contentBlocksGrouped as $parent => $blocks) : ?>
+
+                                <?= $this->Html->link(
+                                    h($parent),
+                                    '#' . $slugify($parent),
+                                    ['class' => 'nav-link mh-nav-link btn']
+                                ) ?>
+
+                            <?php endforeach; ?>
                         </div>
                     </div>
                 </div>
@@ -68,12 +75,13 @@ $slugify = function ($text) {
                                 </div>
 
                                 <div class="table-responsive">
-                                    <table class="table admin-table mb-0">
+                                    <table class="table admin-table mb-0 w-100" style= "table-layout: fixed;">
                                         <thead>
                                         <tr>
-                                            <th><?= __('Content Block') ?></th>
-                                            <th><?= __('Description') ?></th>
-                                            <th class="actions"><?= __('Actions') ?></th>
+                                            <th style="width: 25%;"><?= __('Content Block') ?></th>
+                                            <th style="width: 65%:"><?= __('Description') ?></th>
+                                            <th style= "width: 10%;
+                                            "class="actions"><?= __('Actions') ?></th>
                                         </tr>
                                         </thead>
 

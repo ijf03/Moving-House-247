@@ -172,7 +172,8 @@ $isUser = ($identity && (int)$role === 3);
                     <h2 class = "mh-footer-title">
                         <?= $this->ContentBlock->text('title-footer'); ?>
                       </h2>
-                    <p class="mh-footer-subtitle mb-0">Most quotes returned within the same day.</p>
+                    <p
+                        class="mh-footer-subtitle mb-0"> <?= $this->ContentBlock->text('subtitle-footer'); ?></p>
                 </div>
                 <div class="col-lg-4 text-lg-end">
                     <?= $this->Html->link(
@@ -198,10 +199,12 @@ $isUser = ($identity && (int)$role === 3);
                  <?php endif;?>
                         </span>
 
-                        <h3> <?= $this ->ContentBlock->html('company-name-footer')?> </h3>
+                        <h3 class="mh-footer-brand mb-0"> <?= $this ->ContentBlock->text('company-name-footer')?> </h3>
                     </div>
+                    <p class="mh-footer-text mb-0">
+                        <?= $this ->ContentBlock->text('company-description-footer')?>
+                    </p>
 
-                    <?= $this ->ContentBlock->html('company-description-footer')?>
 
                 </div>
 
@@ -249,9 +252,12 @@ $isUser = ($identity && (int)$role === 3);
                 </div>
 
                 <div class="col-lg-3">
-                    <?= $this->ContentBlock->text('title-footer'); ?>
+                    <h4 class="mh-footer-heading"><?= $this->ContentBlock->text('title-service-description-footer'); ?></h4>
+                    <p class="mh-footer-text mb-0">
+                        <?= $this->ContentBlock->text('service-description-footer'); ?>
 
-                    <?= $this->ContentBlock->html('description-footer'); ?>
+                    </p>
+
                 </div>
             </div>
         </div>

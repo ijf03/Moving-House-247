@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 14, 2026 at 02:01 AM
+-- Generation Time: May 16, 2026 at 08:22 PM
 -- Server version: 11.8.6-MariaDB
 -- PHP Version: 8.4.16
 
@@ -43,6 +43,10 @@ SET FOREIGN_KEY_CHECKS = 1;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Database: `3047`
+--
 
 -- --------------------------------------------------------
 
@@ -186,66 +190,53 @@ CREATE TABLE `content_blocks` (
 INSERT INTO `content_blocks`
 (`id`, `parent`, `slug`, `label`, `description`, `type`, `value`, `previous_value`, `modified`)
 VALUES
-    (1, 'home', 'hero-stat-ontime', 'Statistics 1 - On-time Arrival', 'Shown in the first row of the hero statistics panel.', 'html', '<span>On-time arrival</span>
-                                <strong>98%</strong>',NULL, NOW()),
-    (2, 'home', 'hero-stat-reviews', 'Statistics 2 - 5-star Reviews', 'Shown in the second row of the hero statistics panel.', 'html', '<span>5-star reviews</span>
-                                <strong>4.9/5</strong>', NULL, NOW()),
-    (3, 'home', 'hero-stat-moves', 'Statistics 3 - Moves Completed', 'Shown in the third row of the hero statistics panel.', 'html', '<span>Moves Completed</span>
-                <strong>10,000+</strong>', NULL, NOW()),
-    (4, 'home', 'website-title-main', 'Website Title (Main)', 'Shown on the home page as the main title', 'html', 'Move done right,<br><span class="accent">any time of day.</span>', NULL, NOW()),
-    (5, 'home', 'main-page-description', 'Main page description', 'Shown on the homepage, under the main website title', 'text', 'Trusted local removals and storage solutions. Get a fast online quote and book your move in minutes. No hold music, no guesswork.', NULL, NOW()),
-    (6, 'home', 'services-title', 'Services (Title)', 'Shown on the home page in the services section', 'text', 'Our Services', NULL, NOW()),
-    (7, 'home', 'services-subtitle', 'Services (Subtitle)', 'Shown on the home page in the services section', 'text', 'Whatever your move looks it, we have a solution to fit.', NULL, NOW()),
-    (8, 'home', 'removal', 'Relocation (Card)', 'Shown on the home page in the services section', 'html',
-     '<span class="service-tag  ">Removals</span>
-     <h3>Relocation</h3>
-     <p>Full-service home and apartment moves, planned and executed by trained crews.</p>',
-     NULL, NOW()),
-    (9, 'home', 'storage', 'Storage (Card)', 'Shown on the home page in the services section', 'html',
-     '<span class="service-tag">Storage</span>
-     <h3>Storage Solutions</h3>
-     <p>Short and long-term secure storage when you need extra time between properties.</p>',
-     NULL, NOW()),
-    (10, 'home', 'furniture', 'Furniture (Card)', 'Shown on the home page in the services section', 'html',
-     '<span class="service-tag">Furniture</span>
-     <h3>Furniture &amp; Item Removal</h3>
-     <p>Single items, large furniture, or full clear-outs, we handle the heavy lifting.</p>',
-     NULL, NOW()),
-    (11, 'home', 'transport', 'Transport (Card)', 'Shown on the home page in the services section', 'html',
-     '<span class="service-tag">Transport</span>
-     <h3>Moving Your Belongings</h3>
-     <p>Careful handling of your possessions from packing to delivery, every step covered.</p>',
-     NULL, NOW()),
-    (12, 'home', 'booking-title', 'Booking (Title)', 'Shown on the home page in the booking section', 'text', 'Booking is Simple', NULL, NOW()),
-    (13, 'home', 'booking-subtitle', 'Booking (Subtitle)', 'Shown on the home page in the booking section', 'text', 'Three straightforward steps from quote to move-in day.', NULL, NOW()),
-    (14, 'home', 'first-booking-card', 'First Step Booking Card', 'Shown on the home page in the booking section', 'html',
-     '<h3>Request a quote</h3>
-     <p>Tell us about your move with our quick online form. No phone calls needed.</p>',
-     NULL, NOW()),
-    (15, 'home', 'second-booking-card', 'Second Step Booking Card', 'Shown on the home page in the booking section', 'html',
-     '<h3>Confirm your booking</h3>
-     <p>We confirm date, time, crew size and pricing all in writing, no surprises.</p>',
-     NULL, NOW()),
-    (16, 'home', 'third-booking-card', 'Third Step Booking Card', 'Shown on the home page in the booking section', 'html',
-     '<h3>Move with ease</h3>
-     <p>Our team arrives on time, handles the work, and gets you settled in stress-free.</p>',
-     NULL, NOW()),
-    (17, 'global', 'logo', 'Logo (Navigation Bar)', 'Shown in the navigation bar for staff and customer', 'image', 'company-logo.png', NULL, NOW()),
-    (18, 'global', 'title-footer', 'Main Title (Footer)', 'Shown in the footer of every pages for staff and customer', 'text', 'Get your free quote today', NULL, NOW()),
-    (19, 'global', 'subtitle-footer', 'Subtitle (Footer)', 'Shown in the footer of every pages for staff and customer', 'text', 'Most quotes returned within the same day.', NULL, NOW()),
-    (20, 'global', 'company-name-footer', 'Company Name (Footer)', 'Shown in the footer of every pages for staff and customer', 'html', '<h3 class="mh-footer-brand mb-0">Moving House 24/7</h3>', NULL, NOW()),
-    (21, 'global', 'description-footer', 'Service Description (Footer)', 'Shown in the footer of every pages for staff and customer', 'html', '<h4 class="mh-footer-heading">Trust</h4>
-                    <p class="mh-footer-text mb-0">
-                        Fully insured, professionally trained crews. Transparent quotes, no hidden fees.
-                    </p>', NULL, NOW()),
-    (22, 'global', 'company-description-footer', 'Company Description (Footer)', 'Shown in the footer of every pages for staff and customer', 'html', '<h4 class="mh-footer-heading">Trust</h4>
-                   <p class="mh-footer-text mb-0">
-                        Reliable removals &amp; storage across Victoria, any time of day.
-                    </p>', NULL, NOW()),
-    (23, 'global', 'phone-contact-footer', 'Phone Number (Footer)', 'Shown in the footer of every pages for staff and customer', 'text', '0412 345 678', NULL, NOW()),
-    (24, 'global', 'email-contact-footer', 'Email (Footer)', 'Shown in the footer of every pages for staff and customer', 'text', 'hello@movinghouse247.com.au', NULL, NOW()),
-    (25, 'global', 'address-footer', 'Address (Footer)', 'Shown in the footer of every pages for staff and customer', 'text', 'Victoria, Australia', NULL, NOW()),
-    (26, 'global', 'logo-footer', 'Logo (Footer)', 'Shown in the footer of every pages for staff and customer', 'image', 'company-logo.png', NULL, NOW());
+    (1, 'Home Page Main Content', 'header-description-main', 'Header Description', 'Shown on the home page as header description (coloured)', 'text', 'Available 24/7 across Victoria', NULL, NOW()),
+    (2, 'Home Page Main Content', 'website-title-main', 'Website Title (Main)', 'Shown on the home page as the main title', 'text', 'Move done right,', NULL, NOW()),
+    (3, 'Home Page Main Content', 'website-title-main-coloured', 'Website Title (Coloured)', 'Shown on the home page as the main title (coloured)', 'text', 'any time of day.', NULL, NOW()),
+    (4, 'Home Page Main Content', 'main-page-description', 'Main page description', 'Shown on the homepage, under the main website title', 'text', 'Trusted local removals and storage solutions. Get a fast online quote and book your move in minutes. \n                No hold music, no guesswork.', NULL, NOW()),
+    (5, 'Home Page Main Content', 'first-additional-description-main', 'Additional Description (Fully Insured)', 'Shown on the home page as the first description', 'text', '🛡 Fully insured', NULL, NOW()),
+    (6, 'Home Page Main Content', 'second-additional-description-main', 'Additional Description (Trained Crews)', 'Shown on the home page as the second description', 'text', '⭐ Trained crews', NULL, NOW()),
+    (7, 'Home Page Main Content', 'third-additional-description-main', 'Additional Description (24/7 availability)', 'Shown on the home page as the third description', 'text', '◷ 24/7 availability', NULL, NOW()),
+    (8, 'Home Page Main Content', 'logo', 'Logo (Navigation Bar)', 'Shown in the navigation bar for staff and customer', 'image', 'company-logo.png', NULL, NOW()),
+    (9, 'Home Page Statistics', 'hero-stat-first', 'Statistics 1 - On-time arrival', 'Shown in the first row of the main statistics on the home page.', 'text', '98%', NULL, NOW()),
+    (10, 'Home Page Statistics', 'hero-label-first', 'Statistics 1 Label - On-time arrival', 'Shown in the first row of the main statistics on the home page.', 'text', 'On-time arrival', NULL, NOW()),
+    (11, 'Home Page Statistics', 'hero-stat-second', 'Statistics 2 - 5-star reviews', 'Shown in the second row of the main statistics on the home page.', 'text', '4.9/5', NULL, NOW()),
+    (12, 'Home Page Statistics', 'hero-label-second', 'Statistics 2 Label -5-star reviews', 'Shown in the second row of the main statistics on the home page.', 'text', '5-star reviews', NULL, NOW()),
+    (13, 'Home Page Statistics', 'hero-stat-third', 'Statistics 3 - Moves Completed', 'Shown in the third row of the main statistics on the home page.', 'text', '10,000+', NULL, NOW()),
+    (14, 'Home Page Statistics', 'hero-label-third', 'Statistics 3 Label - Moves Completed', 'Shown in the third row of the main statistics on the home page.', 'text', 'Moves Completed', NULL, NOW()),
+    (15, 'Services (Home)', 'services-title', 'Services (Title)', 'Shown on the home page in the services section', 'text', 'Our Services', NULL, NOW()),
+    (16, 'Services (Home)', 'services-subtitle', 'Services (Subtitle)', 'Shown on the home page under the service title in the services section ', 'text', 'Whatever your move looks it, we have a solution to fit.', NULL, NOW()),
+    (17, 'Services (Home)', 'removal-tag', 'Relocation Service Tag Card', 'Shown on the home page in the services section', 'text', 'Removals', NULL, NOW()),
+    (18, 'Services (Home)', 'removal-name', 'Relocation Service Name Card', 'Shown on the home page in the services section', 'text', 'Relocation', NULL, NOW()),
+    (19, 'Services (Home)', 'removal-description', ' Relocation Service Description Card', 'Shown on the home page in the services section', 'text', 'Full-service home and apartment moves, planned and executed by trained crews.', NULL, NOW()),
+    (20, 'Services (Home)', 'transport-tag', 'Transport Service Tag Card', 'Shown on the home page in the services section ', 'text', 'Transport', NULL, NOW()),
+    (21, 'Services (Home)', 'transport-name', 'Transport Service Name Card', 'Shown on the home page in the services section ', 'text', 'Moving Your Belongings', NULL, NOW()),
+    (22, 'Services (Home)', 'transport-description', 'Transport Service Description Card', 'Shown on the home page in the services section ', 'text', 'Careful handling of your possessions from packing to delivery, every step covered.', NULL, NOW()),
+    (23, 'Services (Home)', 'storage-tag', 'Storage Service Tag Card', 'Shown on the home page in the services section ', 'text', 'Storage', NULL, NOW()),
+    (24, 'Services (Home)', 'storage-name', 'Storage Service Name Card', 'Shown on the home page in the services section', 'text', 'Storage Solutions', NULL, NOW()),
+    (25, 'Services (Home)', 'storage-description', 'Storage Service Description Card', 'Shown on the home page in the services section', 'text', 'Short and long-term secure storage when you need extra time between properties.', NULL, NOW()),
+    (26, 'Services (Home)', 'furniture-tag', 'Furniture Service Tag Card', 'Shown on the home page in the services section', 'text', 'Furniture', NULL, NOW()),
+    (27, 'Services (Home)', 'furniture-name', 'Furniture Service Name Card', 'Shown on the home page in the services section', 'text', 'Furniture &amp; Item Removal', NULL, NOW()),
+    (28, 'Services (Home)', 'furniture-description', 'Furniture Service Description Card', 'Shown on the home page in the services section', 'text', 'Single items, large furniture, or full clear-outs, we handle the heavy lifting.', NULL, NOW()),
+    (29, 'Booking (Home)', 'booking-tag', 'Booking (Tag)', 'Shown on the home page in the booking section ', 'text', 'HOW IT WORKS', NULL, NOW()),
+    (30, 'Booking (Home)', 'booking-title', 'Booking (Title)', 'Shown on the home page in the booking section ', 'text', 'Booking is Simple', NULL, NOW()),
+    (31, 'Booking (Home)', 'booking-subtitle', 'Booking (Subtitle)', 'Shown on the home page in the booking section ', 'text', 'Three straightforward steps from quote to move-in day.', NULL, NOW()),
+    (32, 'Booking (Home)', 'first-booking-title-card', 'First Step Booking Title Card', 'Shown on the home page in the booking section', 'text', 'Request a quote', NULL, NOW()),
+    (33, 'Booking (Home)', 'first-booking-description-card', 'First Step Booking Description Card', 'Shown on the home page in the booking section', 'text', 'Tell us about your move with our quick online form. No phone calls needed', NULL, NOW()),
+    (34, 'Booking (Home)', 'second-booking-title-card', 'Second Step Booking Title Card', 'Shown on the home page in the booking section ', 'text', 'Confirm your booking', NULL, NOW()),
+    (35, 'Booking (Home)', 'second-booking-description-card', 'Second Step Booking Description Card', 'Shown on the home page in the booking section ', 'text', 'We confirm date, time, crew size and pricing all in writing, no surprises.', NULL, NOW()),
+    (36, 'Booking (Home)', 'third-booking-title-card', 'Third Step Booking Title Card', 'Shown on the home page in the booking section ', 'text', 'Move with ease', NULL, NOW()),
+    (37, 'Booking (Home)', 'third-booking-description-card', 'Third Step Booking Description Card', 'Shown on the home page in the booking section ', 'text', 'Our team arrives on time, handles the work, and gets you settled in stress-free.', NULL, NOW()),
+    (38, 'Footer', 'title-footer', 'Main Title (Footer)', 'Shown in the footer of every pages for staff and customer.', 'text', 'Get your free quote today', NULL, NOW()),
+    (39, 'Footer', 'subtitle-footer', 'Subtitle (Footer)', 'Shown in the footer of every pages for staff and customer.', 'text', 'Most quotes returned within the same day.', NULL, NOW()),
+    (40, 'Footer', 'company-name-footer', 'Company name (Footer)', 'Shown in the footer of every pages for staff and customer.', 'text', 'Moving House 24/7', NULL, NOW()),
+    (41, 'Footer', 'company-description-footer', 'Company description (Footer)', 'Shown in the footer of every pages for staff and customer.', 'text', 'Reliable removals &amp; storage across Victoria, any time of day.', NULL, NOW()),
+    (42, 'Footer', 'title-service-description-footer', 'Title service description (Footer)', 'Shown in the footer of every pages for staff and customer.', 'text', 'Trust', NULL, NOW()),
+    (43, 'Footer', 'service-description-footer', 'Service Description (Footer)', 'Shown in the footer of every pages for staff and customer.', 'text', 'Fully insured, professionally trained crews. Transparent quotes, no hidden fees.', NULL, NOW()),
+    (44, 'Footer', 'phone-contact-footer', 'Phone Number (Footer)', 'Shown in the footer of every pages for staff and customer.', 'text', '0412 345 678', NULL, NOW()),
+    (45, 'Footer', 'email-contact-footer', 'Email (Footer)', 'Shown in the footer of every pages for staff and customer.', 'text', 'hello@movinghouse247.com.au', NULL, NOW()),
+    (46, 'Footer', 'address-footer', 'Address (Footer)', 'Shown in the footer of every pages for staff and customer.', 'text', 'Victoria, Australia', NULL, NOW()),
+    (47, 'Footer', 'logo-footer', 'Logo (Footer)', 'Shown in the footer of every pages for staff and customer.', 'image', 'company-logo.png', NULL, NOW());
 
 -- --------------------------------------------------------
 

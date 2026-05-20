@@ -26,7 +26,7 @@ $this->Html->css('ContentBlocks.content-blocks', ['block' => true]);
         }
     </style>
 
-    <div class="contentBlocks form content mh-page-soft">
+    <div class="mh-page-soft">
 
         <section class="admin-hero">
             <div class="container">
@@ -61,12 +61,93 @@ $this->Html->css('ContentBlocks.content-blocks', ['block' => true]);
 
                         <?php
                         if ($contentBlock->type === 'text') {
+                            $maxLength = 64;
+                            $isEmail = false;
+                            $isPhone = false;
+                            if ($contentBlock->slug === 'main-page-description') {
+                                $maxLength = 512;
+                            } elseif ($contentBlock->slug === 'header-description-main') {
+                                $maxLength = 50;
+                            } elseif ($contentBlock->slug === 'first-additional-description-main') {
+                                $maxLength = 32;
+                            } elseif ($contentBlock->slug === 'second-additional-description-main') {
+                                $maxLength = 32;
+                            } elseif ($contentBlock->slug === 'third-additional-description-main') {
+                                $maxLength = 32;
+                            } elseif ($contentBlock->slug === 'hero-stat-first') {
+                                $maxLength = 12;
+                            } elseif ($contentBlock->slug === 'hero-label-first') {
+                                $maxLength = 32;
+                            } elseif ($contentBlock->slug === 'hero-stat-second') {
+                                $maxLength = 12;
+                            } elseif ($contentBlock->slug === 'hero-label-second') {
+                                $maxLength = 32;
+                            } elseif ($contentBlock->slug === 'hero-stat-third') {
+                                $maxLength = 12;
+                            } elseif ($contentBlock->slug === 'hero-label-third') {
+                                $maxLength = 32;
+                            } elseif ($contentBlock->slug === 'services-title') {
+                                $maxLength = 32;
+                            } elseif ($contentBlock->slug === 'services-subtitle') {
+                                $maxLength = 128;
+                            } elseif ($contentBlock->slug === 'removal-description') {
+                                $maxLength = 128;
+                            } elseif ($contentBlock->slug === 'transport-description') {
+                                $maxLength = 128    ;
+                            } elseif ($contentBlock->slug === 'storage-description') {
+                                $maxLength = 128;
+                            } elseif ($contentBlock->slug === 'furniture-description') {
+                                $maxLength = 128;
+                            } elseif ($contentBlock->slug === 'main-page-description') {
+                                $maxLength = 256;
+                            } elseif ($contentBlock->slug === 'booking-title') {
+                                $maxLength = 32;
+                            } elseif ($contentBlock->slug === 'booking-subtitle') {
+                                $maxLength = 128;
+                            } elseif ($contentBlock->slug === 'first-booking-description-card') {
+                                $maxLength = 128;
+                            } elseif ($contentBlock->slug === 'second-booking-description-card') {
+                                $maxLength = 128;
+                            } elseif ($contentBlock->slug === 'third-booking-description-card') {
+                                $maxLength = 128;
+                            } elseif ($contentBlock->slug === 'title-footer') {
+                                $maxLength = 50;
+                            } elseif ($contentBlock->slug === 'subtitle-footer') {
+                                $maxLength = 128;
+                            } elseif ($contentBlock->slug === 'company-description-footer') {
+                                $maxLength = 128;
+                            } elseif ($contentBlock->slug === 'service-description-footer') {
+                                $maxLength = 128;
+                            } elseif ($contentBlock->slug === 'phone-contact-footer') {
+                                $isPhone = true;
+                                $maxLength = 10;
+                            } elseif ($contentBlock->slug === 'email-contact-footer') {
+                                $isEmail = true;
+                                $maxLength = 100;
+                            }
                             echo $this->Form->control('value', [
                                 'type' => 'text',
+                                'id' => 'content-block-value',
+                                'data-maxlength' => $maxLength,
+                                'isEmail' => $isEmail ? 'true' : 'false',
+                                'isPhone' => $isPhone ? 'true' : 'false',
+                                'isHTML' => 'false',
                                 'value' => html_entity_decode($contentBlock->value),
                                 'label' => __('Content'),
                                 'class' => 'form-control',
+
                             ]);
+
+                            echo '<div id="char-counter" style="font-size: 13px; margin-top: 5px; color: #666;">0 / 32 characters</div>';
+                            echo '<div id="html-tag-error" style="font-size: 13px; margin-top: 5px; color: red; display: none;">HTML code tags are not permitted in plain text fields.</div>';
+                            if ($isEmail) {
+                                echo '<div id="email-error" style="font-size: 13px; margin-top: 5px; color: red; display: none;">Please enter a valid email address (must include @ and a domain extension).</div>';
+                            }
+                            if ($isPhone) {
+                                echo '<div id="phone-error" style="font-size: 13px; margin-top: 5px; color: red; display: none;">Phone number must be exactly 10 digits.</div>';
+                            }
+
+
                         } elseif ($contentBlock->type === 'html') {
                             echo $this->Form->control('value', [
                                 'type' => 'textarea',
@@ -141,3 +222,4 @@ $this->Html->css('ContentBlocks.content-blocks', ['block' => true]);
         });
     </script>
 <?php endif; ?>
+<?= $this->Html->script('content-blocks-validation', ['block' => true]); ?>
