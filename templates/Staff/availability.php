@@ -63,6 +63,50 @@
                 events: formatted_events,
                 allDaySlot: false,
                 eventResizableFromStart: true,
+                eventResize: function(info) {
+                    console.log(info);
+                    var event = info.event;
+                    var start = addOffset(event.startStr);
+                    var end = addOffset(event.endStr);
+                    if (isNaN(new Date(start))||isNaN(new Date(end))){
+                        alert('Invalid Datetime!');
+                        return;
+                    }
+                    if (!start|| !end){
+                        alert('Start time and end time cannot be empty!');
+                        return;
+                    }
+                    if (Date.parse(start) >= Date.parse(end)){
+                        alert('Start time must be earlier than end time');
+                        return
+                    }
+                    if (!confirm('Change available time to '+start.replace('T',' ')+' - '+end.replace('T',' ')+'?\nYou will receive jobs for that period of time')){
+                        return;
+                    }
+                    submitForm()
+                },
+                eventDrop: function(info) {
+                    console.log(info);
+                    var event = info.event;
+                    var start = addOffset(event.startStr);
+                    var end = addOffset(event.endStr);
+                    if (isNaN(new Date(start))||isNaN(new Date(end))){
+                        alert('Invalid Datetime!');
+                        return;
+                    }
+                    if (!start|| !end){
+                        alert('Start time and end time cannot be empty!');
+                        return;
+                    }
+                    if (Date.parse(start) >= Date.parse(end)){
+                        alert('Start time must be earlier than end time');
+                        return
+                    }
+                    if (!confirm('Change available time to '+start.replace('T',' ')+' - '+end.replace('T',' ')+'?\nYou will receive jobs for that period of time')){
+                        return;
+                    }
+                    submitForm()
+                },
                 eventClick: function(info) {
                     const event = info.event;
                     activeEventID = event.id;
@@ -192,12 +236,6 @@
                             'type' => 'button',
                             'onclick' => 'newEvent()',
                             'class' => 'admin-primary-link'
-                        ]) ?>
-
-                        <?= $this->Form->button(__('Save Schedule'), [
-                            'type' => 'button',
-                            'onclick' => 'submitForm()',
-                            'class' => 'admin-action-link'
                         ]) ?>
 
                         <?= $this->Form->control('availability_json', [
