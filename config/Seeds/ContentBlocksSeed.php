@@ -22,12 +22,21 @@ class ContentBlocksSeed extends BaseSeed
     {
         $data = [
             [
-                    'parent' => 'Home Page Main Content',
-                    'label' => 'Website Title (Main)',
-                    'description' => 'Shown on the home page as the main title',
-                    'slug' => 'website-title-main',
-                    'type' => 'text',
-                    'value' => 'Move done right,',
+                'parent' => 'Home Page Main Content',
+                'label' => 'Header Description',
+                'description' => 'Shown on the home page as header description (coloured)',
+                'slug' => 'header-description-main',
+                'type' => 'text',
+                'value' => 'Available 24/7 across Victoria',
+            ],
+            [
+
+                'parent' => 'Home Page Main Content',
+                'label' => 'Website Title (Main)',
+                'description' => 'Shown on the home page as the main title',
+                'slug' => 'website-title-main',
+                'type' => 'text',
+                'value' => 'Move done right,',
             ],
             [
                     'parent' => 'Home Page Main Content',
@@ -45,6 +54,30 @@ class ContentBlocksSeed extends BaseSeed
                     'type' => 'text',
                     'value' => 'Trusted local removals and storage solutions. Get a fast online quote and book your move in minutes.
                 No hold music, no guesswork.',
+            ],
+            [
+                'parent' => 'Home Page Main Content',
+                'label' => 'Additional Description (Fully Insured)',
+                'description' => 'Shown on the home page as the first description',
+                'slug' => 'first-additional-description-main',
+                'type' => 'text',
+                'value' => '🛡 Fully insured',
+            ],
+            [
+                'parent' => 'Home Page Main Content',
+                'label' => 'Additional Description (Trained Crews)',
+                'description' => 'Shown on the home page as the second description',
+                'slug' => 'second-additional-description-main',
+                'type' => 'text',
+                'value' => '⭐ Trained crews',
+            ],
+            [
+                'parent' => 'Home Page Main Content',
+                'label' => 'Additional Description (24/7 availability)',
+                'description' => 'Shown on the home page as the third description',
+                'slug' => 'third-additional-description-main',
+                'type' => 'text',
+                'value' => '◷ 24/7 availability',
             ],
             [
                 'parent' => 'Home Page Statistics',
@@ -215,6 +248,14 @@ class ContentBlocksSeed extends BaseSeed
             ],
             [
                 'parent' => 'Booking (Home)',
+                'label' => 'Booking (Tag)',
+                'description' => 'Shown on the home page in the booking section ',
+                'slug' => 'booking-tag',
+                'type'=> 'text',
+                'value' =>'HOW IT WORKS',
+            ],
+            [
+                'parent' => 'Booking (Home)',
                 'label' => 'Booking (Title)',
                 'description' => 'Shown on the home page in the booking section ',
                 'slug' => 'booking-title',
@@ -279,7 +320,7 @@ class ContentBlocksSeed extends BaseSeed
                 'value' => 'Our team arrives on time, handles the work, and gets you settled in stress-free.',
             ],
             [
-                'parent' => 'Footer',
+                'parent' => 'Home Page Main Content',
                 'label' => 'Logo (Navigation Bar)',
                 'description' => 'Shown in the navigation bar for staff and customer',
                 'slug' => 'logo',

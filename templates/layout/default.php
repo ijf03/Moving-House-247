@@ -172,7 +172,8 @@ $isUser = ($identity && (int)$role === 3);
                     <h2 class = "mh-footer-title">
                         <?= $this->ContentBlock->text('title-footer'); ?>
                       </h2>
-                    <p class="mh-footer-subtitle mb-0">Most quotes returned within the same day.</p>
+                    <p
+                        class="mh-footer-subtitle mb-0"> <?= $this->ContentBlock->text('subtitle-footer'); ?></p>
                 </div>
                 <div class="col-lg-4 text-lg-end">
                     <?= $this->Html->link(

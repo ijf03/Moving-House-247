@@ -35,7 +35,7 @@ $this->assign('title', 'Moving House 24/7');
                         <div class="hero-content">
                             <div class="hero-badge">
                                 <span class="hero-badge-icon">◷</span>
-                                <span>Available 24/7 across Victoria</span>
+                                <span> <?= $this->ContentBlock->text('header-description-main'); ?></span>
                             </div>
 
                             <h1>
@@ -62,9 +62,11 @@ $this->assign('title', 'Moving House 24/7');
                             </div>
 
                             <div class="hero-features">
-                                <span>🛡 Fully insured</span>
-                                <span>⭐ Trained crews</span>
-                                <span>◷ 24/7 availability</span>
+
+
+                                <span><?= $this->ContentBlock->text('first-additional-description-main'); ?></span>
+                                <span> <?= $this->ContentBlock->text('second-additional-description-main'); ?></span>
+                                <span> <?= $this->ContentBlock->text('third-additional-description-main'); ?></span>
                             </div>
                         </div>
                     </div>
@@ -128,7 +130,7 @@ $this->assign('title', 'Moving House 24/7');
 
         <section class="how-it-works">
             <div class="container-fluid how-shell">
-                <p class="section-kicker">HOW IT WORKS</p>
+                <p class="section-kicker"> <?= $this->ContentBlock->text('booking-tag');?></p>
                 <h2><?= $this->ContentBlock->text('booking-title'); ?></h2>
                 <p class="section-intro">
                     <?= $this->ContentBlock->text('booking-subtitle'); ?>

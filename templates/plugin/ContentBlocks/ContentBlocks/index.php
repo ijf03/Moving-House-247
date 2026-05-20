@@ -13,18 +13,16 @@ $slugify = function ($text) {
 };
 ?>
 
-<div class="contentBlocks index content mh-page-soft">
+<div class="mh-page-soft">
 
-    <section class="admin-hero">
-        <div class="container">
-            <div class="admin-hero-shell">
-                <div class="admin-hero-content">
-                    <span class="admin-eyebrow"><?= __('Admin') ?></span>
-                    <h1><?= __('Content Blocks') ?></h1>
-                    <p class="admin-hero-text">
-                        <?= __('Manage editable website text, page sections, and reusable content blocks.') ?>
-                    </p>
-                </div>
+    <section class="admin-hero " >
+        <div class="container admin-hero-shell">
+            <div class="admin-hero-content">
+                <span class="admin-eyebrow"><?= __('Admin') ?></span>
+                <h1><?= __('Content Blocks') ?></h1>
+                <p class="admin-hero-text">
+                    <?= __('Manage editable website text, page sections, and reusable content blocks.') ?>
+                </p>
             </div>
         </div>
     </section>
@@ -77,12 +75,13 @@ $slugify = function ($text) {
                                 </div>
 
                                 <div class="table-responsive">
-                                    <table class="table admin-table mb-0">
+                                    <table class="table admin-table mb-0 w-100" style= "table-layout: fixed;">
                                         <thead>
                                         <tr>
-                                            <th><?= __('Content Block') ?></th>
-                                            <th><?= __('Description') ?></th>
-                                            <th class="actions"><?= __('Actions') ?></th>
+                                            <th style="width: 25%;"><?= __('Content Block') ?></th>
+                                            <th style="width: 65%:"><?= __('Description') ?></th>
+                                            <th style= "width: 10%;
+                                            "class="actions"><?= __('Actions') ?></th>
                                         </tr>
                                         </thead>
 
