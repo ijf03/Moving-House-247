@@ -10,6 +10,11 @@
         const minutes = String(absOffset % 60).padStart(2, "0");
         window.timezoneOffset = (isPlus?"+":"-")+hours+":"+minutes;
 
+        function datetimeFormat(datetime){
+            split = datetime.split(':');
+            return split[0]+':'+split[1];
+        }
+
         function addOffset(datetime){
             var head = datetime.toString().split(datetime.toString().includes("+")?"+":"-")[0];
             return head;
@@ -61,6 +66,11 @@
                 height: 'auto',
                 editable: true,
                 events: formatted_events,
+                slotLabelFormat: {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    meridiem: 'short'
+                },
                 allDaySlot: false,
                 eventResizableFromStart: true,
                 eventResize: function(info) {
@@ -80,7 +90,7 @@
                         alert('Start time must be earlier than end time');
                         return
                     }
-                    if (!confirm('Change available time to '+start.replace('T',' ')+' - '+end.replace('T',' ')+'?\nYou will receive jobs for that period of time')){
+                    if (!confirm('Change available time to '+datetimeFormat(start.replace('T',' '))+' - '+datetimeFormat(end.replace('T',' '))+'?\nYou will receive jobs for that period of time')){
                         return;
                     }
                     submitForm()
@@ -102,7 +112,7 @@
                         alert('Start time must be earlier than end time');
                         return
                     }
-                    if (!confirm('Change available time to '+start.replace('T',' ')+' - '+end.replace('T',' ')+'?\nYou will receive jobs for that period of time')){
+                    if (!confirm('Change available time to '+datetimeFormat(start.replace('T',' '))+' - '+datetimeFormat(end.replace('T',' '))+'?\nYou will receive jobs for that period of time')){
                         return;
                     }
                     submitForm()
@@ -110,10 +120,10 @@
                 eventClick: function(info) {
                     const event = info.event;
                     activeEventID = event.id;
-                    window.startTimezone = (event.startStr.includes("+")?"+":"-")+event.startStr.split(event.startStr.includes("+")?"+":"-")[1]
-                    window.endTimezone = (event.endStr.includes("+")?"+":"-")+event.endStr.split(event.endStr.includes("+")?"+":"-")[1]
-                    document.getElementById('start_datetime').value = event.startStr.split(event.startStr.includes("+")?"+":"-")[0];
-                    document.getElementById('end_datetime').value = event.endStr.split(event.endStr.includes("+")?"+":"-")[0];
+                    window.startTimezone = (event.startStr.includes("+")?"+":"-")+event.startStr.split(event.startStr.includes("+")?"+":"-")[-1]
+                    window.endTimezone = (event.endStr.includes("+")?"+":"-")+event.endStr.split(event.endStr.includes("+")?"+":"-")[-1]
+                    document.getElementById('start_datetime').value = datetimeFormat(event.startStr.split(event.startStr.includes("+")?"+":"-").slice(0,-1).join('-'));
+                    document.getElementById('end_datetime').value = datetimeFormat(event.endStr.split(event.endStr.includes("+")?"+":"-").slice(0,-1).join('-'));
 
                     document.querySelector('.modal-title').innerText = 'Edit Availability';
 
@@ -154,7 +164,7 @@
                 alert('Start time must be earlier than end time');
                 return
             }
-            if (!confirm('Change available time to '+start.replace('T',' ')+' - '+end.replace('T',' ')+'?\nYou will receive jobs for that period of time')){
+            if (!confirm('Change available time to '+datetimeFormat(start.replace('T',' '))+' - '+datetimeFormat(end.replace('T',' '))+'?\nYou will receive jobs for that period of time')){
                 return;
             }
             calendar.getEventById(activeEventID).setDates(document.getElementById('start_datetime').value + startTimezone,
@@ -183,7 +193,7 @@
                 alert('Start time must be earlier than end time');
                 return;
             }
-            if (!confirm('Do you want to mark '+start.replace('T',' ')+' - '+end.replace('T',' ')+' as available?\nYou will receive jobs for that period of time')){
+            if (!confirm('Do you want to mark '+datetimeFormat(start.replace('T',' '))+' - '+datetimeFormat(end.replace('T',' '))+' as available?\nYou will receive jobs for that period of time')){
                 return;
             }
             calendar.addEvent(
@@ -265,12 +275,12 @@
             <div class="modal-body px-0 mh-form">
                 <div class="mb-3">
                     <label for="start_datetime" class="form-label fw-bold"><?= __('Start time') ?></label>
-                    <input type="datetime-local" id="start_datetime" required>
+                    <input type="datetime-local" id="start_datetime" step="60" required/>
                 </div>
 
                 <div class="mb-3">
                     <label for="end_datetime" class="form-label fw-bold"><?= __('End time') ?></label>
-                    <input type="datetime-local" id="end_datetime" required>
+                    <input type="datetime-local" id="end_datetime" step="60" required/>
                 </div>
             </div>
 
@@ -303,12 +313,12 @@
             <div class="modal-body px-0 mh-form">
                 <div class="mb-3">
                     <label for="new_start" class="form-label fw-bold"><?= __('Start time') ?></label>
-                    <input type="datetime-local" id="new_start" required>
+                    <input type="datetime-local" id="new_start" required step="60"/>
                 </div>
 
                 <div class="mb-3">
                     <label for="new_end" class="form-label fw-bold"><?= __('End time') ?></label>
-                    <input type="datetime-local" id="new_end" required>
+                    <input type="datetime-local" id="new_end" required step="60"/>
                 </div>
             </div>
 

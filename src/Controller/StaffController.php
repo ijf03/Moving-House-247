@@ -201,8 +201,9 @@ class StaffController extends AppController
                     return;
                 }
             }
+            else{
             $this->Flash->error(__('The staff could not be saved. Please, try again.'));
-        }
+        }}
         $this->set(compact('staffEntity'));
     }
 
@@ -232,7 +233,11 @@ class StaffController extends AppController
             return $this->redirect(['action' => 'index']);
         }
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $staff = $this->Staff->patchEntity($staff, $this->request->getData());
+            $data = $this->request->getData();
+            if (!$data['license_number']) {
+                $data['license_number'] = $staff->license_number;
+            }
+            $staff = $this->Staff->patchEntity($staff, $data);
             if ($this->Staff->save($staff)) {
                 $user = $usersTable->patchEntity($user, ['email' => $staff->email,
                     'phone' => $staff->phone,
@@ -246,6 +251,7 @@ class StaffController extends AppController
 
                 return $this->redirect(['action' => 'index']);
             }
+            debug($staff);
             $this->Flash->error(__('The staff could not be saved. Please, try again.'));
         }
         $this->set(compact('staff','isAdmin'));

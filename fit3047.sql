@@ -537,16 +537,17 @@ CREATE TABLE `staff` (
                          `last_name` varchar(50) NOT NULL,
                          `email` varchar(62) NOT NULL,
                          `phone` varchar(15) NOT NULL,
-                         `isDriver` tinyint(1) NOT NULL DEFAULT 0
+                         `isDriver` tinyint(1) NOT NULL DEFAULT 0,
+    `license_number` varchar(64) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 --
 -- Dumping data for table `staff`
 --
 
-INSERT INTO `staff` (`staff_id`, `first_name`, `last_name`, `email`, `phone`, `isDriver`) VALUES
-                                                                                              (1, 'Jordan', 'Lee', 'staff@myapp.local', '0422222222', 0),
-                                                                                              (2, 'Uba', 'Driver', 'driver@staff.com', '0444444444', 1);
+INSERT INTO `staff` (`staff_id`, `first_name`, `last_name`, `email`, `phone`, `isDriver`, `license_number`) VALUES
+                                                                                              (1, 'Jordan', 'Lee', 'staff@myapp.local', '0422222222', 0, null),
+                                                                                              (2, 'Uba', 'Driver', 'driver@staff.com', '0444444444', 1, '15e2b0d3c33891ebb0f1ef609ec419420c20e320ce94c65fbc8c3312448eb225');
 
 -- --------------------------------------------------------
 
