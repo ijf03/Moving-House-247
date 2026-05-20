@@ -3,7 +3,7 @@
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Booking $booking
  * @var \App\Model\Entity\Invoice $invoice
- * @var array $presets
+ * @var array $bookings
  */
 ?>
 <div class="mh-page-soft">
@@ -25,19 +25,23 @@
         <div class="container">
             <div class="row g-4 justify-content-center">
 
-                <div class="col-lg-3">
+                <div class="col-12 col-lg-3">
                     <div class="admin-table-card">
                         <div class="admin-table-header">
                             <h2><?= __('Actions') ?></h2>
                         </div>
 
                         <div class="admin-action-stack">
-                            <?= $this->Html->link(__('Back to Invoices'), ['action' => 'index'], ['class' => 'admin-action-link']) ?>
+                            <?= $this->Html->link(
+                                __('Back to Invoices'),
+                                ['action' => 'index'],
+                                ['class' => 'admin-action-link']
+                            ) ?>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-lg-9">
+                <div class="col-12 col-lg-9">
                     <div class="auth-card auth-card-wide">
                         <div class="auth-header">
                             <h2 class="auth-title"><?= __('New Invoice') ?></h2>
@@ -53,26 +57,26 @@
 
                         <div class="row g-3">
 
-                            <div class="col-md-6 auth-form-group">
+                            <div class="col-12 col-md-6 auth-form-group">
                                 <?= $this->Form->control('booking_id', [
                                     'empty' => 'Select a booking',
                                     'options' => $bookings,
                                     'label' => 'Booking',
-                                    'class' => 'auth-input'
+                                    'class' => 'auth-input',
                                 ]) ?>
                             </div>
 
-                            <div class="col-md-6 auth-form-group">
+                            <div class="col-12 col-md-6 auth-form-group">
                                 <?= $this->Form->control('status_display', [
                                     'type' => 'text',
                                     'value' => 'Pending',
                                     'readonly' => true,
                                     'label' => 'Status',
-                                    'class' => 'auth-input'
+                                    'class' => 'auth-input',
                                 ]) ?>
                             </div>
 
-                            <div class="col-md-6 auth-form-group">
+                            <div class="col-12 col-md-6 auth-form-group">
                                 <?= $this->Form->control('due_date', [
                                     'type' => 'date',
                                     'label' => 'Due Date',
@@ -84,7 +88,9 @@
                         </div>
 
                         <div class="auth-form-actions">
-                            <?= $this->Form->button(__('Create Invoice and add items'), ['class' => 'mh-btn-primary']) ?>
+                            <?= $this->Form->button(__('Create Invoice'), [
+                                'class' => 'mh-btn-primary text-center',
+                            ]) ?>
                         </div>
 
                         <?= $this->Form->end() ?>
