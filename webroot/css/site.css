@@ -824,9 +824,21 @@ body.mh-site {
 .auth-recaptcha {
     margin-top: 0.35rem;
     margin-bottom: 1rem;
-    overflow: visible;
-    display:flex;
+    width: 100%;
+    overflow-x: auto;
+    display: flex;
     justify-content: center;
+}
+
+@media screen and (max-width: 480px) {
+    .auth-recaptcha {
+        justify-content: flex-start;
+    }
+
+    .auth-recaptcha .g-recaptcha {
+        transform: scale(0.85);
+        transform-origin: left top;
+    }
 }
 
 .auth-card .message {
