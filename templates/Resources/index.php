@@ -149,10 +149,10 @@
                                     <?= __('Track consumable items and stock levels.') ?>
                                 </p>
 
-                                <p class="admin-muted-text mt-2">
-                                    <?= __('Items:') ?> <?= h($inventoryItemCount) ?>
-                                    <br>
-                                    <?= __('Low stock:') ?> <?= h($lowStockCount) ?>
+                                <p class="admin-muted-text mt-2 d-flex flex-wrap align-items-center">
+                                    <span class="text-nowrap"><?= __('Items:') ?> <?= h($inventoryItemCount) ?></span>
+                                    <span class="mx-3 text-muted d-none d-sm-inline">|</span>
+                                    <span class="text-nowrap"><?= __('Low stock:') ?> <?= h($lowStockCount) ?></span>
                                 </p>
 
                                 <?= $this->Html->link(
