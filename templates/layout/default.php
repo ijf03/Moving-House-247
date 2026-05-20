@@ -235,14 +235,14 @@ $isUser = ($identity && (int)$role === 3);
                     <ul class="list-unstyled mh-footer-contact mb-0">
                         <li>
                             <?= $this->Html->link(
-                                $this->ContentBlock->text('phone-contact-footer'),
-                                'tel:' . str_replace(' ', '', $this->ContentBlock->text('phone-contact-footer'))
+                                $this->ContentBlock->text('phone-contact'),
+                                'tel:' . str_replace(' ', '', $this->ContentBlock->text('phone-contact'))
                             ) ?>
                         </li>
                         <li>
                             <?= $this->Html->link(
-                                $this->ContentBlock->text('email-contact-footer'),
-                                'mailto:'.$this->ContentBlock->text('email-contact-footer'),
+                                $this->ContentBlock->text('email-contact'),
+                                'mailto:'.$this->ContentBlock->text('email-contact'),
                                 ['target' => '_blank'],
                             ) ?>
 
