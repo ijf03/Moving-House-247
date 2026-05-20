@@ -117,9 +117,9 @@
                                 <td class="actions">
                                     <div class="admin-action-stack">
                                         <?= $this->Html->link(
-                                            __('View'),
+                                            ' &nbsp;'.__('View'),
                                             ['action' => 'view', $inventoryItem->inventory_item_id],
-                                            ['class' => 'admin-action-link']
+                                            ['class' => 'admin-action-link','escape'=>false]
                                         ) ?>
 
                                         <?= $this->Html->link(
