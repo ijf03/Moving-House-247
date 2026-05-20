@@ -238,7 +238,7 @@ class StaffController extends AppController
                     'phone' => $staff->phone,
                     'first_name' => $staff->first_name,
                     'last_name' => $staff->last_name,]);
-                if(!$this->Staff->save($user)){
+                if(!$usersTable->save($user)){
                     $this->Flash->error(__('User detail cannot be saved'));
                     return;
                 }
