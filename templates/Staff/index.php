@@ -80,7 +80,7 @@
                                     <td><?= h($staffEntity->phone) ?></td>
                                     <td><?= h($staffEntity->isDriverText) ?></td>
                                     <td class="actions">
-                                        <?= $this->Html->link(' &nbsp;'.__('View'), ['action' => 'view', $staffEntity->staff_id], ['class' => 'admin-action-link', 'escape'=> false]) ?>
+                                        <?= $this->Html->link(__('View'), ['action' => 'view', $staffEntity->staff_id], ['class' => 'admin-action-link']) ?>
                                         <?= $this->Html->link(__('Edit'), ['action' => 'edit', $staffEntity->staff_id], ['class' => 'admin-action-link']) ?>
                                         <?= $this->Html->link(__('Availability'), ['action' => 'availability', $staffEntity->staff_id], ['class' => 'admin-action-link']) ?>
                                         <?= $this->Form->postLink(

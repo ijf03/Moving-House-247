@@ -109,9 +109,9 @@
                                 <td class="actions">
                                     <div class="admin-action-stack">
                                         <?= $this->Html->link(
-                                            ' &nbsp;'.__('View'),
+                                            __('View'),
                                             ['action' => 'view', $storageUnit->storage_unit_id],
-                                            ['class' => 'admin-action-link','escape'=>false]
+                                            ['class' => 'admin-action-link']
                                         ) ?>
 
                                         <?= $this->Html->link(

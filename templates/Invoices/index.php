@@ -149,7 +149,7 @@
                             <td><?= h($invoice->sent_at) ?></td>
                             <td><?= h($invoice->paid_at) ?></td>
                             <td class="actions">
-                                <?= $this->Html->link(' &nbsp;'.__('View'), ['action' => 'view', $invoice->invoice_id], ['class' => 'admin-action-link','escape'=>false]) ?>
+                                <?= $this->Html->link(__('View'), ['action' => 'view', $invoice->invoice_id], ['class' => 'admin-action-link']) ?>
                                 <?php if (strtolower($invoice->status) !== 'paid'): ?>
                                     <?= $this->Html->link(__('Edit'), ['action' => 'edit', $invoice->invoice_id], ['class' => 'admin-action-link']) ?>
 

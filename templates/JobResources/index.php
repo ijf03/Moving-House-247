@@ -207,9 +207,9 @@ foreach ($jobResources as $jobResource) {
                                 <td class="actions">
                                     <div class="admin-action-stack">
                                         <?= $this->Html->link(
-                                            ' &nbsp;'.__('View Resources'),
+                                            __('View Resources'),
                                             ['action' => 'view', $jobId],
-                                            ['class' => 'admin-action-link', 'escape'=>false]
+                                            ['class' => 'admin-action-link']
                                         ) ?>
 
                                         <?= $this->Html->link(

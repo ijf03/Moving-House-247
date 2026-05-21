@@ -98,7 +98,7 @@ $isAdmin = $isAdmin ?? false;
                                     </td>
                                     <td class="actions">
                                         <div class="admin-action-stack">
-                                            <?= $this->Html->link(' &nbsp;'.__('View'), ['action' => 'view', $user->user_id], ['class' => 'admin-action-link', 'escape'=>false]) ?>
+                                            <?= $this->Html->link(__('View'), ['action' => 'view', $user->user_id], ['class' => 'admin-action-link']) ?>
                                             <?= $this->Html->link(__('Edit'), ['action' => 'edit', $user->user_id], ['class' => 'admin-action-link']) ?>
                                             <?= $this->Form->postLink(
                                                 __('Delete'),
