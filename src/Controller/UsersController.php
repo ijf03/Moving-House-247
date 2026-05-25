@@ -372,7 +372,24 @@ class UsersController extends AppController
                 return;
             }
         }
-        if ($this->Users->delete($user)) {
+        else if($userType->user_type_name == 'Customer')
+        {
+            $customerTable = $this->fetchTable('Customer');
+            $customerRef = $customerTable->find()
+                ->where(['email'=>$user->email])
+                ->first();
+            if(!$customerRef)
+            {
+                $this->Flash->error(__('Customer profile not found'));
+                return;
+            }
+            $customer = $customerTable->get($customerRef->staff_id);
+            if (!$customerTable->delete($customer)) {
+                $this->Flash->error('Customer account could not be deleted, please try again.');
+                return;
+            }
+        }
+        if ($this->Usrs->delete($user)) {
             $this->Flash->success(__($user->full_name . ' has been deleted.'));
             if ($target === $userId) {
                 return $this->redirect(['controller' => 'Users', 'action' => 'logout']);
