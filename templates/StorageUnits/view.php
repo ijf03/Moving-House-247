@@ -83,11 +83,11 @@
                                 </tr>
                                 <tr>
                                     <th><?= __('Created') ?></th>
-                                    <td><?= h($storageUnit->created) ?></td>
-                                </tr>
+                                    <td><?= h($storageUnit->created?->format('d/m/Y') )?></td>
+                                </tr
                                 <tr>
                                     <th><?= __('Modified') ?></th>
-                                    <td><?= h($storageUnit->modified) ?></td>
+                                    <td><?= h($storageUnit->modified?->format('d/m/Y') )?></td>
                                 </tr>
                                 <tr>
                                     <th><?= __('Climate Controlled') ?></th>

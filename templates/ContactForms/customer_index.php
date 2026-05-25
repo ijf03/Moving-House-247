@@ -76,7 +76,7 @@
                                             <?= h(ucfirst($contactForm->status)) ?>
                                         </span>
                                     </td>
-                                    <td><?= h($contactForm->created) ?></td>
+                                    <td><?= h($contactForm->created?->format('d/m/Y') ) ?></td>
                                     <td>
                                         <?= $this->Html->link(
                                             __('View Conversation'),

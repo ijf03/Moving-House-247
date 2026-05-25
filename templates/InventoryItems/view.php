@@ -89,11 +89,11 @@
                                 </tr>
                                 <tr>
                                     <th><?= __('Created') ?></th>
-                                    <td><?= h($inventoryItem->created) ?></td>
+                                    <td><?= h($inventoryItem->created?->format('d/m/Y')) ?></td>
                                 </tr>
                                 <tr>
                                     <th><?= __('Modified') ?></th>
-                                    <td><?= h($inventoryItem->modified) ?></td>
+                                    <td><?= h($inventoryItem->modified?->format('d/m/Y')) ?></td>
                                 </tr>
                                 <tr>
                                     <th><?= __('Active') ?></th>

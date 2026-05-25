@@ -85,11 +85,11 @@
                                 </tr>
                                 <tr>
                                     <th><?= __('Created') ?></th>
-                                    <td><?= h($truck->created) ?></td>
+                                    <td><?= h($truck->created?->format('d/m/Y')) ?></td>
                                 </tr>
                                 <tr>
                                     <th><?= __('Modified') ?></th>
-                                    <td><?= h($truck->modified) ?></td>
+                                    <td><?= h($truck->modified?->format('d/m/Y')) ?></td>
                                 </tr>
                                 <tr>
                                     <th><?= __('Active') ?></th>

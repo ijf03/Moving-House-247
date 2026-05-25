@@ -178,7 +178,7 @@ foreach ($jobResources as $jobResource) {
 
                                 <td><?= h($customerName) ?></td>
                                 <td><?= h($serviceType) ?></td>
-                                <td><?= h($jobDate) ?></td>
+                                <td><?= h($jobDate?->format('d/m/Y')) ?></td>
 
                                 <td>
                                         <span class="admin-status-badge">

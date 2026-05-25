@@ -128,9 +128,8 @@ if ($job) {
                                         $resourceType = __('Truck');
 
                                         if ($jobResource->hasValue('truck')) {
-                                            $truckName = $jobResource->truck->name ?? '';
                                             $truckRego = $jobResource->truck->rego ?? '';
-                                            $resourceName = trim($truckName . ' - ' . $truckRego, ' -');
+                                            $resourceName = trim($truckRego, ' -');
 
                                             if ($resourceName === '') {
                                                 $resourceName = __('Truck ID #{0}', $jobResource->truck_id);

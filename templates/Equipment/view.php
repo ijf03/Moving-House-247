@@ -81,11 +81,11 @@
                                 </tr>
                                 <tr>
                                     <th><?= __('Created') ?></th>
-                                    <td><?= h($equipmentEntity->created) ?></td>
+                                    <td><?= h($equipmentEntity->created?->format('d/m/Y')) ?></td>
                                 </tr>
                                 <tr>
                                     <th><?= __('Modified') ?></th>
-                                    <td><?= h($equipmentEntity->modified) ?></td>
+                                    <td><?= h($equipmentEntity->modified?->format('d/m/Y')) ?></td>
                                 </tr>
                                 <tr>
                                     <th><?= __('Active') ?></th>

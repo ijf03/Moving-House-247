@@ -115,7 +115,7 @@
                                 <div class="mh-info-card">
                                     <div class="col-6">
                                         <h3><?= __('Created') ?></h3>
-                                        <p><?= h($contactForm->created) ?></p>
+                                        <p><?= h($contactForm->created?->format('d/m/Y')) ?></p>
                                     </div>
                                     <div class="col-6">
                                         <h3><?= __('Replied At') ?></h3>

@@ -68,7 +68,7 @@
                                         <div class="mh-info-card">
                                             <div>
                                                 <h3><?= __('Date / Time') ?></h3>
-                                                <p><?= h($job->job_date ?? '') ?> <?= h($job->job_time ?? '') ?></p>
+                                                <p><?= h($job->job_date?->format('d/m/Y')  ?? '') ?> <?= h($job->job_time ?? '') ?></p>
                                             </div>
                                         </div>
                                     </div>

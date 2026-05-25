@@ -43,7 +43,7 @@
                                 </strong>
 
                                 <p><?= $this->Text->autoParagraph(h($reply->message)) ?></p>
-                                <small><?= h($reply->created) ?></small>
+                                <small><?= h($reply->created?->format('d/m/Y') ) ?></small>
                             </div>
                         </div>
                     <?php endforeach; ?>

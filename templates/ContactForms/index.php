@@ -94,7 +94,7 @@
                                 <td><?= h($contactForm->customer->email ?? '') ?></td>
                                 <td><?= h($contactForm->customer->phone ?? '') ?></td>
                                 <td><?= h($contactForm->subject) ?></td>
-                                <td><?= h($contactForm->created) ?></td>
+                                <td><?= h($contactForm->created?->format('d/m/Y')) ?></td>
                                 <td>
                                     <span class="admin-status-badge admin-status-<?= strtolower((string)($contactForm->status ?? 'new')) ?>">
                                         <?= h(ucfirst($contactForm->status ?? 'new')) ?>

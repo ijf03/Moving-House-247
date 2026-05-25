@@ -121,7 +121,7 @@
 
                                 <td><?= h($booking->pickup_address) ?></td>
                                 <td><?= h($booking->dropoff_address) ?></td>
-                                <td><?= h($booking->job_date) ?></td>
+                                <td><?= h($booking->job_date?->format('d/m/Y')) ?></td>
                                 <td><?= h($booking->job_time) ?></td>
                                 <td>
                                     <span class="admin-status-badge">
