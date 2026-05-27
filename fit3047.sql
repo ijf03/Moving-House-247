@@ -85,11 +85,6 @@ CREATE TABLE `bookings` (
 -- Dumping data for table `bookings`
 --
 
-INSERT INTO `bookings` (`booking_id`, `customer_id`, `job_type_id`, `pickup_address`, `dropoff_address`, `job_date`, `job_time`, `status`, `created`, `message`, `accepted_notified`, `rejected_notified`) VALUES
-                                                                                                                                                                                                               (1, 11, 3, 'CH109, 21 Sports Walk, Clayton, VIC, Clayton, 3168', 'a24rgvv, Monash, 3168', '2026-05-28', '16:03:00', 'Pending', '2026-05-13 15:01:18', NULL, 0, 0),
-                                                                                                                                                                                                               (2, 11, 1, '12 Joan Avenue, Ferntree Gully, 3156', NULL, '2026-05-16', '16:22:00', 'Pending', '2026-05-16 06:20:01', NULL, 0, 0),
-                                                                                                                                                                                                               (3, 11, 1, '12, 1, 4000', NULL, '2026-05-29', '18:52:00', 'Pending', '2026-05-16 08:50:10', NULL, 0, 0);
-
 -- --------------------------------------------------------
 
 --
@@ -111,20 +106,6 @@ CREATE TABLE `contact_forms` (
 -- Dumping data for table `contact_forms`
 --
 
-INSERT INTO `contact_forms` (`contact_form_id`, `customer_id`, `subject`, `message`, `created`, `status`, `admin_reply`, `replied_at`) VALUES
-                                                                                                                                           (1, 1, 'Quote for apartment move', 'Hi, I would like a quote for moving a 2-bedroom apartment from Clayton to Melbourne.', '2026-04-18 09:30:00', 'replied', 'Thanks Emily. We have sent you a preliminary quote and will confirm availability shortly.', '2026-04-18 11:05:00'),
-                                                                                                                                           (2, 2, 'Short-term storage question', 'Do you offer storage for furniture while renovations are happening?', '2026-04-18 13:20:00', 'replied', 'Yes, we offer short-term storage options. We can include this in your quote.', '2026-04-18 15:10:00'),
-                                                                                                                                           (3, 3, 'Office relocation availability', 'We need help moving office equipment next week. Are morning slots available?', '2026-04-19 08:45:00', 'new', NULL, NULL),
-                                                                                                                                           (4, 4, 'Transfer booking request', 'Can you transfer packed boxes from South Yarra to Carlton?', '2026-04-19 12:00:00', 'replied', 'Yes, we can assist with transfer jobs. Please provide your preferred date.', '2026-04-19 14:35:00'),
-                                                                                                                                           (5, 5, 'Fragile items handling', 'I have glassware and framed artwork. Can your movers handle fragile items?', '2026-04-20 10:25:00', 'new', NULL, NULL),
-                                                                                                                                           (6, 6, 'Storage unit size', 'What storage unit size would suit a studio apartment?', '2026-04-20 16:15:00', 'replied', 'A small to medium unit is usually suitable for a studio apartment.', '2026-04-20 17:40:00'),
-                                                                                                                                           (7, 7, 'Packing materials', 'Can I request wardrobe boxes and packing tape with my booking?', '2026-04-21 09:10:00', 'new', NULL, NULL),
-                                                                                                                                           (8, 8, 'Student move inquiry', 'I am moving from Bundoora to the city and only have a few furniture items.', '2026-04-21 13:55:00', 'replied', 'We can help with smaller student moves. Please submit a booking request online.', '2026-04-21 15:25:00'),
-                                                                                                                                           (9, 9, 'Large family move', 'We are moving a family home and need help with heavy furniture.', '2026-04-22 11:35:00', 'new', NULL, NULL),
-                                                                                                                                           (10, 10, 'Storage before settlement', 'Can my items be stored for two weeks before delivery to my new address?', '2026-04-22 14:50:00', 'replied', 'Yes, we can arrange storage before final delivery.', '2026-04-22 16:20:00'),
-                                                                                                                                           (11, 11, 'Test', 'message', '2026-05-13 12:05:59', 'new', NULL, NULL),
-                                                                                                                                           (12, 12, 'hello', 'this works', '2026-05-13 12:06:36', 'new', NULL, NULL);
-
 -- --------------------------------------------------------
 
 --
@@ -144,25 +125,6 @@ CREATE TABLE `contact_form_replies` (
 -- Dumping data for table `contact_form_replies`
 --
 
-INSERT INTO `contact_form_replies` (`contact_form_reply_id`, `contact_form_id`, `sender_type`, `message`, `created`, `modified`) VALUES
-                                                                                                                                     (1, 1, 'customer', 'Hi, I would like a quote for moving a 2-bedroom apartment from Clayton to Melbourne.', '2026-04-18 09:30:00', '2026-05-13 11:28:29'),
-                                                                                                                                     (2, 2, 'customer', 'Do you offer storage for furniture while renovations are happening?', '2026-04-18 13:20:00', '2026-05-13 11:28:29'),
-                                                                                                                                     (3, 3, 'customer', 'We need help moving office equipment next week. Are morning slots available?', '2026-04-19 08:45:00', '2026-05-13 11:28:29'),
-                                                                                                                                     (4, 4, 'customer', 'Can you transfer packed boxes from South Yarra to Carlton?', '2026-04-19 12:00:00', '2026-05-13 11:28:29'),
-                                                                                                                                     (5, 5, 'customer', 'I have glassware and framed artwork. Can your movers handle fragile items?', '2026-04-20 10:25:00', '2026-05-13 11:28:29'),
-                                                                                                                                     (6, 6, 'customer', 'What storage unit size would suit a studio apartment?', '2026-04-20 16:15:00', '2026-05-13 11:28:29'),
-                                                                                                                                     (7, 7, 'customer', 'Can I request wardrobe boxes and packing tape with my booking?', '2026-04-21 09:10:00', '2026-05-13 11:28:29'),
-                                                                                                                                     (8, 8, 'customer', 'I am moving from Bundoora to the city and only have a few furniture items.', '2026-04-21 13:55:00', '2026-05-13 11:28:29'),
-                                                                                                                                     (9, 9, 'customer', 'We are moving a family home and need help with heavy furniture.', '2026-04-22 11:35:00', '2026-05-13 11:28:29'),
-                                                                                                                                     (10, 10, 'customer', 'Can my items be stored for two weeks before delivery to my new address?', '2026-04-22 14:50:00', '2026-05-13 11:28:29'),
-                                                                                                                                     (16, 1, 'admin', 'Thanks Emily. We have sent you a preliminary quote and will confirm availability shortly.', '2026-04-18 11:05:00', '2026-05-13 11:28:29'),
-                                                                                                                                     (17, 2, 'admin', 'Yes, we offer short-term storage options. We can include this in your quote.', '2026-04-18 15:10:00', '2026-05-13 11:28:29'),
-                                                                                                                                     (18, 4, 'admin', 'Yes, we can assist with transfer jobs. Please provide your preferred date.', '2026-04-19 14:35:00', '2026-05-13 11:28:29'),
-                                                                                                                                     (19, 6, 'admin', 'A small to medium unit is usually suitable for a studio apartment.', '2026-04-20 17:40:00', '2026-05-13 11:28:29'),
-                                                                                                                                     (20, 8, 'admin', 'We can help with smaller student moves. Please submit a booking request online.', '2026-04-21 15:25:00', '2026-05-13 11:28:29'),
-                                                                                                                                     (21, 10, 'admin', 'Yes, we can arrange storage before final delivery.', '2026-04-22 16:20:00', '2026-05-13 11:28:29'),
-                                                                                                                                     (23, 11, 'customer', 'message', '2026-05-13 12:05:59', '2026-05-13 12:05:59'),
-                                                                                                                                     (24, 12, 'customer', 'this works', '2026-05-13 12:06:36', '2026-05-13 12:06:36');
 
 -- --------------------------------------------------------
 
@@ -277,19 +239,6 @@ CREATE TABLE `customers` (
 -- Dumping data for table `customers`
 --
 
-INSERT INTO `customers` (`customer_id`, `first_name`, `last_name`, `email`, `phone`, `stripe_id`) VALUES
-                                                                                                      (1, 'Emily', 'Carter', 'emily.carter@example.com', '0412345678', NULL),
-                                                                                                      (2, 'Liam', 'Nguyen', 'liam.nguyen@example.com', '0423456789', NULL),
-                                                                                                      (3, 'Sophie', 'Patel', 'sophie.patel@example.com', '0434567890', NULL),
-                                                                                                      (4, 'Daniel', 'Reyes', 'daniel.reyes@example.com', '0445678901', NULL),
-                                                                                                      (5, 'Mia', 'Thompson', 'mia.thompson@example.com', '0456789012', NULL),
-                                                                                                      (6, 'Joshua', 'Tan', 'joshua.tan@example.com', '0467890123', NULL),
-                                                                                                      (7, 'Hannah', 'Lim', 'hannah.lim@example.com', '0478901234', NULL),
-                                                                                                      (8, 'Noah', 'Brown', 'noah.brown@example.com', '0489012345', NULL),
-                                                                                                      (9, 'Ava', 'Williams', 'ava.williams@example.com', '0490123456', NULL),
-                                                                                                      (10, 'Marcus', 'Smith', 'marcus.smith@example.com', '0401234567', NULL),
-                                                                                                      (11, 'Alex', 'Morgan', 'customer@myapp.local', '0411111111', 'cus_UVcoOXAshCoV72'),
-                                                                                                      (12, 'Testing form', 'Fernan', 'test@me.com', '0422264066', 'cus_UVcoqDvVYdhVFA');
 
 -- --------------------------------------------------------
 
@@ -314,10 +263,6 @@ CREATE TABLE `equipment` (
 -- Dumping data for table `equipment`
 --
 
-INSERT INTO `equipment` (`equipment_id`, `name`, `category`, `quantity_available`, `status`, `storage_location`, `condition_notes`, `is_active`, `created`, `modified`) VALUES
-                                                                                                                                                                            (1, 'Heavy-duty trolley', 'Trolley', 4, 'available', 'Clayton Depot', NULL, 1, '2026-05-13 11:28:29', '2026-05-13 11:28:29'),
-                                                                                                                                                                            (2, 'Moving blanket', 'Protective', 20, 'available', 'Clayton Depot', NULL, 1, '2026-05-13 11:28:29', '2026-05-13 11:28:29'),
-                                                                                                                                                                            (3, 'Ratchet strap', 'Securing', 15, 'available', 'Springvale Depot', NULL, 1, '2026-05-13 11:28:29', '2026-05-13 11:28:29');
 
 -- --------------------------------------------------------
 
@@ -341,11 +286,6 @@ CREATE TABLE `inventory_items` (
 --
 -- Dumping data for table `inventory_items`
 --
-
-INSERT INTO `inventory_items` (`inventory_item_id`, `name`, `category`, `quantity_on_hand`, `reorder_threshold`, `unit`, `storage_location`, `is_active`, `created`, `modified`) VALUES
-                                                                                                                                                                                     (1, 'Small box', 'Boxes', 100, 20, 'each', 'Warehouse Shelf A', 1, '2026-05-13 11:28:29', '2026-05-13 11:28:29'),
-                                                                                                                                                                                     (2, 'Packing tape', 'Packing', 60, 10, 'roll', 'Warehouse Shelf B', 1, '2026-05-13 11:28:29', '2026-05-13 11:28:29'),
-                                                                                                                                                                                     (3, 'Bubble wrap', 'Packing', 25, 5, 'roll', 'Warehouse Shelf C', 1, '2026-05-13 11:28:29', '2026-05-13 11:28:29');
 
 -- --------------------------------------------------------
 
@@ -372,9 +312,6 @@ CREATE TABLE `invoices` (
 --
 -- Dumping data for table `invoices`
 --
-
-INSERT INTO `invoices` (`invoice_id`, `booking_id`, `customer_id`, `stripe_invoice_id`, `invoice_url`, `status`, `subtotal_cents`, `total_cents`, `due_date`, `sent_at`, `paid_at`, `created`, `modified`) VALUES
-    (1, 1, 11, NULL, NULL, 'draft', 0, 0, NULL, NULL, NULL, '2026-05-13 15:04:32', '2026-05-13 15:04:32');
 
 -- --------------------------------------------------------
 
@@ -450,18 +387,6 @@ CREATE TABLE `jobs` (
 -- Dumping data for table `jobs`
 --
 
-INSERT INTO `jobs` (`job_id`, `job_type_id`, `description`, `pickup_address`, `dropoff_address`, `job_date`, `job_time`, `customer_id`, `allocated_at`, `cancelled_at`, `status`, `driver_required`, `porter_required`) VALUES
-                                                                                                                                                                                                                            (1, 1, 'Move 2-bedroom apartment including fridge, sofa, washing machine, and boxes.', '12 King Street, Clayton VIC 3168', '88 Collins Street, Melbourne VIC 3000', '2026-05-01', '09:00:00', 1, '2026-05-13 11:33:05', NULL, 'Processing', 2, 2),
-                                                                                                                                                                                                                            (2, 1, 'Store household furniture and personal boxes during apartment renovation.', '5 Princes Highway, Dandenong VIC 3175', 'Unit 4, Storage Hub, Springvale VIC 3171', '2026-05-02', '13:30:00', 2, '2026-05-13 15:39:22', NULL, 'Processing', 2, 3),
-                                                                                                                                                                                                                            (3, 1, 'Office equipment relocation including desks, monitors, and chairs.', '21 Wellington Road, Mulgrave VIC 3170', '9 Queen Street, Melbourne VIC 3000', '2026-05-03', '08:15:00', 3, NULL, NULL, 'Pending', 0, 0),
-                                                                                                                                                                                                                            (4, 3, 'Transfer packed boxes between rental properties.', '44 Chapel Street, South Yarra VIC 3141', '72 Lygon Street, Carlton VIC 3053', '2026-05-04', '10:30:00', 4, '2026-05-13 15:39:36', NULL, 'Completed', 1, 1),
-                                                                                                                                                                                                                            (5, 1, 'Move 2-bedroom unit with lift access and fragile items.', '18 High Street, Glen Iris VIC 3146', '120 Burke Road, Camberwell VIC 3124', '2026-05-05', '11:00:00', 5, NULL, NULL, 'Pending', 0, 0),
-                                                                                                                                                                                                                            (6, 2, 'Store boxes and small appliances from a studio apartment.', '7 Sydney Road, Brunswick VIC 3056', 'Storage King, Preston VIC 3072', '2026-05-06', '14:00:00', 6, '2026-05-13 15:57:49', NULL, 'Processing', 2, 1),
-                                                                                                                                                                                                                            (7, 1, 'Move apartment furniture and provide wardrobe boxes.', '33 Bay Street, Port Melbourne VIC 3207', '54 Smith Street, Collingwood VIC 3066', '2026-05-07', '09:45:00', 7, NULL, NULL, 'Pending', 0, 0),
-                                                                                                                                                                                                                            (8, 3, 'Transfer student room furniture and personal boxes.', '90 Plenty Road, Bundoora VIC 3083', '27 Swanston Street, Melbourne VIC 3000', '2026-05-08', '12:15:00', 8, NULL, NULL, 'Pending', 0, 0),
-                                                                                                                                                                                                                            (9, 1, 'Move family home furniture including outdoor setting and dining table.', '14 Main Road, Eltham VIC 3095', '65 Toorak Road, Toorak VIC 3142', '2026-05-09', '08:30:00', 9, NULL, NULL, 'Pending', 0, 0),
-                                                                                                                                                                                                                            (10, 2, 'Store household items while customer waits for property settlement.', '101 Bridge Road, Richmond VIC 3121', 'Secure Store, Moorabbin VIC 3189', '2026-05-10', '15:30:00', 10, NULL, NULL, 'Pending', 0, 0);
-
 -- --------------------------------------------------------
 
 --
@@ -481,14 +406,6 @@ CREATE TABLE `job_resources` (
 --
 -- Dumping data for table `job_resources`
 --
-
-INSERT INTO `job_resources` (`job_resource_id`, `job_id`, `truck_id`, `equipment_id`, `storage_unit_id`, `inventory_id`, `quantity`) VALUES
-                                                                                                                                         (1, 1, 1, NULL, NULL, NULL, 1.00),
-                                                                                                                                         (2, 2, 1, NULL, NULL, NULL, 1.00),
-                                                                                                                                         (3, 2, 2, NULL, NULL, NULL, 1.00),
-                                                                                                                                         (4, 4, 1, NULL, NULL, NULL, 1.00),
-                                                                                                                                         (5, 6, 1, NULL, NULL, NULL, 1.00),
-                                                                                                                                         (6, 6, 2, NULL, NULL, NULL, 1.00);
 
 -- --------------------------------------------------------
 
@@ -544,11 +461,6 @@ CREATE TABLE `staff` (
 --
 -- Dumping data for table `staff`
 --
-
-INSERT INTO `staff` (`staff_id`, `first_name`, `last_name`, `email`, `phone`, `isDriver`, `license_number`) VALUES
-                                                                                              (1, 'Jordan', 'Lee', 'staff@myapp.local', '0422222222', 0, null),
-                                                                                              (2, 'Uba', 'Driver', 'driver@staff.com', '0444444444', 1, '15e2b0d3c33891ebb0f1ef609ec419420c20e320ce94c65fbc8c3312448eb225');
-
 -- --------------------------------------------------------
 
 --
@@ -569,11 +481,6 @@ CREATE TABLE `staff_job` (
 --
 -- Dumping data for table `staff_job`
 --
-
-INSERT INTO `staff_job` (`allocation_id`, `staff_id`, `job_id`, `status`, `role`, `report_notes`, `report_photo`, `report_submitted_at`) VALUES
-                                                                                                                                             (1, 1, 4, 'Confirmed', 'Porter', '\' OR \'1\'=\'1', 'job_4_staff_1_3994a0d8b4a02123.jpg', '2026-05-14 01:47:52'),
-                                                                                                                                             (2, 2, 4, 'Confirmed', 'Driver', '<script>alert(\'XSS\')</script>', 'job_4_staff_2_63a9f3362c24d501.png', '2026-05-14 01:46:32');
-
 -- --------------------------------------------------------
 
 --
@@ -596,11 +503,6 @@ CREATE TABLE `storage_units` (
 --
 -- Dumping data for table `storage_units`
 --
-
-INSERT INTO `storage_units` (`storage_unit_id`, `unit_code`, `facility_name`, `unit_size_m3`, `status`, `security_level`, `is_climate_controlled`, `is_active`, `created`, `modified`) VALUES
-                                                                                                                                                                                           (1, 'A01', 'Springvale Storage', 12.00, 'available', 'standard', 0, 1, '2026-05-13 11:28:29', '2026-05-13 11:28:29'),
-                                                                                                                                                                                           (2, 'B14', 'Moorabbin Storage', 25.00, 'available', 'high', 1, 1, '2026-05-13 11:28:29', '2026-05-13 11:28:29');
-
 -- --------------------------------------------------------
 
 --
@@ -625,11 +527,6 @@ CREATE TABLE `trucks` (
 --
 -- Dumping data for table `trucks`
 --
-
-INSERT INTO `trucks` (`truck_id`, `name`, `rego`, `truck_size`, `capacity_m3`, `max_payload_kg`, `status`, `current_location`, `next_service_date`, `is_active`, `created`, `modified`) VALUES
-                                                                                                                                                                                            (1, 'Truck 1', '1ABC123', 'Small', 20.00, 2000.00, 'available', 'Clayton Depot', NULL, 1, '2026-05-13 11:28:29', '2026-05-13 11:28:29'),
-                                                                                                                                                                                            (2, 'Truck 2', '1DEF456', 'Large', 35.00, 4000.00, 'available', 'Springvale Depot', NULL, 1, '2026-05-13 11:28:29', '2026-05-13 11:28:29');
-
 -- --------------------------------------------------------
 
 --
@@ -653,10 +550,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `email`, `phone`, `password`, `first_name`, `last_name`, `user_type`, `reset_id`, `time_limit`) VALUES
-                                                                                                                                    (1, 'customer@myapp.local', '0411111111', '$2y$12$O2mUGRcOpX4i.RgsD0Dofe9hmwPLsxC.teN0iMwi7a9Dx0ainBcum', 'Alexis', 'Morgan', 3, NULL, NULL),
-                                                                                                                                    (2, 'staff@myapp.local', '0422222222', '$2y$12$uVkWd9a7/30M6Zc3CZ8Ou.NOtS2NHNaB8pdaZbmwq8gvFCjjnICse', 'Jordan', 'Lee', 2, NULL, NULL),
-                                                                                                                                    (3, 'admin@test.com', '0433333333', '$2y$12$xGvQK7AIhGg7iytP8aIEjOV1pm4Ev7hmJweuns1iNDkYW4VI69ipS', 'Alice', 'Admin', 1, NULL, NULL),
-                                                                                                                                    (4, 'driver@staff.com', '0444444444', '$2y$12$bXFuHfh4UdmDlcC/c7wblus5E1Kel3LiThtfpGv3xxaWlU/lLwPQ6', 'Uba', 'Driver', 2, NULL, NULL);
+                                                                                                                                    (1, 'admin@test.com', '0433333333', '$2y$12$xGvQK7AIhGg7iytP8aIEjOV1pm4Ev7hmJweuns1iNDkYW4VI69ipS', 'Alice', 'Admin', 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
