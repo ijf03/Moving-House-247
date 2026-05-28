@@ -543,8 +543,15 @@ class UsersController extends AppController
                 ]);
 
                 if (!$customersTable->save($customer)) {
-                    $this->Flash->error('User account created, but customer profile could not be created.');
+                    $this->Flash->error('Customer profile could not be created.');
+                    $errors = $customer->getErrors();
+                    foreach ($errors as $field => $fieldErrors) {
+                        foreach ($fieldErrors as $rule => $message) {
+                            $this->Flash->error($field .' : '.$message);
+                        }
+                    }
                     $this->Users->delete($user);
+                    $this->set(compact('siteKey'));
                     return;
                 }
 
