@@ -99,38 +99,38 @@ $isUser = ($identity && (int)$role === 3);
                     <?php elseif ($isUser) : ?>
                         <?= $this->Html->link(
                             'Book a Service',
-                            ['controller' => 'Bookings', 'action' => 'chooseType'],
+                            ['plugin' => false, 'controller' => 'Bookings', 'action' => 'chooseType'],
                             ['class' => 'nav-link mh-nav-link'],
                         ) ?>
 
                         <?= $this->Html->link(
                             'Contact Us',
-                            ['controller' => 'ContactForms', 'action' => 'customer_index'],
+                            ['plugin' => false, 'controller' => 'ContactForms', 'action' => 'customer_index'],
                             ['class' => 'nav-link mh-nav-link'],
                         ) ?>
 
                         <?= $this->Html->link(
                             'My Bookings',
-                            ['controller' => 'Bookings', 'action' => 'myBookings'],
+                            ['plugin' => false, 'controller' => 'Bookings', 'action' => 'myBookings'],
                             ['class' => 'nav-link mh-nav-link'],
                         ) ?>
 
                     <?php else : ?>
                         <?= $this->Html->link(
                             'Services',
-                            ['controller' => 'Pages', 'action' => 'display', 'home', '#' => 'services'],
+                            ['plugin' => false, 'controller' => 'Pages', 'action' => 'display', 'home', '#' => 'services'],
                             ['class' => 'nav-link mh-nav-link '],
                         ) ?>
 
                         <?= $this->Html->link(
                             'Contact Us',
-                            ['controller' => 'ContactForms', 'action' => 'add'],
+                            ['plugin' => false, 'controller' => 'ContactForms', 'action' => 'add'],
                             ['class' => 'nav-link mh-nav-link'],
                         ) ?>
 
                         <?= $this->Html->link(
                             'Book a Service',
-                            ['controller' => 'Bookings', 'action' => 'chooseType'],
+                            ['plugin' => false, 'controller' => 'Bookings', 'action' => 'chooseType'],
                             ['class' => 'nav-link mh-nav-link'],
                         ) ?>
 
@@ -139,14 +139,14 @@ $isUser = ($identity && (int)$role === 3);
                     <?php if ($identity) : ?>
                         <?= $this->Html->link(
                             'Log Out',
-                            ['controller' => 'Users', 'action' => 'logout'],
+                            ['plugin' => false, 'controller' => 'Users', 'action' => 'logout'],
                             ['class' => 'nav-link mh-nav-link'],
                         ) ?>
 
                     <?php else : ?>
                         <?= $this->Html->link(
                             'Log In',
-                            ['controller' => 'Users', 'action' => 'login'],
+                            ['plugin' => false, 'controller' => 'Users', 'action' => 'login'],
                             ['class' => 'btn mh-quote-btn ms-lg-3 mt-3 mt-lg-0'],
                         ) ?>
 

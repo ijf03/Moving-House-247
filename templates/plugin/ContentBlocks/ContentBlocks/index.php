@@ -4,6 +4,13 @@
  * @var iterable<\ContentBlocks\Model\Entity\ContentBlock> $contentBlocksGrouped
  */
 
+if ($this->request->getAttribute('identity')) {
+    $user = $this->request->getAttribute('identity');
+    $isAdmin = $user->user_type == 1;
+    if (!$isAdmin) {
+        throw new NotFoundException();
+    }
+}
 $this->assign('title', 'Content Blocks');
 
 $this->Html->css('ContentBlocks.content-blocks', ['block' => true]);
